@@ -43,7 +43,7 @@ function sortByLevel(a: Card, b: Card) {
   return (a.xp ?? -1) - (b.xp ?? -1);
 }
 
-function sortByPosition(a: Card, b: Card) {
+export function sortByPosition(a: Card, b: Card) {
   return (a.position ?? 0) - (b.position ?? 0);
 }
 
