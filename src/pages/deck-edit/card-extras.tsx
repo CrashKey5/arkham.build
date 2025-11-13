@@ -1,4 +1,8 @@
 import { Attachments } from "@/components/attachments/attachments";
+import {
+  FilterAttachmentButton,
+  isAttachable,
+} from "@/components/attachments/attachments.filter";
 import { getMatchingAttachables } from "@/components/attachments/attachments.helpers";
 import { useStore } from "@/store";
 import type { ResolvedDeck } from "@/store/lib/types";
@@ -71,13 +75,15 @@ export function CardExtras(props: Props) {
   const hasAttachable =
     currentTab === "slots" && !isEmpty(getMatchingAttachables(card, deck));
 
+  const isAnAttachable = currentTab === "slots" && isAttachable(card, deck);
+
   const hasUpgrades =
     canEdit && !isEmpty(availableUpgrades.upgrades[card.code]);
 
   const canShowMoveButton =
     !!quantity && (currentTab !== "slots" || card.xp != null);
 
-  if (!hasAttachable && !hasUpgrades && !canShowMoveButton) {
+  if (!hasAttachable && !isAnAttachable && !hasUpgrades && !canShowMoveButton) {
     return null;
   }
 
@@ -98,6 +104,9 @@ export function CardExtras(props: Props) {
           <MoveToSideDeck card={card} deck={deck} />
         )}
       {hasAttachable && <Attachments card={card} resolvedDeck={deck} />}
+      {isAnAttachable && (
+        <FilterAttachmentButton card={card} resolvedDeck={deck} />
+      )}
     </div>
   );
 }
