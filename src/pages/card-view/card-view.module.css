@@ -74,3 +74,20 @@
 .view-section-cards > * + * {
   margin-top: 1rem;
 }
+
+.card-set-nav-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-set-nav-container :last-child {
+  text-align: right;
+}
+
+.card-set-nav-title h3 {
+  text-align: center;
+}
+
+.card-set-nav-title h3 * {
+  margin: 1em;
+}
