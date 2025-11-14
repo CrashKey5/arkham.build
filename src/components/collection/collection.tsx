@@ -6,6 +6,7 @@ import { useStore } from "@/store";
 import { selectCycleCardCounts } from "@/store/selectors/collection";
 import { selectCyclesAndPacks } from "@/store/selectors/lists";
 import type { SettingsState } from "@/store/slices/settings.types";
+import { official } from "@/utils/card-utils";
 import { CYCLES_WITH_STANDALONE_PACKS } from "@/utils/constants";
 import { displayPackName } from "@/utils/formatting";
 import { isEmpty } from "@/utils/is-empty";
@@ -28,7 +29,7 @@ export function CollectionSettings(props: Props) {
   const cyclesWithPacks = useStore(selectCyclesAndPacks);
 
   const collectionCycles = useMemo(() => {
-    return cyclesWithPacks.filter((cycle) => cycle.official !== false);
+    return cyclesWithPacks.filter((cycle) => official(cycle));
   }, [cyclesWithPacks]);
 
   const canEdit = !!setSettings;

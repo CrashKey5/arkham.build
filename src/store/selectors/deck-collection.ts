@@ -10,6 +10,7 @@ import { formatProviderName } from "@/utils/formatting";
 import { and, or } from "@/utils/fp";
 import i18n from "@/utils/i18n";
 import { normalizeDiacritics } from "@/utils/normalize-diacritics";
+import type { LookupTables } from "../lib/lookup-tables.types";
 import { deckTags } from "../lib/resolve-deck";
 import { instantiateSearchFromLocale } from "../lib/searching";
 import type { ResolvedDeck } from "../lib/types";
@@ -17,6 +18,7 @@ import type { StoreState } from "../slices";
 import type { Folder } from "../slices/data.types";
 import type {
   DeckFiltersKey,
+  DeckProperties,
   DeckPropertyName,
   DeckValidity,
   RangeMinMax,
@@ -24,7 +26,11 @@ import type {
 } from "../slices/deck-collection.types";
 import type { MultiselectFilter } from "../slices/lists.types";
 import { selectLocalDecks } from "./decks";
-import { selectLocaleSortingCollator, selectMetadata } from "./shared";
+import {
+  selectLocaleSortingCollator,
+  selectLookupTables,
+  selectMetadata,
+} from "./shared";
 
 // Arbitrarily chosen for now
 const MATCHING_MAX_TOKEN_DISTANCE_DECKS = 4;
@@ -33,7 +39,7 @@ const selectDeckFilters = (state: StoreState) => state.deckCollection.filters;
 
 export const selectDeckFilterValue = createSelector(
   selectDeckFilters,
-  (_, filter: DeckFiltersKey) => filter,
+  (_: StoreState, filter: DeckFiltersKey) => filter,
   (filters, filter) => filters[filter],
 );
 
@@ -82,6 +88,43 @@ export const selectTagsChanges = createSelector(
   },
 );
 
+const filterDeckByCard = (cardCode: string, lookupTables: LookupTables) => {
+  return (deck: ResolvedDeck) => {
+    const allSlots = [
+      ...Object.values(deck.cards.slots),
+      ...Object.values(deck.cards.sideSlots ?? {}),
+      ...Object.values(deck.cards.extraSlots ?? {}),
+    ];
+
+    const duplicates = Object.keys(
+      lookupTables.relations.duplicates[cardCode] ?? {},
+    );
+    return allSlots.some(
+      (slot) =>
+        slot.card.code === cardCode || duplicates.includes(slot.card.code),
+    );
+  };
+};
+
+const makeDeckCardsFilter = (
+  values: MultiselectFilter,
+  lookupTables: LookupTables,
+) => {
+  return and(values.map((value) => filterDeckByCard(value, lookupTables)));
+};
+
+export const selectCardsChanges = createSelector(
+  selectDeckFilters,
+  selectMetadata,
+  (filters, metadata) => {
+    const cardsFilters = filters.cards;
+    if (!cardsFilters.length) return "";
+    return cardsFilters
+      .map((code) => displayAttribute(metadata.cards[code], "name"))
+      .join(` ${i18n.t("filters.and")} `);
+  },
+);
+
 // Properties
 const selectDeckPropertiesFilter = (state: StoreState) =>
   state.deckCollection.filters.properties;
@@ -106,9 +149,7 @@ export const selectDeckPropertiesChanges = createSelector(
   },
 );
 
-const makeDeckPropertiesFilter = (
-  properties: Record<DeckPropertyName, boolean>,
-) => {
+const makeDeckPropertiesFilter = (properties: DeckProperties) => {
   const filters = [];
   for (const property of Object.keys(properties)) {
     if (properties[property as DeckPropertyName]) {
@@ -189,60 +230,74 @@ const makeDeckProviderFilter = (values: StorageProvider[]) => {
   };
 };
 
-const selectFilteringFunc = createSelector(selectDeckFilters, (filters) => {
-  const filterFuncs = [];
-  for (const filter of Object.keys(filters) as DeckFiltersKey[]) {
-    switch (filter) {
-      case "faction": {
-        const currentFilter = filters[filter];
-        if (currentFilter.length) {
-          filterFuncs.push(makeDeckFactionFilter(currentFilter));
+const selectFilteringFunc = createSelector(
+  selectDeckFilters,
+  selectLookupTables,
+  (filters, lookupTables) => {
+    const filterFuncs = [];
+    for (const filter of Object.keys(filters) as DeckFiltersKey[]) {
+      switch (filter) {
+        case "cards": {
+          const currentFilter = filters[filter];
+          if (currentFilter.length) {
+            filterFuncs.push(makeDeckCardsFilter(currentFilter, lookupTables));
+          }
+          break;
         }
-        break;
-      }
 
-      case "tags": {
-        const currentFilter = filters[filter];
-        if (currentFilter.length) {
-          filterFuncs.push(makeDeckTagsFilter(currentFilter));
+        case "faction": {
+          const currentFilter = filters[filter];
+          if (currentFilter.length) {
+            filterFuncs.push(makeDeckFactionFilter(currentFilter));
+          }
+          break;
         }
-        break;
-      }
 
-      case "properties": {
-        const currentFilter = filters[filter];
-        filterFuncs.push(makeDeckPropertiesFilter(currentFilter));
-        break;
-      }
-
-      case "validity": {
-        const currentFilter = filters[filter];
-        if (currentFilter !== "all") {
-          filterFuncs.push(makeDeckValidityFilter(currentFilter));
+        case "tags": {
+          const currentFilter = filters[filter];
+          if (currentFilter.length) {
+            filterFuncs.push(makeDeckTagsFilter(currentFilter));
+          }
+          break;
         }
-        break;
-      }
 
-      case "xpCost": {
-        const currentFilter = filters[filter];
-        if (currentFilter) {
-          filterFuncs.push(makeDeckXpCostFilter(currentFilter));
+        case "properties": {
+          const currentFilter = filters[filter];
+          filterFuncs.push(
+            makeDeckPropertiesFilter(currentFilter as DeckProperties),
+          );
+          break;
         }
-        break;
-      }
 
-      case "provider": {
-        const currentFilter = filters[filter];
-        if (currentFilter) {
-          filterFuncs.push(makeDeckProviderFilter(currentFilter));
+        case "validity": {
+          const currentFilter = filters[filter];
+          if (currentFilter !== "all") {
+            filterFuncs.push(makeDeckValidityFilter(currentFilter));
+          }
+          break;
         }
-        break;
+
+        case "xpCost": {
+          const currentFilter = filters[filter];
+          if (currentFilter) {
+            filterFuncs.push(makeDeckXpCostFilter(currentFilter));
+          }
+          break;
+        }
+
+        case "provider": {
+          const currentFilter = filters[filter];
+          if (currentFilter) {
+            filterFuncs.push(makeDeckProviderFilter(currentFilter));
+          }
+          break;
+        }
       }
     }
-  }
 
-  return and(filterFuncs);
-});
+    return and(filterFuncs);
+  },
+);
 
 export const selectFactionsInLocalDecks = createSelector(
   selectLocalDecks,
@@ -509,6 +564,7 @@ export const selectProviderChanges = createSelector(
 );
 
 export const selectDeckFilterChanges = createSelector(
+  selectCardsChanges,
   selectXpCostChanges,
   selectDeckPropertiesChanges,
   selectTagsChanges,

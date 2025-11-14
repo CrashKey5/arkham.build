@@ -115,4 +115,24 @@ test.describe("smoke tests", () => {
       expect(page.url()).toBe(`${baseURL}/`);
     },
   );
+
+  test(
+    "lists are reset between navigation",
+    { tag: "@smoke" },
+    async ({ page }) => {
+      await importDeckFromFile(page, "validation/base_case.json", {
+        navigate: "edit",
+      });
+      await page.getByTestId("card-type-player").click();
+      await page.getByTestId("masthead-logo").click();
+      await page.getByTestId("collection-deck").click();
+      await page.getByTestId("view-edit").click();
+      await expect(
+        page.getByTestId("virtuoso-top-item-list").getByText("Asset"),
+      ).toBeVisible();
+      await expect(
+        page.getByTestId("virtuoso-top-item-list").getByText("Hand"),
+      ).toBeVisible();
+    },
+  );
 });

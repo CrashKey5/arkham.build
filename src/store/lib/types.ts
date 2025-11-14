@@ -41,6 +41,7 @@ export type CardWithRelations = ResolvedCard & {
     requiredCards?: ResolvedCard[];
     parallelCards?: ResolvedCard[];
     duplicates?: ResolvedCard[];
+    reprints?: ResolvedCard[];
     otherVersions?: ResolvedCard[];
 
     level?: ResolvedCard[];

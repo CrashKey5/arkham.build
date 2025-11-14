@@ -15,7 +15,7 @@ type Props<T extends Coded> = {
   listRef: React.MutableRefObject<HTMLElement[]>;
   omitItemPadding?: boolean;
   renderItem: (t: T) => React.ReactNode;
-  selectedItems: string[];
+  selectedItems: (T | undefined)[];
   setActiveIndex: (i: number) => void;
   setSelectedItem: (t: T) => void;
 };
@@ -35,8 +35,14 @@ export function ComboboxMenu<T extends Coded>(props: Props<T>) {
   const [scrollParent, setScrollParent] = useState<HTMLElement | undefined>();
   const virtuosoRef = useRef<GroupedVirtuosoHandle>(null);
 
+  const mouseOverIndex = useRef<number | null>(null);
+
   useEffect(() => {
-    if (activeIndex != null && virtuosoRef.current) {
+    if (
+      activeIndex != null &&
+      virtuosoRef.current &&
+      mouseOverIndex.current !== activeIndex
+    ) {
       virtuosoRef.current.scrollIntoView({
         index: activeIndex,
         behavior: "auto",
@@ -76,6 +82,7 @@ export function ComboboxMenu<T extends Coded>(props: Props<T>) {
                 setSelectedItem(item);
               }}
               onPointerOver={() => {
+                mouseOverIndex.current = index;
                 setActiveIndex(index);
               }}
               ref={(node) => {
@@ -85,7 +92,7 @@ export function ComboboxMenu<T extends Coded>(props: Props<T>) {
               }}
               tabIndex={active ? 0 : -1}
             >
-              {selectedItems.includes(item.code) && (
+              {selectedItems.find((s) => s?.code === item.code) && (
                 <CheckIcon className={css["menu-item-check"]} />
               )}
               {renderItem(item)}

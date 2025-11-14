@@ -71,19 +71,17 @@ export type Props<T extends Coded> = {
   locale: string;
   limit?: number;
   omitItemPadding?: boolean;
-  onValueChange?: (value: string[]) => void;
+  onValueChange?: (value: T[]) => void;
   onEscapeBlur?: () => void;
   placeholder?: string;
   readonly?: boolean;
   renderItem?: (item: T) => React.ReactNode;
   renderResult?: (item: T) => React.ReactNode;
   showLabel?: boolean;
-  selectedItems: string[];
+  selectedItems: (T | undefined)[];
 };
 
 // TODO: the logic here is very messy, extract to a reducer when adding group support.
-// TODO: there is a nasty edge case here where the combobox has a selected item which
-// is not in present in the items list. In this case, the item will not be shown.
 export function Combobox<T extends Coded>(props: Props<T>) {
   const {
     autoFocus,
@@ -143,11 +141,12 @@ export function Combobox<T extends Coded>(props: Props<T>) {
 
   const setSelectedItem = useCallback(
     (item: T) => {
-      const next = [...selectedItems];
-      const idx = selectedItems.indexOf(item.code);
+      const next = [...selectedItems] as T[];
+
+      const idx = next.findIndex((s) => s.code === item.code);
 
       if (idx === -1) {
-        next.push(item.code);
+        next.push(item);
       } else {
         next.splice(idx, 1);
       }
@@ -171,10 +170,12 @@ export function Combobox<T extends Coded>(props: Props<T>) {
   );
 
   const removeSelectedItem = useCallback(
-    (item: T) => {
-      setSelectedItem(item);
+    (index: number) => {
+      const next = [...selectedItems] as T[];
+      next.splice(index, 1);
+      onValueChange?.(next);
     },
-    [setSelectedItem],
+    [selectedItems, onValueChange],
   );
 
   useEffect(() => {
@@ -303,7 +304,7 @@ export function Combobox<T extends Coded>(props: Props<T>) {
       )}
       {!isEmpty(selectedItems) && (
         <ComboboxResults
-          items={items.filter((x) => selectedItems.includes(x.code))}
+          items={selectedItems}
           onRemove={readonly ? undefined : removeSelectedItem}
           renderResult={renderResult}
         />

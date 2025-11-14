@@ -39,7 +39,10 @@ function getPackIcon(code?: string) {
     case "return":
       return "core";
 
-    case "plh":
+    case "core_2026":
+      return "core_2026";
+
+    case "enc":
     case "hfa":
     case "otr":
     case "ptr":

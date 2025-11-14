@@ -15,6 +15,7 @@
 
 .attachment-content {
   display: inline-flex;
+  align-items: center;
   gap: 0.0625rem;
   min-height: 1.125rem;
   font-size: var(--text-xs);

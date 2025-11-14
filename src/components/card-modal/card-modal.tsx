@@ -9,13 +9,12 @@ import {
   getRelatedCardQuantity,
   getRelatedCards,
 } from "@/store/lib/resolve-card";
-import { selectCardWithRelations } from "@/store/selectors/card-view";
-import type { CardModalConfig } from "@/store/slices/ui.types";
 import {
-  getCanonicalCardCode,
-  isSpecialist,
-  isStaticInvestigator,
-} from "@/utils/card-utils";
+  selectCardWithRelations,
+  selectShowFanMadeRelations,
+} from "@/store/selectors/card-view";
+import type { CardModalConfig } from "@/store/slices/ui.types";
+import { isSpecialist, isStaticInvestigator } from "@/utils/card-utils";
 import { cx } from "@/utils/cx";
 import { formatRelationTitle } from "@/utils/formatting";
 import { isEmpty } from "@/utils/is-empty";
@@ -75,6 +74,7 @@ export function CardModal(props: Props) {
   );
 
   const settings = useStore((state) => state.settings);
+  const showFanMadeRelations = useStore(selectShowFanMadeRelations);
 
   const openCardModal = useStore((state) => state.openCardModal);
   const listOrder = useStore((state) => state.ui.cardModal.config?.listOrder);
@@ -95,7 +95,7 @@ export function CardModal(props: Props) {
   const showQuantities =
     !!ctx.resolvedDeck && cardWithRelations?.card.type_code !== "investigator";
   const showExtraQuantities = ctx.resolvedDeck?.hasExtraDeck;
-  const related = getRelatedCards(cardWithRelations);
+  const related = getRelatedCards(cardWithRelations, showFanMadeRelations);
 
   const attachableDefinition = ctx.resolvedDeck?.availableAttachments.find(
     (config) => config.code === cardWithRelations.card.code,
@@ -189,18 +189,19 @@ export function CardModal(props: Props) {
           <SpecialistInvestigators card={cardWithRelations.card} />
         </div>
       )}
-      {!ctx.resolvedDeck && settings.showCardModalPopularDecks && (
-        <div className={css["related"]}>
-          <PopularDecks scope={cardWithRelations.card} />
-        </div>
-      )}
+      {!cardWithRelations.card.preview &&
+        !ctx.resolvedDeck &&
+        settings.showCardModalPopularDecks && (
+          <div className={css["related"]}>
+            <PopularDecks scope={cardWithRelations.card} />
+          </div>
+        )}
     </>
   );
 
-  const canonicalCode = getCanonicalCardCode(cardWithRelations.card);
-
   const traits = cardWithRelations.card.real_traits;
-  const deckQuantity = ctx.resolvedDeck?.slots[canonicalCode] ?? 0;
+  const deckQuantity =
+    ctx.resolvedDeck?.slots[cardWithRelations.card.code] ?? 0;
 
   return (
     <Modal key={cardWithRelations.card.code} data-testid="card-modal">
@@ -213,8 +214,8 @@ export function CardModal(props: Props) {
                 asChild
                 href={
                   cardWithRelations.card.parallel
-                    ? `/deck/create/${canonicalCode}?initial_investigator=${cardWithRelations.card.code}`
-                    : `/deck/create/${canonicalCode}`
+                    ? `/deck/create/${cardWithRelations.card.alternate_of_code}?initial_investigator=${cardWithRelations.card.code}`
+                    : `/deck/create/${cardWithRelations.card.code}`
                 }
                 onClick={onCloseModal}
               >

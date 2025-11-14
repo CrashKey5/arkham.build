@@ -46,7 +46,6 @@ class ArkhamDBAdapter implements SyncAdapter<ArkhamDBDeckPayload> {
     const deck = DeckSchema.parse(_deck);
     applyHiddenSlots(deck);
 
-    state.cacheFanMadeContent([deck]);
     state = this.stateGetter();
 
     const lookupTables = selectLookupTables(state);

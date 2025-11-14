@@ -1,5 +1,4 @@
 import { ChevronsLeftIcon, ChevronsRightIcon } from "lucide-react";
-import { Redirect } from "wouter";
 import { PopularDecks } from "@/components/arkhamdb-decklists/popular-decks";
 import { Card } from "@/components/card/card";
 import {
@@ -15,9 +14,10 @@ import { getRelatedCards } from "@/store/lib/resolve-card";
 import { sortByPosition } from "@/store/lib/sorting";
 import type { CardWithRelations } from "@/store/lib/types";
 import type { Card as CardType } from "@/store/schemas/card.schema";
+import { selectShowFanMadeRelations } from "@/store/selectors/card-view";
 import { selectCyclesAndPacks } from "@/store/selectors/lists";
 import { selectLookupTables, selectMetadata } from "@/store/selectors/shared";
-import { displayAttribute, isSpecialist } from "@/utils/card-utils";
+import { displayAttribute, isSpecialist, official } from "@/utils/card-utils";
 import { displayPackName, formatRelationTitle } from "@/utils/formatting";
 import { isEmpty } from "@/utils/is-empty";
 import css from "./card-view.module.css";
@@ -135,16 +135,8 @@ export function CardViewCards({
 }: {
   cardWithRelations: CardWithRelations;
 }) {
-  const canonicalCode =
-    cardWithRelations.card.duplicate_of_code ??
-    cardWithRelations.card.alternate_of_code;
-
-  if (canonicalCode && !cardWithRelations.card.parallel) {
-    const href = `/card/${canonicalCode}`;
-    return <Redirect replace to={href} />;
-  }
-
-  const related = getRelatedCards(cardWithRelations);
+  const showFanMadeRelations = useStore(selectShowFanMadeRelations);
+  const related = getRelatedCards(cardWithRelations, showFanMadeRelations);
 
   return (
     <>
@@ -157,7 +149,9 @@ export function CardViewCards({
         </Card>
       </div>
 
-      <PopularDecks scope={cardWithRelations.card} />
+      {official(cardWithRelations.card) && !cardWithRelations.card.preview && (
+        <PopularDecks scope={cardWithRelations.card} />
+      )}
 
       {!isEmpty(related) &&
         related.map(([key, value]) => (

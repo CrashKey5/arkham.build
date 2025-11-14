@@ -336,6 +336,10 @@
   width: 1em;
 }
 
+.text blockquote {
+  border-left-style: double;
+}
+
 .flavor {
   font-size: var(--card-text-size-sm);
   max-width: 60ch;

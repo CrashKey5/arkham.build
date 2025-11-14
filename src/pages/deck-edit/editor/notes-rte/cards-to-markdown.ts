@@ -341,10 +341,16 @@ function renderSubname(
     const seenLevels = new Set<number | undefined | null>();
 
     const versions = Object.keys(lookupTables.relations.level[card.code] ?? {});
-    for (const code of versions) {
-      const versionLevel = cardLevel(metadata.cards[code]);
 
-      if (seenLevels.has(versionLevel)) {
+    for (const code of versions) {
+      const version = metadata.cards[code];
+      const versionLevel = cardLevel(version);
+
+      if (
+        seenLevels.has(versionLevel) &&
+        displayAttribute(card, "subname") !==
+          displayAttribute(version, "subname")
+      ) {
         needsDisambiguation = true;
         break;
       }

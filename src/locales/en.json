@@ -74,6 +74,7 @@
       "scan": "Scan of {{code}}",
       "section_actions": "Actions",
       "section_deckbuilding": "Deckbuilding",
+      "section_printings": "Printings",
       "section_faq": "FAQ",
       "thumbnail": "Thumbnail of {{code}}"
     },
@@ -871,6 +872,8 @@
           "campaign_playalong": "Campaign Play-Along",
           "campaign_playalong_help": "The Campaign Play-Along is an ongoing event hosted on the Mythos Busters discord server. It is designed to play Arkham campaigns together, share stories and generally create a sense of community.",
           "choose_cycle_placeholder": "Select cycles...",
+          "collection": "Collection",
+          "collection_help": "Set your current <settings_link>collection</settings_link> as this deck's card pool. This can be useful to freeze the deck's card pool, or to share a \"build preset\" with people sharing a physical collection.",
           "configure_environment": "Configure environment",
           "current": "Current",
           "current_help": "When deckbuilding in the Current Environment, players may only deckbuild with core cards, the five starter decks and the three most recent investigator expansions.",
@@ -1360,6 +1363,9 @@
     "rules": {
       "title": "Rules reference"
     },
+    "search": {
+      "title": "Search results"
+    },
     "settings": {
       "backup": {
         "confirm": "Are you sure you want to restore this backup? Any existing data will be overwritten.",
@@ -1500,6 +1506,9 @@
         "collapse": "Close section",
         "expand": "Expand section",
         "toggle": "Toggle section"
+      },
+      "combobox": {
+        "unknown_option": "Unknown option"
       },
       "copy_to_clipboard": "Copy to clipboard",
       "copy_to_clipboard_success": "Copied.",

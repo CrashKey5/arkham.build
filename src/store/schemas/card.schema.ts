@@ -301,6 +301,7 @@ const AdditionalAttributes = {
   back_thumbnail_url: z.url().nullish(),
   card_pool_extension: CardPoolExtensionSchema.optional(),
   image_url: z.url().nullish(),
+  reprint_of: z.string().nullish(),
   thumbnail_url: z.url().nullish(),
 };
 

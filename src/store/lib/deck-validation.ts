@@ -222,6 +222,7 @@ function validateInvestigator(deck: ResolvedDeck) {
       valid = !!deck.metaParsed.deck_size_selected;
     } else if (option.faction_select) {
       valid =
+        !!(option.id && deck.metaParsed[option.id as keyof DeckMeta]) ||
         !!deck.metaParsed.faction_selected ||
         (!!deck.metaParsed.faction_1 && !!deck.metaParsed.faction_2);
     } else if (option.option_select) {
@@ -337,7 +338,7 @@ function validateSlots(
 ): Error[] {
   const validators: SlotValidator[] = [
     new DeckLimitsValidator(deck),
-    new DeckRequiredCardsValidator(deck, mode),
+    new DeckRequiredCardsValidator(deck, lookupTables, mode),
     new DeckOptionsValidator(deck, lookupTables, mode),
   ];
 
@@ -454,16 +455,22 @@ class DeckLimitsValidator implements SlotValidator {
 }
 
 class DeckRequiredCardsValidator implements SlotValidator {
-  requirements: ApiDeckRequirements;
   cards: Record<string, Card> = {};
   investigatorFront: Card;
+  lookupTables: LookupTables;
   quantities: Record<string, number> = {};
+  requirements: ApiDeckRequirements;
   selectedDeckSize: number | undefined;
 
-  constructor(deck: ResolvedDeck, mode: "slots" | "extraSlots" = "slots") {
+  constructor(
+    deck: ResolvedDeck,
+    lookupTables: LookupTables,
+    mode: "slots" | "extraSlots" = "slots",
+  ) {
     const investigatorBack = deck.investigatorBack.card;
-
     this.investigatorFront = deck.investigatorFront.card;
+
+    this.lookupTables = lookupTables;
 
     const accessor =
       mode === "slots" ? "deck_requirements" : "side_deck_requirements";
@@ -509,10 +516,19 @@ class DeckRequiredCardsValidator implements SlotValidator {
     const cards = Object.values(this.cards);
     for (let i = 0; i < cards.length; i += 1) {
       const card = cards[i];
-      const quantity = this.quantities[card.code];
 
-      const matches = Object.entries(this.requirements.card ?? {}).filter(
-        (r) => !!r[1][card.code],
+      const allCardVersions = [
+        card.code,
+        ...Object.keys(this.lookupTables.relations.duplicates[card.code] ?? {}),
+      ];
+
+      const quantity = allCardVersions.reduce(
+        (acc, curr) => acc + (this.quantities[curr] ?? 0),
+        0,
+      );
+
+      const matches = Object.entries(this.requirements.card ?? {}).filter((r) =>
+        allCardVersions.some((code) => !!r[1][code]),
       );
 
       for (const match of matches) {
@@ -727,7 +743,7 @@ class DeckOptionsValidator implements SlotValidator {
       this.forbidden.push(card);
     } else if ((cardLevel(card) ?? 0) > 5) {
       this.forbidden.push(card);
-    } else if (card.real_text?.startsWith("Mutated. Forbidden.")) {
+    } else if (this.isForbiddenByTrait(card)) {
       this.forbidden.push(card);
       // campaign and investigator cards should not be validated against deck options.
     } else if (card.xp == null) {
@@ -737,6 +753,10 @@ class DeckOptionsValidator implements SlotValidator {
       this.cards.push(card);
       this.quantities[card.code] = quantity;
     }
+  }
+
+  isForbiddenByTrait(card: Card) {
+    return card.real_text?.includes("Forbidden.");
   }
 
   validate() {

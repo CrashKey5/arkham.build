@@ -11,12 +11,29 @@ import { makeSortFunction } from "../lib/sorting";
 import type { ResolvedDeck } from "../lib/types";
 import type { Card } from "../schemas/card.schema";
 import type { StoreState } from "../slices";
-import { selectCanonicalTabooSetId } from "./lists";
+import { selectActiveList, selectCanonicalTabooSetId } from "./lists";
 import {
   selectLocaleSortingCollator,
   selectLookupTables,
   selectMetadata,
 } from "./shared";
+
+export const selectShowFanMadeRelations = createSelector(
+  selectActiveList,
+  (state: StoreState) => state.settings.cardListsDefaultContentType,
+  (activeList, defaultContentType) => {
+    if (activeList) {
+      const { filters, filterValues } = activeList;
+
+      const idx = filters.findIndex((key) => key === "fan_made_content");
+      const filterValue = idx !== -1 ? filterValues[idx] : undefined;
+
+      if (filterValue != null) return filterValue.value !== "official";
+    }
+
+    return defaultContentType !== "official";
+  },
+);
 
 export const selectCardWithRelations = createSelector(
   selectMetadata,

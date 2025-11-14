@@ -47,7 +47,7 @@ export function assertCanPublishDeck(deck: ResolvedDeck) {
     ...deck.cards.ignoreDeckLimitSlots,
     investigatorBack: deck.investigatorBack,
     investigatorFront: deck.investigatorFront,
-  }).filter((c) => c.card.preview);
+  }).filter((c) => c.card.preview || c.card.pack_code === "enc");
 
   if (previews.length) {
     throw new UnsupportedPublishError(previews);

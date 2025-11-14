@@ -173,7 +173,91 @@ test.describe("fan-made content", () => {
       .getByTestId("collection-project-title");
 
     expect(await collectionItems.all()).toHaveLength(1);
-    expect(collectionItems).toHaveText("Dark Matter");
+    await expect(collectionItems).toHaveText("Dark Matter");
+  });
+
+  test("fan-made cards are shown in card relations", async ({ page }) => {
+    await page.goto(
+      "/install-fan-made-content?id=530aa058-2450-4ef6-acad-1c99a0e89a8c",
+    );
+
+    await page.getByTestId("quick-install").click();
+
+    const collectionItems = page
+      .getByTestId("collection")
+      .getByTestId("collection-project-title");
+
+    expect(await collectionItems.all()).toHaveLength(1);
+    await expect(collectionItems).toHaveText(
+      "Forget Me Not Investigator Expansion",
+    );
+    await page.getByTestId("masthead-logo").click();
+    await fillSearch(page, "Snipe");
+    await expect(
+      page.getByTestId("listcard-cd00bc7f-398e-4f3b-885f-1048cd840086"),
+    ).toBeVisible();
+    await page
+      .getByTestId("listcard-4342f012-9ead-4009-9cb5-76bdda711521")
+      .click();
+    await page.getByTestId("listcard-08087").click();
+
+    await page
+      .getByTestId("listcard-08087")
+      .getByTestId("listcard-title")
+      .click();
+    await expect(
+      page
+        .getByTestId("cardset-level")
+        .getByTestId("listcard-cd00bc7f-398e-4f3b-885f-1048cd840086"),
+    ).toBeVisible();
+    await page
+      .getByTestId("cardset-level")
+      .getByTestId("listcard-4342f012-9ead-4009-9cb5-76bdda711521")
+      .click();
+    await page
+      .getByTestId("cardset-level")
+      .getByTestId("listcard-cd00bc7f-398e-4f3b-885f-1048cd840086")
+      .getByTestId("listcard-title")
+      .click();
+    await expect(
+      page.getByTestId("cardset-level").getByTestId("listcard-08087"),
+    ).toBeVisible();
+  });
+
+  test("fan-made cards are not shown in card relations when setting is off", async ({
+    page,
+  }) => {
+    await page.goto(
+      "/install-fan-made-content?id=530aa058-2450-4ef6-acad-1c99a0e89a8c",
+    );
+
+    await page.getByTestId("quick-install").click();
+
+    const collectionItems = page
+      .getByTestId("collection")
+      .getByTestId("collection-project-title");
+
+    expect(await collectionItems.all()).toHaveLength(1);
+    await expect(collectionItems).toHaveText(
+      "Forget Me Not Investigator Expansion",
+    );
+
+    await page.getByLabel("Card lists").selectOption("official");
+    await page.getByTestId("settings-save").click();
+    await page.getByTestId("masthead-logo").click();
+    await page.getByTestId("search-input").click();
+    await page.getByTestId("search-input").fill("Snipe");
+    await expect(page.getByTestId("listcard-08087")).toBeVisible();
+    await fillSearch(page, "Snipe");
+    await expect(
+      page.getByTestId("listcard-cd00bc7f-398e-4f3b-885f-1048cd840086"),
+    ).not.toBeVisible();
+    await page.getByTestId("listcard-title").click();
+    await expect(
+      page
+        .getByTestId("cardset-level")
+        .getByTestId("listcard-cd00bc7f-398e-4f3b-885f-1048cd840086"),
+    ).not.toBeVisible();
   });
 });
 

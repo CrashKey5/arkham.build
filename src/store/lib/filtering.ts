@@ -2,6 +2,7 @@ import {
   cardLevel,
   cardUses,
   isSpecialist,
+  official,
   splitMultiValue,
 } from "@/utils/card-utils";
 import type { SkillKey } from "@/utils/constants";
@@ -13,7 +14,6 @@ import {
   TAG_REGEX_FALLBACKS,
 } from "@/utils/constants";
 import { resolveLimitedPoolPacks } from "@/utils/environments";
-import { capitalize } from "@/utils/formatting";
 import type { Filter } from "@/utils/fp";
 import { and, not, notUnless, or } from "@/utils/fp";
 import { isEmpty } from "@/utils/is-empty";
@@ -69,7 +69,7 @@ export function filterPreviews(card: Card) {
 }
 
 export function filterOfficial(card: Card) {
-  return !!card.official;
+  return official(card);
 }
 
 /**
@@ -775,23 +775,40 @@ export function filterTraits(
 
   for (const key of filterState) {
     filters.push((card: Card) => {
-      const hasTrait = !!card.real_traits?.includes(key);
+      const matches = matchesTrait(card, key);
 
       if (
-        hasTrait ||
+        matches ||
         !card.customization_options ||
         !includeUnselectedCustomizationTraits
       ) {
-        return hasTrait;
+        return matches;
       }
 
-      return !!card.customization_options?.some((o) =>
-        o.real_traits?.includes(key),
-      );
+      return !!card.customization_options?.some((o) => matchesTrait(o, key));
     });
   }
 
   return or(filters);
+}
+
+function lower(s: string[]) {
+  return s.map((t) => t.toLowerCase());
+}
+
+function matchesTrait(
+  card: { real_traits?: string | null; traits?: string | null },
+  trait: string,
+) {
+  const baseTraits = lower(splitMultiValue(card.real_traits));
+  const lowerTrait = trait.toLowerCase();
+
+  const matches = baseTraits.includes(lowerTrait);
+  if (matches || card.real_traits === card.traits) {
+    return matches;
+  }
+
+  return lower(splitMultiValue(card.traits)).includes(lowerTrait);
 }
 
 /**
@@ -947,11 +964,7 @@ function parseOption(option: DeckOption, config?: InvestigatorAccessConfig) {
     filterCount += 1;
 
     optionFilter.push(
-      filterTraits(
-        // traits are stored lowercased for whatever reason.
-        option.trait.map(capitalize),
-        config?.customizable?.properties === "all",
-      ),
+      filterTraits(option.trait, config?.customizable?.properties === "all"),
     );
   }
 

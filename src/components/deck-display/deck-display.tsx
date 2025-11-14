@@ -17,7 +17,6 @@ import type { ResolvedDeck } from "@/store/lib/types";
 import type { History } from "@/store/selectors/decks";
 import { selectConnectionLockForDeck } from "@/store/selectors/shared";
 import { cx } from "@/utils/cx";
-import { isEmpty } from "@/utils/is-empty";
 import { useAccentColor } from "@/utils/use-accent-color";
 import DeckDescription from "../deck-description";
 import {
@@ -84,7 +83,7 @@ export function DeckDisplay(props: DeckDisplayProps) {
 
   const { t } = useTranslation();
   const cssVariables = useAccentColor(deck.investigatorBack.card);
-  const hasHistory = !isEmpty(history);
+  const hasHistory = history && history?.length > 1;
 
   const onTabChange = useCallback(
     (val: string) => {

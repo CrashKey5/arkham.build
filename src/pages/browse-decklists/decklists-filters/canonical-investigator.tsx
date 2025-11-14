@@ -13,6 +13,7 @@ import {
   selectLookupTables,
   selectMetadata,
 } from "@/store/selectors/shared";
+import { official } from "@/utils/card-utils";
 import { and } from "@/utils/fp";
 import css from "../browser-decklists.module.css";
 import type { DecklistFilterProps } from "./shared";
@@ -24,7 +25,7 @@ const selectInvestigatorCards = createSelector(
     const investigatorFilter = and([
       filterType(["investigator"]),
       (c) => !!c.deck_options,
-      (c) => c.official !== false,
+      (c) => official(c),
       (c) => filterDuplicates(c) || !!c.parallel,
     ]);
 
@@ -103,11 +104,13 @@ export function CanonicalInvestigator({
           const card = cards[0];
           setFormState((prev) => ({
             ...prev,
-            canonicalInvestigatorCode: card ? `${card}-${card}` : undefined,
+            canonicalInvestigatorCode: card
+              ? `${card.code}-${card.code}`
+              : undefined,
           }));
         }}
         selectedItems={
-          resolvedCanonicalCard ? [resolvedCanonicalCard.card.code] : []
+          resolvedCanonicalCard ? [resolvedCanonicalCard.card] : []
         }
         showLabel
       />
