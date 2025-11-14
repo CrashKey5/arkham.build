@@ -288,3 +288,12 @@ export function numericalStr(num: string | number | null | undefined) {
 export function official(card: Card | Pack | Cycle) {
   return card.official !== false;
 }
+
+export function cardUrl(card: Card) {
+  return `~/card/${card.code}`;
+}
+
+export function oldFormatCardUrl(card: Card) {
+  const baseUrl = cardUrl(card);
+  return `${baseUrl}?old_format=true`;
+}

@@ -1,4 +1,6 @@
 import { ChevronsLeftIcon, ChevronsRightIcon } from "lucide-react";
+import { useMemo } from "react";
+import { Link, useSearchParams } from "wouter";
 import { PopularDecks } from "@/components/arkhamdb-decklists/popular-decks";
 import { Card } from "@/components/card/card";
 import {
@@ -9,16 +11,23 @@ import { CustomizationsEditor } from "@/components/customizations/customizations
 import PackIcon from "@/components/icons/pack-icon";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/store";
-import { filterBacksides, filterPackCode } from "@/store/lib/filtering";
+import { filterBacksides } from "@/store/lib/filtering";
 import { getRelatedCards } from "@/store/lib/resolve-card";
 import { sortByPosition } from "@/store/lib/sorting";
 import type { CardWithRelations } from "@/store/lib/types";
 import type { Card as CardType } from "@/store/schemas/card.schema";
+import type { Pack } from "@/store/schemas/pack.schema";
 import { selectShowFanMadeRelations } from "@/store/selectors/card-view";
-import { selectCyclesAndPacks } from "@/store/selectors/lists";
 import { selectLookupTables, selectMetadata } from "@/store/selectors/shared";
-import { displayAttribute, isSpecialist, official } from "@/utils/card-utils";
+import {
+  cardUrl,
+  displayAttribute,
+  isSpecialist,
+  official,
+  oldFormatCardUrl,
+} from "@/utils/card-utils";
 import { displayPackName, formatRelationTitle } from "@/utils/formatting";
+import { and } from "@/utils/fp";
 import { isEmpty } from "@/utils/is-empty";
 import css from "./card-view.module.css";
 
@@ -45,33 +54,78 @@ function CardSetNav(props: { currentCard: CardWithRelations }) {
   const metadata = useStore(selectMetadata);
   const lookupTables = useStore(selectLookupTables);
 
-  const allCards = Object.values(metadata.cards);
+  const [search] = useSearchParams();
+  const oldFormat = search.get("old_format") === "true";
 
-  let searchCode = currentCard.card.pack_code;
+  const targetPack = useMemo(() => {
+    const currentCardPackCode = currentCard.card.pack_code;
 
-  const cyclesWithPacks = useStore(selectCyclesAndPacks);
-  const currentCycle = cyclesWithPacks.find(
-    (pack) =>
-      pack.code === metadata.packs[currentCard.card.pack_code].cycle_code,
-  );
+    const currentPack = metadata.packs[currentCardPackCode];
+    let targetPack = currentPack;
 
-  if (currentCycle?.reprintPacks) {
-    const targetType = currentCard.card.encounter_code ? "encounter" : "player";
-    const reprint = currentCycle.reprintPacks.find(
-      (pack) => pack.reprint?.type === targetType,
-    );
+    if (!oldFormat) {
+      const reprintPackCodes =
+        lookupTables.reprintPacksByPack[currentCardPackCode];
 
-    if (reprint) {
-      searchCode = reprint.code;
+      if (reprintPackCodes) {
+        const targetType = currentCard.card.encounter_code
+          ? "encounter"
+          : "player";
+
+        const reprint = Object.keys(reprintPackCodes).reduce(
+          (acc, curr) => {
+            const pack = metadata.packs[curr];
+            return pack.reprint?.type === targetType ? pack : acc;
+          },
+          undefined as Pack | undefined,
+        );
+
+        if (reprint) {
+          targetPack = reprint;
+        }
+      }
     }
-  }
 
-  const filteredCards = allCards.filter(
-    (card) =>
-      filterPackCode([searchCode], metadata, lookupTables)?.(card) &&
-      filterBacksides(card),
+    return targetPack;
+  }, [
+    currentCard.card.encounter_code,
+    currentCard.card.pack_code,
+    lookupTables.reprintPacksByPack,
+    metadata.packs,
+    oldFormat,
+  ]);
+
+  const filteredCards = useMemo(
+    () =>
+      Object.values(metadata.cards)
+        .filter(
+          and([
+            filterBacksides,
+            (card) => {
+              if (targetPack.reprint && targetPack.reprint?.type !== "rcore") {
+                const cardPack = metadata.packs[card.pack_code];
+
+                const cycleMatches =
+                  cardPack.cycle_code === targetPack.cycle_code;
+
+                const reprintTypeMatches =
+                  !!card.encounter_code === !!currentCard.card.encounter_code;
+
+                return cycleMatches && reprintTypeMatches;
+              }
+
+              return card.pack_code === targetPack.code;
+            },
+          ]),
+        )
+        .sort(sortByPosition),
+    [
+      currentCard.card.encounter_code,
+      metadata.cards,
+      metadata.packs,
+      targetPack,
+    ],
   );
-  filteredCards.sort(sortByPosition);
 
   const cardListIndex = filteredCards.findIndex(
     (card) => card.code === currentCard.card.code,
@@ -81,24 +135,25 @@ function CardSetNav(props: { currentCard: CardWithRelations }) {
     <div>
       <div className={css["card-set-nav-title"]}>
         <h3>
-          {<PackIcon code={metadata.packs[searchCode].code} />}
-          {displayPackName(metadata.packs[searchCode])}
-          {<PackIcon code={metadata.packs[searchCode].code} />}
+          {<PackIcon code={targetPack.code} />}
+          {displayPackName(targetPack)}
         </h3>
       </div>
       <div className={css["card-set-nav-container"]}>
-        <div>
+        <div className={css["card-set-button"]}>
           <CardSetLink
             shift={-1}
             cardListIndex={cardListIndex}
             filteredCards={filteredCards}
+            oldFormat={oldFormat}
           />
         </div>
-        <div>
+        <div className={css["card-set-button"]}>
           <CardSetLink
             shift={1}
             cardListIndex={cardListIndex}
             filteredCards={filteredCards}
+            oldFormat={oldFormat}
           />
         </div>
       </div>
@@ -107,25 +162,26 @@ function CardSetNav(props: { currentCard: CardWithRelations }) {
 }
 
 function CardSetLink(props: {
-  shift: number;
   cardListIndex: number;
   filteredCards: CardType[];
+  oldFormat: boolean;
+  shift: number;
 }) {
-  const { shift, cardListIndex, filteredCards } = props;
+  const { shift, cardListIndex, filteredCards, oldFormat } = props;
 
-  const targetIndex = cardListIndex + shift;
+  const targetCard = filteredCards[cardListIndex + shift];
 
-  if (filteredCards[targetIndex] != null) {
+  if (targetCard) {
+    const url = oldFormat ? oldFormatCardUrl(targetCard) : cardUrl(targetCard);
+
     return (
-      <Button
-        as="a"
-        className={css["button"]}
-        href={`/card/${filteredCards[targetIndex].code}`}
-      >
-        {shift < 0 && <ChevronsLeftIcon />}
-        {displayAttribute(filteredCards[targetIndex], "name")}
-        {shift > 0 && <ChevronsRightIcon />}
-      </Button>
+      <Link to={url} asChild>
+        <Button as="a" size="full">
+          {shift < 0 && <ChevronsLeftIcon />}
+          {displayAttribute(targetCard, "name")}
+          {shift > 0 && <ChevronsRightIcon />}
+        </Button>
+      </Link>
     );
   }
 }

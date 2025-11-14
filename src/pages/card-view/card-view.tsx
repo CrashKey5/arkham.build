@@ -1,7 +1,7 @@
 import { FloatingPortal } from "@floating-ui/react";
 import { GlobeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link, useParams } from "wouter";
+import { Link, useParams, useSearchParams } from "wouter";
 import {
   CardArkhamDBLink,
   CardReviewsLink,
@@ -19,9 +19,15 @@ import type { CardWithRelations } from "@/store/lib/types";
 import { selectCardWithRelations } from "@/store/selectors/card-view";
 import {
   type Printing as PrintingT,
+  selectLookupTables,
   selectPrintingsForCard,
 } from "@/store/selectors/shared";
-import { displayAttribute, isStaticInvestigator } from "@/utils/card-utils";
+import {
+  cardUrl,
+  displayAttribute,
+  isStaticInvestigator,
+  oldFormatCardUrl,
+} from "@/utils/card-utils";
 import { FLOATING_PORTAL_ID } from "@/utils/constants";
 import { cx } from "@/utils/cx";
 import { useDocumentTitle } from "@/utils/use-document-title";
@@ -169,28 +175,57 @@ function Printings(props: { code: string }) {
     selectPrintingsForCard(state, props.code),
   );
 
+  const [search] = useSearchParams();
+  const oldFormat = search.get("old_format") === "true";
+
+  const lookupTables = useStore(selectLookupTables);
+
   return (
     <ul className={css["printings"]}>
-      {printings.map((printing) => (
-        <li key={`${printing.pack.code}-${printing.card.code}`}>
-          <ListPrinting printing={printing} />
-        </li>
-      ))}
+      {printings.map((printing) => {
+        const reprintPackCode =
+          lookupTables.reprintPacksByPack[printing.pack.code];
+
+        return (
+          <li key={`${printing.pack.code}-${printing.card.code}`}>
+            <ListPrinting
+              active={
+                printing.card.code === props.code &&
+                oldFormat === !printing.pack.reprint
+              }
+              printing={printing}
+              oldFormat={!!reprintPackCode}
+            />
+          </li>
+        );
+      })}
     </ul>
   );
 }
 
-function ListPrinting({ printing }: { printing: PrintingT }) {
+function ListPrinting({
+  active,
+  oldFormat,
+  printing,
+}: {
+  active?: boolean;
+  oldFormat?: boolean;
+  printing: PrintingT;
+}) {
   const { refs, referenceProps, isMounted, floatingStyles, transitionStyles } =
     useRestingTooltip();
+
+  const url = oldFormat
+    ? oldFormatCardUrl(printing.card)
+    : cardUrl(printing.card);
 
   return (
     <>
       <Link
-        className={css["printings-item"]}
         {...referenceProps}
+        className={cx(css["printings-item"], active && css["active"])}
         ref={refs.setReference}
-        to={`~/card/${printing.card.code}`}
+        to={url}
       >
         <Printing printing={printing} />
       </Link>

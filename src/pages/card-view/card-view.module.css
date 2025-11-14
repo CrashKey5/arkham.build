@@ -4,7 +4,7 @@
   gap: 1rem;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto auto auto;
-  grid-template-areas: "header" "sidebar" "main" "footer";
+  grid-template-areas: "header" "main" "sidebar" "footer";
   margin-inline: auto;
   max-width: var(--layout-max-width);
   padding-inline: var(--layout-padding);
@@ -77,19 +77,31 @@
 
 .card-set-nav-container {
   display: flex;
+  flex-flow: row wrap;
   justify-content: space-between;
+  gap: 0.375rem;
 }
 
 .card-set-nav-container :last-child {
   text-align: right;
 }
 
+.card-set-nav-title {
+  margin-bottom: 0.375rem;
+}
+
 .card-set-nav-title h3 {
   text-align: center;
+  line-height: 1;
 }
 
 .card-set-nav-title h3 * {
-  margin: 1em;
+  margin: 0.5rem;
+}
+
+.card-set-button {
+  width: fit-content;
+  min-width: 20ch;
 }
 
 .printings {
@@ -112,6 +124,10 @@
   padding: 0.375rem 0.5rem;
   border-top-width: 0;
   border-bottom-width: 0;
+
+  &.active {
+    background-color: var(--palette-2);
+  }
 }
 
 .printings > * + * .printings-item {
@@ -129,8 +145,8 @@
   border-radius: 0 0 var(--rounded) var(--rounded);
 }
 
-a.printings-item:hover,
-a.printings-item:focus-visible {
+a.printings-item:not(.active):hover,
+a.printings-item:not(.active):focus-visible {
   background-color: var(--palette-1);
 }
 
