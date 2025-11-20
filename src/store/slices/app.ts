@@ -208,7 +208,7 @@ export const createAppSlice: StateCreator<StoreState, [], [], AppSlice> = (
             Object.values(merged.data.decks),
           ),
         },
-        lists: keepListState ? merged.lists : makeLists(merged.settings),
+        lists: merged.lists,
       };
     });
 
