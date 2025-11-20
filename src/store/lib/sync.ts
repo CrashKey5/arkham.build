@@ -29,7 +29,6 @@ type ArkhamDBDeckPayload = Omit<
   | "previous_deck"
   | "next_deck"
   | "taboo_id"
-  | "meta"
 > & {
   slots: string;
   side: string | undefined;
@@ -44,9 +43,8 @@ class ArkhamDBAdapter implements SyncAdapter<ArkhamDBDeckPayload> {
     let state = this.stateGetter();
 
     const deck = DeckSchema.parse(_deck);
-    applyHiddenSlots(deck);
+    applyHiddenSlots(deck, selectMetadata(state));
 
-    state.cacheFanMadeContent([deck]);
     state = this.stateGetter();
 
     const lookupTables = selectLookupTables(state);
@@ -76,8 +74,10 @@ class ArkhamDBAdapter implements SyncAdapter<ArkhamDBDeckPayload> {
   }
 
   out(_deck: Deck) {
+    const state = this.stateGetter();
     const deck = structuredClone(_deck);
-    extractHiddenSlots(deck);
+
+    extractHiddenSlots(deck, selectMetadata(state));
 
     const payload = deck as Record<string, unknown>;
 

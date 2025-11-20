@@ -9,6 +9,7 @@ function getInitialUIState(): DeckCollectionState {
   return {
     expandedFolders: {},
     filters: {
+      cards: [],
       faction: [],
       properties: {
         parallel: false,
@@ -20,6 +21,7 @@ function getInitialUIState(): DeckCollectionState {
       xpCost: undefined,
     },
     open: {
+      cards: false,
       properties: true,
       provider: true,
       tags: false,

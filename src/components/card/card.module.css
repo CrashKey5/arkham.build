@@ -166,7 +166,7 @@
   .image
   :where([data-component="card-scan"], [data-component="card-thumbnail"]) {
   max-width: 100%;
-  width: 16rem;
+  width: min(16rem, 100%);
   height: auto;
 }
 
@@ -175,7 +175,7 @@
   .image
   :where([data-component="card-scan"], [data-component="card-thumbnail"]) {
   max-width: 100%;
-  width: 20rem;
+  width: min(20rem, 100%);
   height: auto;
 }
 
@@ -336,6 +336,10 @@
   width: 1em;
 }
 
+.text blockquote {
+  border-left-style: double;
+}
+
 .flavor {
   font-size: var(--card-text-size-sm);
   max-width: 60ch;
@@ -364,6 +368,12 @@
 
 .meta-property strong {
   font-weight: 700;
+}
+
+.meta-divider {
+  margin: 0.25rem 0;
+  border-style: dotted;
+  border-color: var(--palette-2);
 }
 
 .details {

@@ -62,10 +62,6 @@ function About() {
             <strong>@zzorba:</strong> {t("about.hall_of_fame.zzorba")} 🙇‍♂️
           </li>
           <li>
-            <strong>@kamalisk &amp; ArkhamDB crew: </strong>{" "}
-            {t("about.hall_of_fame.arkham_db")}
-          </li>
-          <li>
             <strong>@Chr1Z</strong>, <strong>@Dangaroo</strong>,{" "}
             <strong>@5argon</strong>: {t("about.hall_of_fame.testing")}
           </li>
@@ -73,6 +69,10 @@ function About() {
             <strong>@TartanLlama</strong>, <strong>@MickeyTheQ</strong>,{" "}
             <strong>@blu</strong>, <strong>@5argon</strong>:{" "}
             {t("about.hall_of_fame.code")}
+          </li>
+          <li>
+            <strong>@kamalisk / ArkhamDB: </strong>{" "}
+            {t("about.hall_of_fame.arkham_db")}
           </li>
           <li>
             <strong>@morvael</strong>:{" "}

@@ -2,11 +2,10 @@ import { forwardRef, useCallback, useEffect } from "react";
 import { CenterLayout } from "@/layouts/center-layout";
 import { useStore } from "@/store";
 import {
-  selectActiveList,
   selectActiveListSearch,
   selectListCards,
 } from "@/store/selectors/lists";
-import { selectMetadata } from "@/store/selectors/shared";
+import { selectActiveList, selectMetadata } from "@/store/selectors/shared";
 import { useResolvedDeck } from "@/utils/use-resolved-deck";
 import { Footer } from "../footer";
 import { CardGrid } from "./card-grid";

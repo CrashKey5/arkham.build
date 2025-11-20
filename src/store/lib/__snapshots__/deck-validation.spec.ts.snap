@@ -54,6 +54,18 @@ exports[`Deck Validation > invalid: || Jenny Barnes with permanent Talents 1`] =
 ]
 `;
 
+exports[`Deck Validation > invalid: || Lola faction validation 1`] = `
+[
+  {
+    "details": {
+      "count": "(4 / 5)",
+      "error": "You must have at least 6 cards from each faction.",
+    },
+    "type": "INVALID_DECK_OPTION",
+  },
+]
+`;
+
 exports[`Deck Validation > invalid: || Roland (front) with too many Directives 1`] = `
 [
   {

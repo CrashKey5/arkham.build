@@ -1,4 +1,6 @@
-import { Redirect } from "wouter";
+import { ChevronsLeftIcon, ChevronsRightIcon } from "lucide-react";
+import { useMemo } from "react";
+import { Link, useSearchParams } from "wouter";
 import { PopularDecks } from "@/components/arkhamdb-decklists/popular-decks";
 import { Card } from "@/components/card/card";
 import {
@@ -6,10 +8,30 @@ import {
   SpecialistInvestigators,
 } from "@/components/card-modal/specialist";
 import { CustomizationsEditor } from "@/components/customizations/customizations-editor";
+import PackIcon from "@/components/icons/pack-icon";
+import { Button } from "@/components/ui/button";
+import { useStore } from "@/store";
+import { filterBacksides } from "@/store/lib/filtering";
 import { getRelatedCards } from "@/store/lib/resolve-card";
+import { sortByPosition } from "@/store/lib/sorting";
 import type { CardWithRelations } from "@/store/lib/types";
-import { isSpecialist } from "@/utils/card-utils";
-import { formatRelationTitle } from "@/utils/formatting";
+import type { Card as CardType } from "@/store/schemas/card.schema";
+import type { Pack } from "@/store/schemas/pack.schema";
+import {
+  selectLookupTables,
+  selectMetadata,
+  selectShowFanMadeRelations,
+} from "@/store/selectors/shared";
+import {
+  cardUrl,
+  displayAttribute,
+  isSpecialist,
+  official,
+  oldFormatCardUrl,
+} from "@/utils/card-utils";
+import { cx } from "@/utils/cx";
+import { displayPackName, formatRelationTitle } from "@/utils/formatting";
+import { and } from "@/utils/fp";
 import { isEmpty } from "@/utils/is-empty";
 import css from "./card-view.module.css";
 
@@ -30,24 +52,163 @@ function CardViewSection(props: Props) {
   );
 }
 
+function CardSetNav(props: { currentCard: CardWithRelations }) {
+  const { currentCard } = props;
+
+  const metadata = useStore(selectMetadata);
+  const lookupTables = useStore(selectLookupTables);
+
+  const [search] = useSearchParams();
+  const oldFormat = search.get("old_format") === "true";
+
+  const targetPack = useMemo(() => {
+    const currentCardPackCode = currentCard.card.pack_code;
+
+    const currentPack = metadata.packs[currentCardPackCode];
+    let targetPack = currentPack;
+
+    if (!oldFormat) {
+      const reprintPackCodes =
+        lookupTables.reprintPacksByPack[currentCardPackCode];
+
+      if (reprintPackCodes) {
+        const targetType = currentCard.card.encounter_code
+          ? "encounter"
+          : "player";
+
+        const reprint = Object.keys(reprintPackCodes).reduce(
+          (acc, curr) => {
+            const pack = metadata.packs[curr];
+            return pack.reprint?.type === targetType ? pack : acc;
+          },
+          undefined as Pack | undefined,
+        );
+
+        if (reprint) {
+          targetPack = reprint;
+        }
+      }
+    }
+
+    return targetPack;
+  }, [
+    currentCard.card.encounter_code,
+    currentCard.card.pack_code,
+    lookupTables.reprintPacksByPack,
+    metadata.packs,
+    oldFormat,
+  ]);
+
+  const filteredCards = useMemo(
+    () =>
+      Object.values(metadata.cards)
+        .filter(
+          and([
+            filterBacksides,
+            (card) => !card.hidden,
+            (card) => {
+              if (targetPack.reprint && targetPack.reprint?.type !== "rcore") {
+                const cardPack = metadata.packs[card.pack_code];
+
+                const cycleMatches =
+                  cardPack.cycle_code === targetPack.cycle_code;
+
+                const reprintTypeMatches =
+                  !!card.encounter_code === !!currentCard.card.encounter_code;
+
+                return cycleMatches && reprintTypeMatches;
+              }
+
+              return card.pack_code === targetPack.code;
+            },
+          ]),
+        )
+        .sort(sortByPosition),
+    [
+      currentCard.card.encounter_code,
+      metadata.cards,
+      metadata.packs,
+      targetPack,
+    ],
+  );
+
+  const cardListIndex = filteredCards.findIndex(
+    (card) => card.code === currentCard.card.code,
+  );
+
+  return (
+    <div>
+      <div className={css["card-set-nav-title"]}>
+        <h3>
+          {<PackIcon code={targetPack.code} />}
+          {displayPackName(targetPack)}
+        </h3>
+      </div>
+      <div className={css["card-set-nav-container"]}>
+        <CardSetLink
+          shift={-1}
+          cardListIndex={cardListIndex}
+          filteredCards={filteredCards}
+          oldFormat={oldFormat}
+        />
+        <CardSetLink
+          shift={1}
+          cardListIndex={cardListIndex}
+          filteredCards={filteredCards}
+          oldFormat={oldFormat}
+        />
+      </div>
+    </div>
+  );
+}
+
+function CardSetLink(props: {
+  cardListIndex: number;
+  filteredCards: CardType[];
+  oldFormat: boolean;
+  shift: number;
+}) {
+  const { shift, cardListIndex, filteredCards, oldFormat } = props;
+
+  const targetCard = filteredCards[cardListIndex + shift];
+
+  if (targetCard) {
+    const url = oldFormat ? oldFormatCardUrl(targetCard) : cardUrl(targetCard);
+
+    return (
+      <Link to={url} asChild>
+        <Button
+          className={cx(
+            css["card-set-button"],
+            shift < 0 ? css["prev"] : css["next"],
+          )}
+          as="a"
+        >
+          {shift < 0 && <ChevronsLeftIcon />}
+          {displayAttribute(targetCard, "name")}
+          {shift > 0 && <ChevronsRightIcon />}
+        </Button>
+      </Link>
+    );
+  }
+}
+
 export function CardViewCards({
   cardWithRelations,
 }: {
   cardWithRelations: CardWithRelations;
 }) {
-  const canonicalCode =
-    cardWithRelations.card.duplicate_of_code ??
-    cardWithRelations.card.alternate_of_code;
-
-  if (canonicalCode && !cardWithRelations.card.parallel) {
-    const href = `/card/${canonicalCode}`;
-    return <Redirect replace to={href} />;
-  }
-
-  const related = getRelatedCards(cardWithRelations);
+  const showFanMadeRelations = useStore(selectShowFanMadeRelations);
+  const settings = useStore((state) => state.settings);
+  const related = getRelatedCards(
+    cardWithRelations,
+    showFanMadeRelations,
+    settings.showPreviews,
+  );
 
   return (
     <>
+      <CardSetNav currentCard={cardWithRelations} />
       <div data-testid="main">
         <Card resolvedCard={cardWithRelations}>
           {cardWithRelations.card.customization_options ? (
@@ -56,7 +217,9 @@ export function CardViewCards({
         </Card>
       </div>
 
-      <PopularDecks scope={cardWithRelations.card} />
+      {official(cardWithRelations.card) && !cardWithRelations.card.preview && (
+        <PopularDecks scope={cardWithRelations.card} />
+      )}
 
       {!isEmpty(related) &&
         related.map(([key, value]) => (

@@ -1,10 +1,11 @@
 import type { StateCreator, StoreApi } from "zustand";
 import { assertCanPublishDeck } from "@/utils/arkhamdb";
 import { assert } from "@/utils/assert";
+import { applyHiddenSlots } from "../lib/fan-made-content";
 import { resolveDeck } from "../lib/resolve-deck";
 import { disconnectProviderIfUnauthorized, syncAdapters } from "../lib/sync";
 import { dehydrate } from "../persist";
-import type { Id } from "../schemas/deck.schema";
+import { DeckSchema, type Id } from "../schemas/deck.schema";
 import {
   selectIsInitialized,
   selectLocaleSortingCollator,
@@ -201,9 +202,17 @@ async function syncConnection(
     );
 
     if (res) {
+      state.cacheFanMadeContent(
+        res.data.map((_deck) => {
+          const deck = DeckSchema.parse(_deck);
+          applyHiddenSlots(deck, selectMetadata(state));
+          return deck;
+        }),
+      );
+
       set((prev) => {
         const { data: apiDecks, lastModified } = res;
-        const data = { ...prev.data };
+        const data = structuredClone(prev.data);
         const apiDeckIds = new Set(apiDecks.map((deck) => deck.id));
 
         for (const deck of Object.values(prev.data.decks)) {

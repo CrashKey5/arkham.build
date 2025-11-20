@@ -1,19 +1,37 @@
+import { FloatingPortal } from "@floating-ui/react";
 import { GlobeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link, useParams } from "wouter";
+import { Link, useParams, useSearchParams } from "wouter";
 import {
   CardArkhamDBLink,
   CardReviewsLink,
 } from "@/components/card-modal/card-arkhamdb-links";
 import { CardModalProvider } from "@/components/card-modal/card-modal-provider";
+import { CardScan } from "@/components/card-scan";
 import { Footer } from "@/components/footer";
 import { Masthead } from "@/components/masthead";
+import { Printing } from "@/components/printing";
 import { Button } from "@/components/ui/button";
+import { useRestingTooltip } from "@/components/ui/tooltip.hooks";
 import { CardViewCards } from "@/pages/card-view/card-view-cards";
 import { useStore } from "@/store";
 import type { CardWithRelations } from "@/store/lib/types";
 import { selectCardWithRelations } from "@/store/selectors/card-view";
-import { displayAttribute, isStaticInvestigator } from "@/utils/card-utils";
+import {
+  type Printing as PrintingT,
+  selectLookupTables,
+  selectPrintingsForCard,
+} from "@/store/selectors/shared";
+import {
+  cardUrl,
+  displayAttribute,
+  isStaticInvestigator,
+  oldFormatCardUrl,
+} from "@/utils/card-utils";
+import {
+  CYCLES_WITH_STANDALONE_PACKS,
+  FLOATING_PORTAL_ID,
+} from "@/utils/constants";
 import { cx } from "@/utils/cx";
 import { useDocumentTitle } from "@/utils/use-document-title";
 import { ErrorStatus } from "../errors/404";
@@ -61,6 +79,9 @@ function CardView() {
         </main>
         <nav className={css["sidebar"]}>
           <div className={css["sidebar-inner"]}>
+            <SidebarSection title={t("card_view.section_printings")}>
+              <Printings code={cardWithRelations.card.code} />
+            </SidebarSection>
             <SidebarSection title={t("card_view.section_actions")}>
               <CardArkhamDBLink card={cardWithRelations.card} size="full">
                 <GlobeIcon /> {t("card_view.actions.open_on_arkhamdb")}
@@ -149,6 +170,81 @@ function SidebarSection(props: { title: string; children: React.ReactNode }) {
       </header>
       <div className={css["sidebar-section-content"]}>{props.children}</div>
     </section>
+  );
+}
+
+function Printings(props: { code: string }) {
+  const printings = useStore((state) =>
+    selectPrintingsForCard(state, props.code),
+  );
+
+  const [search] = useSearchParams();
+  const oldFormat = search.get("old_format") === "true";
+
+  const lookupTables = useStore(selectLookupTables);
+
+  return (
+    <ul className={css["printings"]}>
+      {printings.map((printing) => {
+        const reprintPackCode =
+          lookupTables.reprintPacksByPack[printing.pack.code];
+
+        return (
+          <li key={`${printing.pack.code}-${printing.card.code}`}>
+            <ListPrinting
+              active={
+                printing.card.code === props.code &&
+                (CYCLES_WITH_STANDALONE_PACKS.includes(printing.cycle.code) ||
+                  oldFormat === !printing.pack.reprint)
+              }
+              printing={printing}
+              oldFormat={!!reprintPackCode}
+            />
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function ListPrinting({
+  active,
+  oldFormat,
+  printing,
+}: {
+  active?: boolean;
+  oldFormat?: boolean;
+  printing: PrintingT;
+}) {
+  const { refs, referenceProps, isMounted, floatingStyles, transitionStyles } =
+    useRestingTooltip();
+
+  const url = oldFormat
+    ? oldFormatCardUrl(printing.card)
+    : cardUrl(printing.card);
+
+  return (
+    <>
+      <Link
+        {...referenceProps}
+        className={cx(css["printings-item"], active && css["active"])}
+        ref={refs.setReference}
+        to={url}
+      >
+        <Printing printing={printing} />
+      </Link>
+      {isMounted && (
+        <FloatingPortal id={FLOATING_PORTAL_ID}>
+          <div
+            className={css["preview"]}
+            ref={refs.setFloating}
+            style={{ ...floatingStyles, ...transitionStyles }}
+          >
+            <CardScan card={printing.card} preventFlip />
+          </div>
+        </FloatingPortal>
+      )}
+    </>
   );
 }
 

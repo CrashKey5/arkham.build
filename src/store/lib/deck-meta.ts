@@ -218,6 +218,10 @@ export function decodeCardPool(
 
     if (extension) {
       pool.push(...extension.split(","));
+    } else if (card.card_pool_extension.selections) {
+      pool.push(
+        ...card.card_pool_extension.selections.map((code) => `card:${code}`),
+      );
     }
   }
 

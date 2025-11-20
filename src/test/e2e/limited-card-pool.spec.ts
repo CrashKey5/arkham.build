@@ -10,16 +10,21 @@ test.beforeEach(async ({ page }) => {
 async function createLimitedPoolDeck(page: Page) {
   await page.goto("deck/create/01001");
 
-  await page
+  const input = page
     .getByTestId("limited-card-pool-field")
-    .getByTestId("combobox-input")
-    .click();
+    .getByTestId("combobox-input");
+
+  await input.click();
+
+  await input.fill("revised core");
 
   await page
     .getByTestId("virtuoso-item-list")
     .getByText("Revised Core Set")
     .click();
-  await page.getByText("The Forgotten Age").click();
+  await input.fill("the forgotten age");
+
+  await page.getByText("The Forgotten Age").first().click();
   await page.getByTestId("combobox-input").press("Escape");
   await page.getByTestId("create-save").click();
   await expect(page.getByTestId("limited-card-pool-tag")).toBeVisible();
@@ -38,7 +43,7 @@ test.describe("limited card pool", () => {
   test("apply card pool in deck editor", async ({ page }) => {
     await createLimitedPoolDeck(page);
     await fillSearch(page, "machete");
-    await expect(page.getByTestId("listcard-01020")).toBeVisible();
+    await expect(page.getByTestId("listcard-01520")).toBeVisible();
     await page.getByTestId("search").getByRole("button").click();
     await fillSearch(page, "runic axe");
     await expect(page.getByTestId("listcard-09022")).not.toBeVisible();
@@ -259,6 +264,26 @@ test.describe("environments", () => {
     await expect(page.getByTestId("limited-card-pool-tag")).toHaveScreenshot();
     await page.getByTestId("editor-save").click();
     await expect(page.getByTestId("limited-card-pool-tag")).toHaveScreenshot();
+  });
+
+  test("applies collection environment", async ({ page }) => {
+    await page.goto("/settings?tab=collection");
+    await page.getByText("Show all cards as owned").click();
+    await page.getByText("The Miskatonic Museum").click();
+    await page.getByText("The Path to Carcosa Investigator Expansion").click();
+    await page.getByTestId("settings-save").click();
+    await page.getByTestId("masthead-logo").click();
+    await page.getByTestId("collection-create-deck").click();
+    await fillSearch(page, "mark harrigan");
+    await page.getByTestId("create-choose-investigator").click();
+    await page.getByTestId("limited-card-pool-environments").click();
+    await page.getByTestId("limited-card-pool-environment-collection").click();
+    await page
+      .getByTestId("limited-card-pool-environment-collection-apply")
+      .click();
+    await expect(
+      page.getByTestId("limited-card-pool-field"),
+    ).toHaveScreenshot();
   });
 });
 

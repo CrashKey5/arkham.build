@@ -2,6 +2,7 @@ import {
   cardLevel,
   cardUses,
   isSpecialist,
+  official,
   splitMultiValue,
 } from "@/utils/card-utils";
 import type { SkillKey } from "@/utils/constants";
@@ -13,7 +14,6 @@ import {
   TAG_REGEX_FALLBACKS,
 } from "@/utils/constants";
 import { resolveLimitedPoolPacks } from "@/utils/environments";
-import { capitalize } from "@/utils/formatting";
 import type { Filter } from "@/utils/fp";
 import { and, not, notUnless, or } from "@/utils/fp";
 import { isEmpty } from "@/utils/is-empty";
@@ -24,6 +24,7 @@ import type {
   CostFilter,
   InvestigatorSkillsFilter,
   LevelFilter,
+  List,
   MultiselectFilter,
   PropertiesFilter,
   SkillIconsFilter,
@@ -32,7 +33,7 @@ import type {
 import type { Metadata } from "../slices/metadata.types";
 import { ownedCardCount } from "./card-ownership";
 import type { LookupTables } from "./lookup-tables.types";
-import type { SealedDeck, Selections } from "./types";
+import type { ResolvedDeck, SealedDeck, Selections } from "./types";
 import { isOptionSelect } from "./types";
 
 /**
@@ -69,7 +70,7 @@ export function filterPreviews(card: Card) {
 }
 
 export function filterOfficial(card: Card) {
-  return !!card.official;
+  return official(card);
 }
 
 /**
@@ -200,7 +201,6 @@ export function filterCardPool(
 
   const packFilter = filterPackCode(
     resolveLimitedPoolPacks(metadata, rest).map((p) => p.code),
-    metadata,
     lookupTables,
   );
 
@@ -456,7 +456,6 @@ export function filterOwnership(
 
 export function filterPackCode(
   value: MultiselectFilter,
-  metadata: Metadata,
   lookupTables: LookupTables,
 ) {
   if (isEmpty(value)) return undefined;
@@ -464,13 +463,14 @@ export function filterPackCode(
   const active = Object.values(value).some((x) => x);
   if (!active) return undefined;
 
-  const filterValue = value.reduce<Record<string, boolean>>((acc, curr) => {
-    acc[curr] = true;
-    return acc;
-  }, {});
+  return (card: Card) => {
+    const packCodes = [
+      card.pack_code,
+      ...Object.keys(lookupTables.reprintPacksByPack[card.pack_code] || {}),
+    ];
 
-  return (card: Card) =>
-    filterOwnership(card, metadata, lookupTables, filterValue, false, true);
+    return value.some((packCode) => packCodes.includes(packCode));
+  };
 }
 
 /**
@@ -775,23 +775,40 @@ export function filterTraits(
 
   for (const key of filterState) {
     filters.push((card: Card) => {
-      const hasTrait = !!card.real_traits?.includes(key);
+      const matches = matchesTrait(card, key);
 
       if (
-        hasTrait ||
+        matches ||
         !card.customization_options ||
         !includeUnselectedCustomizationTraits
       ) {
-        return hasTrait;
+        return matches;
       }
 
-      return !!card.customization_options?.some((o) =>
-        o.real_traits?.includes(key),
-      );
+      return !!card.customization_options?.some((o) => matchesTrait(o, key));
     });
   }
 
   return or(filters);
+}
+
+function lower(s: string[]) {
+  return s.map((t) => t.toLowerCase());
+}
+
+function matchesTrait(
+  card: { real_traits?: string | null; traits?: string | null },
+  trait: string,
+) {
+  const baseTraits = lower(splitMultiValue(card.real_traits));
+  const lowerTrait = trait.toLowerCase();
+
+  const matches = baseTraits.includes(lowerTrait);
+  if (matches || card.real_traits === card.traits) {
+    return matches;
+  }
+
+  return lower(splitMultiValue(card.traits)).includes(lowerTrait);
 }
 
 /**
@@ -947,11 +964,7 @@ function parseOption(option: DeckOption, config?: InvestigatorAccessConfig) {
     filterCount += 1;
 
     optionFilter.push(
-      filterTraits(
-        // traits are stored lowercased for whatever reason.
-        option.trait.map(capitalize),
-        config?.customizable?.properties === "all",
-      ),
+      filterTraits(option.trait, config?.customizable?.properties === "all"),
     );
   }
 
@@ -1200,4 +1213,126 @@ export function filterSealed(
 
     return Object.keys(duplicates).some((code) => !!sealedDeck[code]);
   };
+}
+
+export function filterDuplicatesFromContext(
+  filteredCards: Card[],
+  activeList: List,
+  metadata: Metadata,
+  lookupTables: LookupTables,
+  deck: ResolvedDeck | undefined,
+) {
+  const packFilterValue = packFilter(activeList);
+
+  const cardPool = deck?.cardPool
+    ? resolveLimitedPoolPacks(metadata, deck.cardPool).map((p) => p.code)
+    : undefined;
+
+  const cardPoolEmpty = isEmpty(cardPool);
+  const packFilterEmpty = isEmpty(packFilterValue);
+
+  function printingMatches(c: string) {
+    const card = metadata.cards[c];
+
+    const packCodes = [
+      card.pack_code,
+      ...Object.keys(lookupTables.reprintPacksByPack[card.pack_code] || {}),
+    ];
+
+    return (
+      (cardPoolEmpty || cardPool.some((p) => packCodes.includes(p))) &&
+      (packFilterEmpty || packFilterValue.some((p) => packCodes.includes(p)))
+    );
+  }
+
+  const resolutions = filteredCards.reduce((acc, card) => {
+    if (containsCard(deck, card)) {
+      acc.set(card.code, true);
+      return acc;
+    }
+
+    if (acc.has(card.code)) return acc;
+
+    const duplicates = lookupTables.relations.duplicates[card.code];
+    const reprints = lookupTables.relations.reprints[card.code];
+
+    // cards without duplicates pass through.
+    if (!reprints && !duplicates) {
+      acc.set(card.code, true);
+      return acc;
+    }
+
+    const reprintCodes = Object.keys(reprints ?? {});
+    const duplicateCodes = Object.keys(duplicates ?? {});
+
+    // any matching reprint is displayed.
+    for (const c of reprintCodes) {
+      acc.set(c, printingMatches(c));
+    }
+
+    // fold duplicates into the first matching printing.
+    const allDuplicates = [...duplicateCodes, card.code];
+
+    const matchedDuplicates = allDuplicates
+      .filter((c) => printingMatches(c))
+      .sort((a, b) => {
+        const aCard = metadata.cards[a];
+        const bCard = metadata.cards[b];
+
+        const aPack = metadata.packs[aCard.pack_code];
+        const bPack = metadata.packs[bCard.pack_code];
+
+        const aCycle = metadata.cycles[aPack.cycle_code];
+        const bCycle = metadata.cycles[bPack.cycle_code];
+
+        const cycleDiff = aCycle.position - bCycle.position;
+
+        if (cycleDiff === 0) {
+          return aPack.position - bPack.position;
+        }
+
+        return aCycle.position - bCycle.position;
+      });
+
+    const firstMatch = matchedDuplicates[0];
+
+    for (const c of allDuplicates) {
+      if (c === firstMatch) {
+        acc.set(c, true);
+      } else if (firstMatch) {
+        acc.set(c, false);
+      }
+    }
+
+    return acc;
+  }, new Map<string, boolean>());
+
+  return (card: Card) => resolutions.get(card.code);
+}
+
+export function containsCard(
+  deck: ResolvedDeck | undefined,
+  card: Card,
+): boolean {
+  if (!deck) return false;
+  return (
+    deck.slots[card.code] != null ||
+    deck.extraSlots?.[card.code] != null ||
+    deck.sideSlots?.[card.code] != null ||
+    deck.investigator_code === card.code ||
+    deck.metaParsed.alternate_front === card.code ||
+    deck.metaParsed.alternate_back === card.code
+  );
+}
+
+function packFilter(activeList: List): MultiselectFilter | undefined {
+  const packFilterIndex = activeList.filters.findIndex(
+    (f) => f === "pack" && activeList.filtersEnabled,
+  );
+
+  const packFilterValue = packFilterIndex
+    ? (activeList.filterValues[packFilterIndex]?.value as MultiselectFilter)
+    : undefined;
+
+  return packFilterValue;
 }

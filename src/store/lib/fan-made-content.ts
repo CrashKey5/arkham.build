@@ -194,11 +194,10 @@ export function buildCacheFromDecks(decks: Deck[]) {
   );
 }
 
-export function extractHiddenSlots(deck: Deck) {
+export function extractHiddenSlots(deck: Deck, metadata: Metadata) {
   const meta = decodeDeckMeta(deck);
-  if (!meta.fan_made_content) return;
 
-  const fanMadeContentSlots: DeckFanMadeContentSlots = {
+  const hiddenSlots: DeckFanMadeContentSlots = {
     slots: {},
     sideSlots: null,
     ignoreDeckLimitSlots: null,
@@ -210,33 +209,39 @@ export function extractHiddenSlots(deck: Deck) {
     if (!slots.length) continue;
 
     for (const [code, quantity] of slots) {
-      if (meta.fan_made_content.cards?.[code]) {
-        fanMadeContentSlots[key] ??= {};
-        fanMadeContentSlots[key][code] = quantity;
+      if (
+        meta.fan_made_content?.cards?.[code] ||
+        metadata.cards[code]?.preview
+      ) {
+        hiddenSlots[key] ??= {};
+        hiddenSlots[key][code] = quantity;
         delete deck[key]?.[code];
       }
     }
   }
 
-  if (meta.fan_made_content.cards[deck.investigator_code]) {
-    fanMadeContentSlots.investigator_code = deck.investigator_code;
+  if (
+    meta.fan_made_content?.cards[deck.investigator_code] ||
+    metadata.cards[deck.investigator_code]?.preview
+  ) {
+    hiddenSlots.investigator_code = deck.investigator_code;
     deck.investigator_code = SPECIAL_CARD_CODES.SUZI;
     deck.investigator_name = "Subject 5U-21";
   }
 
-  meta.hidden_slots = fanMadeContentSlots;
+  meta.hidden_slots = hiddenSlots;
 
   deck.meta = JSON.stringify(meta);
 }
 
-export function applyHiddenSlots(deck: Deck) {
+export function applyHiddenSlots(deck: Deck, metadata: Metadata) {
   const meta = decodeDeckMeta(deck);
   if (!meta.hidden_slots) return;
 
-  const fanMadeContentSlots = meta.hidden_slots;
+  const hiddenSlots = meta.hidden_slots;
 
   for (const key of ["slots", "sideSlots", "ignoreDeckLimitSlots"] as const) {
-    const slots = Object.entries(fanMadeContentSlots[key] ?? {});
+    const slots = Object.entries(hiddenSlots[key] ?? {});
     if (!slots.length) continue;
 
     for (const [code, quantity] of slots) {
@@ -245,11 +250,12 @@ export function applyHiddenSlots(deck: Deck) {
     }
   }
 
-  if (fanMadeContentSlots.investigator_code !== deck.investigator_code) {
-    deck.investigator_code = fanMadeContentSlots.investigator_code;
+  if (hiddenSlots.investigator_code !== deck.investigator_code) {
+    deck.investigator_code = hiddenSlots.investigator_code;
     deck.investigator_name =
-      meta.fan_made_content?.cards?.[fanMadeContentSlots.investigator_code]
-        ?.name || deck.investigator_name;
+      meta.fan_made_content?.cards?.[hiddenSlots.investigator_code]?.name ||
+      metadata.cards[hiddenSlots.investigator_code]?.real_name ||
+      deck.investigator_name;
   }
 
   delete meta.hidden_slots;

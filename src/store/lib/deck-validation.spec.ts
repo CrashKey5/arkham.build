@@ -44,6 +44,7 @@ const tests = [
   ["invalid: signatures with incorrect quantity", "required_quantity_invalid"],
   ["invalid: missing replacement signature", "required_replacements_invalid"],
   ["invalid: missing advanced signature", "required_advanced_invalid"],
+  ["valid: reprinted signatures mixed with original", "mixed_signatures"],
   // Random basic weaknesses
   ["valid: random basic weakness present", "rbw"],
   [
@@ -55,6 +56,7 @@ const tests = [
   ["valid: dunwich off-class access", "dunwich"],
   ["invalid: too many dunwich off-class cards", "dunwich_invalid"],
   ["valid: off-class access with faction selection", "faction_select"],
+  ["valid: faction selection with an option id", "faction_select_option_id"],
   [
     "invalid: off-class access with faction selection",
     "faction_select_invalid",
@@ -242,11 +244,15 @@ const tests = [
     "invalid: Suzi with invalid 'at_least' constraint and forbidden card",
     "suzi_invalid",
   ],
+  // || Lola
+  ["valid: || Lola faction validation", "parallel_lola"],
+  ["invalid: || Lola faction validation", "parallel_lola_invalid"],
 ];
 
 function validate(store: StoreApi<StoreState>, deck: Deck) {
-  const state = store.getState();
+  store.getState().cacheFanMadeContent([deck]);
 
+  const state = store.getState();
   const metadata = selectMetadata(state);
   const lookupTables = selectLookupTables(state);
 

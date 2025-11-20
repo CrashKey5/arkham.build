@@ -1,8 +1,4 @@
-import type { EqualityFn } from "reselect";
 import { createSelectorCreator, lruMemoize } from "reselect";
-
-export const createCustomEqualSelector = (equalFn: EqualityFn) =>
-  createSelectorCreator(lruMemoize, equalFn);
 
 export const createDebugSelector = createSelectorCreator(lruMemoize, {
   equalityCheck: (previousVal, currentVal) => {

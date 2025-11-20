@@ -53,6 +53,8 @@ export type SubtypeFilter = {
 
 export type SelectFilter = string | number | undefined;
 
+export type CardTypeFilter = "" | "player" | "encounter";
+
 export type SkillIconsFilter = {
   agility: number | undefined;
   combat: number | undefined;
@@ -76,6 +78,7 @@ type InvestigatorCardAccessFilter = string[] | undefined;
 export type FilterMapping = {
   action: MultiselectFilter;
   asset: AssetFilter;
+  card_type: CardTypeFilter;
   cost: CostFilter;
   encounter_set: MultiselectFilter;
   faction: MultiselectFilter;
@@ -90,9 +93,9 @@ export type FilterMapping = {
   pack: MultiselectFilter;
   properties: PropertiesFilter;
   sanity: SanityFilter;
-  skillIcons: SkillIconsFilter;
+  skill_icons: SkillIconsFilter;
   subtype: SubtypeFilter;
-  tabooSet: SelectFilter;
+  taboo_set: SelectFilter;
   trait: MultiselectFilter;
   type: MultiselectFilter;
 };
@@ -134,12 +137,12 @@ export type SortingType =
   | "name"
   | "position"
   | "slot"
+  | "subtype"
   | "type";
 
 export type ViewMode = "compact" | "card-text" | "full-cards" | "scans";
 
 export type List = {
-  cardType: "player" | "encounter";
   display: {
     grouping: GroupingType[];
     properties?: string[];
@@ -152,11 +155,6 @@ export type List = {
     [id: number]: FilterObject<FilterKey>;
   };
   key: string;
-  // Filter that controls which duplicates (parallels, revised core) should be filtered for a list.
-  // This has historically been part of the system filter, but was moved out to allow for more flexibility
-  // when handling duplicates, i.e. keeping those in decks.
-  // This needs to be configurable in order to show parallel investigators in the choose investigator list.
-  duplicateFilter: Filter;
   // Applied before any kind of other filtering is applied to card list.
   systemFilter?: Filter;
   search: Search;
@@ -170,12 +168,14 @@ export type ListsSlice = {
   activeList?: string;
   lists: Lists;
 
-  changeList(value: string, path: string): void;
-
   addList(
     key: string,
-    cardType: List["cardType"],
     initialValues?: Partial<Record<FilterKey, FilterMapping[FilterKey]>>,
+    opts?: {
+      showOwnershipFilter?: boolean;
+      showInvestigatorFilter?: boolean;
+      search?: string;
+    },
   ): void;
 
   removeList(key: string): void;

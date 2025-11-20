@@ -815,6 +815,9 @@
 .encounters-venomous_hate:before {
   content: "\ea03";
 }
+.encounters-enthralling_encore:before {
+  content: "\ea8e";
+}
 .encounters-abominable_contessa:before {
   content: "\ea88";
 }
@@ -1177,6 +1180,9 @@
 }
 .encounters-return_to_dim_carcosa:before {
   content: "\ea48";
+}
+.encounters-core_2026:before {
+  content: "\ea8d";
 }
 .encounters-set:before {
   content: "\49";

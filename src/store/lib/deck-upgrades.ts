@@ -258,6 +258,7 @@ function calculateXpSpent(
       return cost;
     }
 
+    const swaps = getSwaps(diff);
     const upgrades = getDirectUpgrades(diff);
 
     // Myriad cards are counted only once, regardless of sub name.
@@ -275,6 +276,13 @@ function calculateXpSpent(
       }
 
       let quantity = _quantity;
+
+      const swappedWith = swaps[card.code];
+      // swapping a card for a version of itself is free
+      if (swappedWith) {
+        quantity -= swappedWith[1];
+        if (quantity <= 0) continue;
+      }
 
       // some player cards can be given as story assets, these copies are free.
       if (
@@ -527,4 +535,28 @@ function getDirectUpgrades(slotDiff: Diff) {
 function findUpgraded(diff: SlotDiff, card: Card) {
   const x = diff[0];
   return x.real_name === card.real_name && (x.xp ?? 0) < (card.xp ?? 0);
+}
+
+function getSwaps(slotDiff: Diff) {
+  const swaps: Record<string, SlotDiff | undefined> = {};
+
+  for (const [card, quantityAdded] of slotDiff.adds) {
+    const swapped = slotDiff.removes.find((diff) => {
+      const x = diff[0];
+      return (
+        (x.real_name === card.real_name &&
+          x.xp === card.xp &&
+          x.subname === card.subname &&
+          !!x.duplicate_of_code) ||
+        !!card.duplicate_of_code
+      );
+    });
+
+    if (swapped) {
+      const quantityRemoved = Math.abs(swapped[1]);
+      swaps[card.code] = [swapped[0], Math.min(quantityRemoved, quantityAdded)];
+    }
+  }
+
+  return swaps;
 }

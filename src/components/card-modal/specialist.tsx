@@ -11,9 +11,10 @@ import { selectUsableByInvestigators } from "@/store/selectors/card-view";
 import {
   selectLocaleSortingCollator,
   selectMetadata,
+  selectShowFanMadeRelations,
 } from "@/store/selectors/shared";
 import type { StoreState } from "@/store/slices";
-import { isSpecialist } from "@/utils/card-utils";
+import { isSpecialist, official } from "@/utils/card-utils";
 import { formatRelationTitle } from "@/utils/formatting";
 import { isEmpty } from "@/utils/is-empty";
 import { CardSet } from "../cardset";
@@ -26,8 +27,9 @@ const selectSpecialistAccess = createSelector(
   selectMetadata,
   (state: StoreState) => state.settings,
   selectLocaleSortingCollator,
+  selectShowFanMadeRelations,
   (_: StoreState, card: Card) => card,
-  (metadata, settings, collator, investigatorBack) => {
+  (metadata, settings, collator, showFanMadeRelations, investigatorBack) => {
     const investigatorFilter = filterInvestigatorAccess(investigatorBack, {
       customizable: {
         properties: "all",
@@ -37,8 +39,15 @@ const selectSpecialistAccess = createSelector(
 
     return Object.values(metadata.cards)
       .filter((card) => {
-        const allowDisplay = settings.showPreviews || !filterPreviews(card);
-        return isSpecialist(card) && investigatorFilter?.(card) && allowDisplay;
+        const previewsAllowed = settings.showPreviews || !filterPreviews(card);
+        const fanMadeAllowed = showFanMadeRelations || official(card);
+
+        return (
+          isSpecialist(card) &&
+          investigatorFilter?.(card) &&
+          previewsAllowed &&
+          fanMadeAllowed
+        );
       })
       .sort(makeSortFunction(["name", "level"], metadata, collator))
       .map((card) => ({ card }) as ResolvedCard);
@@ -69,7 +78,11 @@ export function SpecialistAccess(props: Props) {
 
 const selectUsableByInvestigatorsResolved = createSelector(
   selectUsableByInvestigators,
-  (cards) => cards.map((card) => ({ card }) as ResolvedCard),
+  selectShowFanMadeRelations,
+  (cards, showFanMadeRelations) =>
+    cards
+      .filter((card) => showFanMadeRelations || official(card))
+      .map((card) => ({ card }) as ResolvedCard),
 );
 
 export function SpecialistInvestigators(props: Props) {

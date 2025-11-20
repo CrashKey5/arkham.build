@@ -43,7 +43,13 @@ function sortByLevel(a: Card, b: Card) {
   return (a.xp ?? -1) - (b.xp ?? -1);
 }
 
-function sortByPosition(a: Card, b: Card) {
+export function sortByPosition(a: Card, b: Card) {
+  const positionDiff = (a.position ?? 0) - (b.position ?? 0);
+
+  if (positionDiff === 0) {
+    return (a.encounter_position ?? 0) - (b.encounter_position ?? 0);
+  }
+
   return (a.position ?? 0) - (b.position ?? 0);
 }
 
@@ -124,6 +130,10 @@ export function makeSortFunction(
 
       case "slot": {
         return sortBySlot(collator);
+      }
+
+      case "subtype": {
+        return sortBySubtype;
       }
     }
   });
@@ -229,4 +239,9 @@ export function sortByFactionOrder(a: string, b: string) {
     FACTION_ORDER.indexOf(a as FactionName) -
     FACTION_ORDER.indexOf(b as FactionName)
   );
+}
+
+function sortBySubtype(a: Card, b: Card) {
+  const RANKING: (string | null | undefined)[] = ["basicweakness", "weakness"];
+  return RANKING.indexOf(a.subtype_code) - RANKING.indexOf(b.subtype_code);
 }

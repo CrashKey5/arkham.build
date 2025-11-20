@@ -52,7 +52,20 @@ export const createDeckEditsSlice: StateCreator<
     });
     dehydrate(get(), "edits").catch(console.error);
   },
+  updateInvestigatorCode(deckId, code) {
+    set((state) => ({
+      deckEdits: {
+        ...state.deckEdits,
+        [deckId]: {
+          ...currentEdits(state, deckId),
+          investigatorCode: code,
+          type: "user" as const,
+        },
+      },
+    }));
 
+    dehydrate(get(), "edits").catch(console.error);
+  },
   updateCardQuantity(deckId, code, quantity, limit, tab, mode = "increment") {
     set((state) =>
       getCardQuantityUpdate(state, deckId, code, quantity, limit, tab, mode),

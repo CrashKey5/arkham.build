@@ -13,12 +13,17 @@
   text-align: left;
 }
 
+.list.vertical {
+  flex-direction: column;
+  border-bottom: none;
+}
+
 .trigger {
   background-color: var(--background-inactive) !important;
-  container-type: inline-size;
   border-radius: 0;
   border-width: 0;
   border-bottom: 0.125rem solid transparent;
+  container-type: inline-size;
   min-height: 1rem;
   padding: 0.375rem 0.125rem;
 }

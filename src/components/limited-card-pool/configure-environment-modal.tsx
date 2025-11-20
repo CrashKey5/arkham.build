@@ -1,9 +1,12 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useCallback, useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { useStore } from "@/store";
 import type { Card } from "@/store/schemas/card.schema";
 import type { Cycle } from "@/store/schemas/cycle.schema";
-import { selectCampaignCycles } from "@/store/selectors/lists";
+import {
+  type CycleWithPacks,
+  selectCampaignCycles,
+} from "@/store/selectors/lists";
 import {
   CAMPAIGN_PLAYALONG_PROJECT_ID,
   campaignPlayalongPacks,
@@ -64,30 +67,52 @@ export function ConfigureEnvironmentModal(props: Props) {
   return (
     <Modal style={accentColor}>
       <ModalBackdrop />
-      <ModalInner size="52rem">
+      <ModalInner size="60rem">
         <ModalActions />
         <DefaultModalContent
           title={t("deck_edit.config.card_pool.configure_environment")}
         >
           <Tabs value={tab} onValueChange={setTab}>
-            <TabsList>
-              <EnvironmentsTabTrigger value="legacy" />
-              <EnvironmentsTabTrigger value="current" />
-              <EnvironmentsTabTrigger value="limited" />
-              <EnvironmentsTabTrigger value="campaign_playalong" />
-            </TabsList>
-            <EnvironmentsTabContent value="legacy">
-              <LegacyTab {...tabProps} />
-            </EnvironmentsTabContent>
-            <EnvironmentsTabContent value="current">
-              <CurrentTab {...tabProps} />
-            </EnvironmentsTabContent>
-            <EnvironmentsTabContent value="limited">
-              <LimitedTab {...tabProps} />
-            </EnvironmentsTabContent>
-            <EnvironmentsTabContent value="campaign_playalong">
-              <CampaignPlayalongTab {...tabProps} />
-            </EnvironmentsTabContent>
+            <div className={css["container"]}>
+              <TabsList className={css["nav"]} vertical>
+                <EnvironmentsTabTrigger value="legacy" />
+                <EnvironmentsTabTrigger value="current" />
+                <EnvironmentsTabTrigger value="limited" />
+                <EnvironmentsTabTrigger value="campaign_playalong" />
+                <EnvironmentsTabTrigger value="collection" />
+              </TabsList>
+              <div className={css["content"]}>
+                <EnvironmentsTabContent value="legacy">
+                  <LegacyTab {...tabProps} />
+                </EnvironmentsTabContent>
+                <EnvironmentsTabContent value="current">
+                  <CurrentTab {...tabProps} />
+                </EnvironmentsTabContent>
+                <EnvironmentsTabContent value="limited">
+                  <LimitedTab {...tabProps} />
+                </EnvironmentsTabContent>
+                <EnvironmentsTabContent value="campaign_playalong">
+                  <CampaignPlayalongTab {...tabProps} />
+                </EnvironmentsTabContent>
+                <EnvironmentsTabContent
+                  translationProps={{
+                    components: {
+                      settings_link: (
+                        // biome-ignore lint/a11y/useAnchorContent: interpolation
+                        <a
+                          href="/settings?tab=collection"
+                          target="_blank"
+                          rel="noreferrer"
+                        />
+                      ),
+                    },
+                  }}
+                  value="collection"
+                >
+                  <CollectionTab {...tabProps} />
+                </EnvironmentsTabContent>
+              </div>
+            </div>
           </Tabs>
         </DefaultModalContent>
       </ModalInner>
@@ -121,6 +146,38 @@ function CurrentTab({ dialogCtx, onValueChange }: TabProps) {
   );
 }
 
+function CollectionTab({ dialogCtx, onValueChange }: TabProps) {
+  const cycles = useStore(selectCampaignCycles);
+  const ignored = cycles.reduce((acc, cycle) => {
+    if (cycle.reprintPacks) {
+      cycle.reprintPacks.forEach((pack) => {
+        if (pack.reprint?.type === "encounter") {
+          acc.add(pack.code);
+        }
+      });
+    }
+
+    return acc;
+  }, new Set());
+
+  const settings = useStore((state) => state.settings);
+  const collection = settings.collection;
+
+  const selected = Object.keys(collection).filter(
+    (code) => collection[code] > 0 && !ignored.has(code),
+  );
+
+  return (
+    <EnvironmentsTabConfirm
+      onClick={() => {
+        onValueChange(selected);
+        dialogCtx.setOpen(false);
+      }}
+      environment="collection"
+    />
+  );
+}
+
 function LimitedTab(props: TabProps) {
   const { dialogCtx, locale, onValueChange } = props;
 
@@ -142,6 +199,10 @@ function LimitedTab(props: TabProps) {
     dialogCtx.setOpen(false);
   };
 
+  const onSelectionChange = useCallback((items: CycleWithPacks[]) => {
+    setSelectedItems(items.map((cycle) => cycle.code));
+  }, []);
+
   return (
     <>
       <Field full padded bordered>
@@ -154,11 +215,15 @@ function LimitedTab(props: TabProps) {
           renderItem={packRenderer}
           renderResult={packRenderer}
           itemToString={packToString}
-          onValueChange={setSelectedItems}
+          onValueChange={onSelectionChange}
           items={cycles}
           label={capitalize(t("common.cycle", { count: 3 }))}
           showLabel
-          selectedItems={selectedItems}
+          selectedItems={
+            selectedItems.map((code) =>
+              cycles.find((cycle) => cycle.code === code),
+            ) as CycleWithPacks[]
+          }
         />
       </Field>
       <EnvironmentsTabConfirm
@@ -200,6 +265,10 @@ function CampaignPlayalongTab(props: TabProps) {
     dialogCtx.setOpen(false);
   };
 
+  const onSelectionChange = useCallback((items: CycleWithPacks[]) => {
+    setSelectedItems(items.map((cycle) => cycle.code));
+  }, []);
+
   return (
     <>
       <Field full padded bordered>
@@ -212,11 +281,15 @@ function CampaignPlayalongTab(props: TabProps) {
           renderItem={packRenderer}
           renderResult={packRenderer}
           itemToString={packToString}
-          onValueChange={setSelectedItems}
+          onValueChange={onSelectionChange}
           items={cycles}
           label={capitalize(t("common.cycle", { count: 1 }))}
           showLabel
-          selectedItems={selectedItems}
+          selectedItems={
+            selectedItems
+              .map((code) => cycles.find((cycle) => cycle.code === code))
+              .filter(Boolean) as CycleWithPacks[]
+          }
         />
       </Field>
       <EnvironmentsTabConfirm
@@ -242,10 +315,12 @@ function EnvironmentsTabTrigger({ value }: { value: string }) {
 
 function EnvironmentsTabContent({
   children,
+  translationProps,
   value,
 }: {
   children: React.ReactNode;
   value: string;
+  translationProps?: Record<string, unknown>;
 }) {
   const { t } = useTranslation();
 
@@ -253,7 +328,17 @@ function EnvironmentsTabContent({
     <TabsContent value={value}>
       <div className={css["environment-tab"]}>
         <div className="longform">
-          <p>{t(`deck_edit.config.card_pool.${value}_help`)}</p>
+          <p>
+            {translationProps ? (
+              <Trans
+                t={t}
+                i18nKey={`deck_edit.config.card_pool.${value}_help`}
+                {...translationProps}
+              />
+            ) : (
+              t(`deck_edit.config.card_pool.${value}_help`)
+            )}
+          </p>
         </div>
         {children}
       </div>

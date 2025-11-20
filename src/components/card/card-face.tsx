@@ -17,6 +17,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   slotHeaderActions?: React.ReactNode;
   resolvedCard: CardWithRelations | ResolvedCard;
+  onPrintingSelect?: (cardCode: string) => void;
   titleLinks?: "card" | "card-modal" | "dialog";
   size: "compact" | "tooltip" | "full";
 }
@@ -25,10 +26,11 @@ export function CardFace(props: Props) {
   const {
     children,
     className,
-    slotHeaderActions,
+    onPrintingSelect,
     resolvedCard,
-    titleLinks,
     size,
+    slotHeaderActions,
+    titleLinks,
     ...rest
   } = props;
 
@@ -73,7 +75,11 @@ export function CardFace(props: Props) {
           victory={card.victory}
         />
         <CardTabooText card={card} showOriginalText={size !== "tooltip"} />
-        <CardMeta resolvedCard={resolvedCard} size={size} />
+        <CardMeta
+          onPrintingSelect={onPrintingSelect}
+          resolvedCard={resolvedCard}
+          size={size}
+        />
         {children}
       </div>
 

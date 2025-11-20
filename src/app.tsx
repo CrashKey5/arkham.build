@@ -38,6 +38,8 @@ const About = lazy(() => import("./pages/about/about"));
 
 const Share = lazy(() => import("./pages/share/share"));
 
+const Search = lazy(() => import("./pages/search/search"));
+
 const CollectionStats = lazy(
   () => import("./pages/collection-stats/collection-stats"),
 );
@@ -51,6 +53,8 @@ const Rules = lazy(() => import("./pages/rules-reference/rules-reference"));
 const InstallFanMadeContent = lazy(
   () => import("./pages/install-fan-made-content/install-fan-made-content"),
 );
+
+const Core2026Reveal = lazy(() => import("./pages/blog/core-2026-reveal"));
 
 function App() {
   return (
@@ -100,6 +104,7 @@ function AppInner() {
           <Router hook={useBrowserLocation}>
             <Switch>
               <Route component={Browse} path="/" />
+              <Route component={Search} path="/search" />
               <Route component={CardView} path="/card/:code" />
               <Route
                 component={CardViewUsable}
@@ -121,6 +126,7 @@ function AppInner() {
                 component={InstallFanMadeContent}
                 path="/install-fan-made-content"
               />
+              <Route component={Core2026Reveal} path="/blog/core-2026-reveal" />
               <Route path="*">
                 <ErrorStatus statusCode={404} />
               </Route>

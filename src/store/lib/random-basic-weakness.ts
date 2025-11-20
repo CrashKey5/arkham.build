@@ -1,5 +1,6 @@
 import { cardLimit } from "@/utils/card-utils";
 import { SPECIAL_CARD_CODES } from "@/utils/constants";
+import { resolveLimitedPoolPacks } from "@/utils/environments";
 import { isEmpty } from "@/utils/is-empty";
 import { randomInt } from "@/utils/random-int";
 import type { Metadata } from "../slices/metadata.types";
@@ -16,7 +17,11 @@ export function randomBasicWeaknessForDeck(
 ) {
   const factionCode = deck.investigatorBack.card.faction_code;
 
-  const limitedPool = deck.cardPool ?? [];
+  const limitedPool = resolveLimitedPoolPacks(
+    metadata,
+    deck.cardPool ?? [],
+  ).map((p) => p.code);
+
   const useLimitedPool =
     settings.useLimitedPoolForWeaknessDraw && !isEmpty(limitedPool);
 
@@ -38,6 +43,7 @@ export function randomBasicWeaknessForDeck(
       lookupTables,
       collection,
       !useLimitedPool && settings.showAllCards,
+      true,
     );
 
     if (

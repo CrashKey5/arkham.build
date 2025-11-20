@@ -258,7 +258,7 @@ export function displayAttribute(
 
 export function cycleOrPack(cycle: Cycle, pack: Pack) {
   if (
-    pack.official === false ||
+    !official(pack) ||
     CYCLES_WITH_STANDALONE_PACKS.includes(cycle.code) ||
     pack.real_name.includes("Investigator Expansion") ||
     pack.real_name.includes("Campaign Expansion")
@@ -283,4 +283,21 @@ export function numericalStr(num: string | number | null | undefined) {
   if (num === -3) return "*";
   if (num === -4) return "?";
   return `${num}`;
+}
+
+export function official(card: Card | Pack | Cycle) {
+  return card.official !== false;
+}
+
+export function cardUrl(card: Card) {
+  return `~/card/${card.code}`;
+}
+
+export function oldFormatCardUrl(card: Card) {
+  const baseUrl = cardUrl(card);
+  return `${baseUrl}?old_format=true`;
+}
+
+export function canShowCardPoolExtension(card: Card) {
+  return card.card_pool_extension && !card.card_pool_extension.selections;
 }

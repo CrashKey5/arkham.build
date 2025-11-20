@@ -40,6 +40,7 @@ export type EditState = {
     };
   };
   description_md?: string | null;
+  investigatorCode?: string;
   investigatorBack?: string | null;
   investigatorFront?: string | null;
   meta?: DeckMeta;
@@ -88,6 +89,8 @@ export type DeckEditsSlice = {
   updateTabooId(deckId: Id, value: number | null): void;
 
   updateInvestigatorSide(deckId: Id, side: string, code: string): void;
+
+  updateInvestigatorCode(deckId: Id, code: string): void;
 
   updateCustomization(
     deckId: Id,

@@ -14,6 +14,7 @@ type Props = {
   canToggleBackside?: boolean;
   children?: React.ReactNode;
   className?: string;
+  onPrintingSelect?: (cardCode: string) => void;
   resolvedCard: ResolvedCard | CardWithRelations;
   slotCardFooter?: React.ReactNode;
   slotHeaderActions?: React.ReactNode;
@@ -32,10 +33,11 @@ export function Card(props: Props) {
     canToggleBackside,
     children,
     className,
-    slotHeaderActions,
-    slotCardFooter,
+    onPrintingSelect,
     resolvedCard,
     size = "full",
+    slotCardFooter,
+    slotHeaderActions,
     titleLinks,
   } = props;
 
@@ -48,10 +50,11 @@ export function Card(props: Props) {
   const frontNode = (
     <CardFace
       className={className}
-      slotHeaderActions={slotHeaderActions}
-      titleLinks={titleLinks}
+      onPrintingSelect={onPrintingSelect}
       resolvedCard={resolvedCard}
       size={size}
+      slotHeaderActions={slotHeaderActions}
+      titleLinks={titleLinks}
     >
       {slotCardFooter}
     </CardFace>

@@ -1,3 +1,4 @@
+import { useStore } from "@/store";
 import type { ResolvedDeck } from "@/store/lib/types";
 import { CardReviewsLink } from "../card-modal/card-arkhamdb-links";
 import { CardPageLink } from "../card-modal/card-page-link";
@@ -12,6 +13,10 @@ type Props = {
 export function DeckInvestigatorModal(props: Props) {
   const { deck, readonly } = props;
 
+  const updateInvestigatorCode = useStore(
+    (state) => state.updateInvestigatorCode,
+  );
+
   return (
     <Modal data-testid="investigator-modal">
       <ModalBackdrop />
@@ -24,6 +29,9 @@ export function DeckInvestigatorModal(props: Props) {
           canToggleBack={false}
           deck={deck}
           readonly={readonly}
+          onPrintingSelect={(code) => {
+            updateInvestigatorCode(deck.id, code);
+          }}
           showRelated
           size="full"
         />

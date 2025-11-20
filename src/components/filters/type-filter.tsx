@@ -3,9 +3,10 @@ import { useTranslation } from "react-i18next";
 import { useStore } from "@/store";
 import type { Type } from "@/store/schemas/metadata.schema";
 import {
-  selectActiveList,
   selectActiveListFilter,
   selectFilterChanges,
+  selectListFilterProperties,
+  selectTypeMapper,
   selectTypeOptions,
 } from "@/store/selectors/lists";
 import { isTypeFilterObject } from "@/store/slices/lists.type-guards";
@@ -20,9 +21,12 @@ const itemToString = (item: Type) => item.name.toLowerCase();
 export function TypeFilter({ id, resolvedDeck, targetDeck }: FilterProps) {
   const { t } = useTranslation();
 
-  const activeList = useStore(selectActiveList);
   const filter = useStore((state) => selectActiveListFilter(state, id));
   const setFilterValue = useStore((state) => state.setFilterValue);
+
+  const listProperties = useStore((state) =>
+    selectListFilterProperties(state, resolvedDeck, targetDeck),
+  );
 
   assert(
     isTypeFilterObject(filter),
@@ -44,6 +48,8 @@ export function TypeFilter({ id, resolvedDeck, targetDeck }: FilterProps) {
     [id, setFilterValue],
   );
 
+  const typeMapper = useStore(selectTypeMapper);
+
   return (
     <MultiselectFilter
       changes={changes}
@@ -54,9 +60,9 @@ export function TypeFilter({ id, resolvedDeck, targetDeck }: FilterProps) {
       options={options}
       placeholder={t("filters.type.placeholder")}
       title={t("filters.type.title")}
-      value={filter.value}
+      value={filter.value.map(typeMapper)}
     >
-      {!filter.open && activeList?.cardType === "player" && (
+      {!filter.open && (
         <ToggleGroup
           data-testid="filters-type-shortcut"
           full
@@ -64,15 +70,21 @@ export function TypeFilter({ id, resolvedDeck, targetDeck }: FilterProps) {
           type="multiple"
           value={filter.value}
         >
-          <ToggleGroupItem value="asset">
-            {t("common.type.asset")}
-          </ToggleGroupItem>
-          <ToggleGroupItem value="event">
-            {t("common.type.event")}
-          </ToggleGroupItem>
-          <ToggleGroupItem value="skill">
-            {t("common.type.skill")}
-          </ToggleGroupItem>
+          {listProperties.types.has("asset") && (
+            <ToggleGroupItem value="asset">
+              {t("common.type.asset")}
+            </ToggleGroupItem>
+          )}
+          {listProperties.types.has("event") && (
+            <ToggleGroupItem value="event">
+              {t("common.type.event")}
+            </ToggleGroupItem>
+          )}
+          {listProperties.types.has("skill") && (
+            <ToggleGroupItem value="skill">
+              {t("common.type.skill")}
+            </ToggleGroupItem>
+          )}
         </ToggleGroup>
       )}
     </MultiselectFilter>

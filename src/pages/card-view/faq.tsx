@@ -22,14 +22,14 @@ export function Faq(props: Props) {
   const clientId = useStore(selectClientId);
 
   const query = useMemo(
-    () => (open ? () => queryFaq(clientId, card.code) : undefined),
-    [card.code, open, clientId],
+    () => () => queryFaq(clientId, card.code),
+    [card.code, clientId],
   );
 
   const response = useQuery({
     queryKey: ["faq", card.code],
     queryFn: query,
-    enabled: !!query,
+    enabled: open,
   });
 
   return (

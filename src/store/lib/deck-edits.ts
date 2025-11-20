@@ -46,6 +46,10 @@ export function applyDeckEdits(
     deck.name = edits.name;
   }
 
+  if (edits.investigatorCode) {
+    deck.investigator_code = edits.investigatorCode;
+  }
+
   if (edits.description_md != null) {
     deck.description_md = edits.description_md;
   }

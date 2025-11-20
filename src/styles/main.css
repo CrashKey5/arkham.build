@@ -685,6 +685,10 @@ svg {
   visibility: hidden;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 .longform {
   font-family: var(--font-family-ui);
   line-height: 1.5;

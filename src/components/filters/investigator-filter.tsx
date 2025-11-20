@@ -6,6 +6,7 @@ import {
   selectActiveListFilter,
   selectFilterChanges,
   selectInvestigatorOptions,
+  selectListFilterProperties,
 } from "@/store/selectors/lists";
 import { selectLookupTables } from "@/store/selectors/shared";
 import { isInvestigatorFilterObject } from "@/store/slices/lists.type-guards";
@@ -22,6 +23,11 @@ export function InvestigatorFilter({
   const { t } = useTranslation();
 
   const filter = useStore((state) => selectActiveListFilter(state, id));
+
+  const listFilterProperties = useStore((state) =>
+    selectListFilterProperties(state, resolvedDeck, targetDeck),
+  );
+
   assert(
     isInvestigatorFilterObject(filter),
     `InvestigatorFilter instantiated with '${filter?.type}'`,
@@ -49,6 +55,10 @@ export function InvestigatorFilter({
     ),
     [otherVersionsTable, t],
   );
+
+  if (!listFilterProperties.cardTypes.has("player") && !filter.value) {
+    return null;
+  }
 
   return (
     <SelectFilter

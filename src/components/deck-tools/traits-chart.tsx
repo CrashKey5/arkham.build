@@ -11,6 +11,7 @@ import {
   selectLocaleSortingCollator,
   selectMetadata,
 } from "@/store/selectors/shared";
+import { splitMultiValue } from "@/utils/card-utils";
 import { cx } from "@/utils/cx";
 import { ListCard } from "../list-card/list-card";
 import { Scroller } from "../ui/scroller";
@@ -68,7 +69,7 @@ function TraitsChartRow({
 
   const cards = Object.values(deck.cards.slots)
     .reduce((acc, { card }) => {
-      if (card.real_traits?.includes(trait.x)) acc.push(card);
+      if (splitMultiValue(card.real_traits).includes(trait.x)) acc.push(card);
       return acc;
     }, [] as Card[])
     .sort(makeSortFunction(["name", "level", "position"], metadata, collator));

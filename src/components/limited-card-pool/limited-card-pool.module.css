@@ -1,3 +1,25 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  gap: 1rem;
+  width: 100%;
+
+  @media screen and (min-width: 45rem) {
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: auto;
+  }
+}
+
+.nav {
+  grid-template-areas: nav;
+  border-right: 1px solid var(--palette-point-five);
+}
+
+.content {
+  grid-template-areas: content;
+}
+
 .environment-actions {
   display: flex;
   flex-flow: row wrap;

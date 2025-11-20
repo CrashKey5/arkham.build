@@ -9,10 +9,8 @@ import { ListLayoutNoSidebar } from "@/layouts/list-layout-no-sidebar";
 import { useStore } from "@/store";
 import type { CardWithRelations } from "@/store/lib/types";
 import type { Card } from "@/store/schemas/card.schema";
-import {
-  selectActiveList,
-  selectCardRelationsResolver,
-} from "@/store/selectors/lists";
+import { selectCardRelationsResolver } from "@/store/selectors/lists";
+import { selectActiveList } from "@/store/selectors/shared";
 import { displayAttribute } from "@/utils/card-utils";
 import { useAccentColor } from "@/utils/use-accent-color";
 import { useDocumentTitle } from "@/utils/use-document-title";

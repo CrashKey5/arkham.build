@@ -16,7 +16,7 @@ test.describe("Limited card slots", () => {
       },
     );
     await page
-      .getByTestId("listcard-05001")
+      .getByTestId("listcard-98010")
       .getByTestId("listcard-title")
       .click();
 
@@ -63,7 +63,7 @@ test.describe("Limited card slots", () => {
     await expect(page.getByTestId("decklist-validation")).toBeVisible();
 
     await page
-      .getByTestId("listcard-05001")
+      .getByTestId("listcard-98010")
       .getByTestId("listcard-title")
       .click();
     await expect(
@@ -84,7 +84,7 @@ test.describe("Limited card slots", () => {
     await expect(page.getByTestId("decklist-validation")).not.toBeVisible();
 
     await page
-      .getByTestId("listcard-05001")
+      .getByTestId("listcard-98010")
       .getByTestId("listcard-title")
       .click();
     await expect(

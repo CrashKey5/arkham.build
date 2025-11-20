@@ -2,8 +2,9 @@
   font-size: var(--text-sm);
   border: 1px solid var(--palette-2);
   border-radius: var(--rounded);
-  background-image: url("/assets/cycles/tdc.avif");
+  background-image: url("/assets/cycles/core_2026.avif");
   background-size: cover;
+  background-position: center center;
   color: var(--color-inverted);
   position: relative;
   margin-inline: 0.5rem;
@@ -12,7 +13,7 @@
 
 .content {
   padding: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.55);
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: var(--rounded);
 }
 

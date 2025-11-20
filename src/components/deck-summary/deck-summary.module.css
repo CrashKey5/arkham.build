@@ -130,6 +130,7 @@
     0.2s ease-in-out opacity,
     0.2s visibility;
   transition-behavior: allow-discrete;
+  z-index: 2;
 }
 
 :root[data-theme="light"] .quick-actions {

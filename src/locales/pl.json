@@ -101,6 +101,7 @@
       },
       "back": "Wstecz",
       "cancel": "Anuluj",
+      "card_back": "{{name}} - rewers",
       "card_few": "karty",
       "card_many": "kart",
       "card_one": "karta",
@@ -292,6 +293,7 @@
       "taboo_chained": "Kosztuje {{xp}} dodatkowego doświadczenia.",
       "taboo_mutated": "Zmutowana",
       "taboo_none": "żadna",
+      "taboo_original_text": "Originalny tekst karty",
       "taboo_unchained": "Kosztuje {{xp}} doświadczenia mniej.",
       "total": "łącznie",
       "trait_few": "Cechy",
@@ -706,6 +708,7 @@
     },
     "deck": {
       "actions": {
+        "archive": "Archiwizuj talię",
         "copy_id": "Kopiuj ID talii",
         "create": "Stwórz talię",
         "delete": "Usuń talię",
@@ -717,7 +720,8 @@
         "export_json": "Eksportuj JSON",
         "export_text": "Eksportuj tekst",
         "upgrade": "Ulepsz talię",
-        "upgrade_short": "Ulepsz"
+        "upgrade_short": "Ulepsz",
+        "unarchive": "Przywróć talię"
       },
       "annotation": "Adnotacje",
       "annotation_tooltip": "Karta ma adnotacje",
@@ -728,6 +732,7 @@
         "Market deck": "Talia handlu",
         "Stick to the Plan": "Trzymaj się planu"
       },
+      "cards": "Karty talii",
       "customization_sheet": "Arkusz usprawnień dla {{name}}",
       "id": "ID talii",
       "latest_upgrade": {
@@ -800,9 +805,11 @@
       }
     },
     "deck_collection": {
+      "archive": "Archiwum",
       "collection_empty": "Kolekcja talii pusta",
       "connect_arkhamdb": "Połącz z ArkhamDB",
       "count": "{{count}} talie",
+      "count_one": "{{count}} talia",
       "count_few": "{{count}} talie",
       "count_hidden": " ({{count}} ukryte)",
       "count_many": "{{count}} talii",
@@ -884,6 +891,7 @@
           "configure_environment": "Skonfiguruj środowisko gry",
           "current": "Aktualne",
           "current_help": "Podczas budowania talii w środowisku Aktualnym gracze mogą budować talię wyłącznie przy użyciu kart z zestawu podstawowego, pięciu talii początkowych badaczy i trzech najnowszych rozszerzeń badacza.",
+          "custom": "Własna pula",
           "help": "Ten wybór nie ma wpływu na badaczy, ich wymagane karty i atuty fabularne.",
           "placeholder": "Wybierz zestawy...",
           "legacy": "Legacy",
@@ -1047,6 +1055,7 @@
       },
       "import_failed": "Nie udało się zaimportować talii: {{error}}",
       "import_success": "Talia została zaimportowana pomyślnie.",
+      "latest_version": "<a>Skocz do najnowszej wersji</a>.",
       "list": "Lista",
       "loading": "Ładowanie talii...",
       "newer_version": "Dostępna jest <a>nowa wersja</a> tej talii. Ta talia jest tylko do odczytu.",
@@ -1095,8 +1104,8 @@
         "description_length_short": "Krótki",
         "excluded_cards": "Wykluczone karty",
         "investigator_factions": "Klasy badacza",
-        "name": "Nazwa przewodnika talii",
-        "name_placeholder": "Wprowadź nazwę...",
+        "name": "Nazwa talii",
+        "name_placeholder": "Wprowadź nazwę (np. Przewodnik talii...)...",
         "required_cards": "Wymagane karty",
         "submit": "Zastosuj",
         "title": "Kryteria filtrowania"
@@ -1197,6 +1206,9 @@
       "encounter_set": {
         "placeholder": "Wybierz zestawy spotkań...",
         "title": "Zestaw spotkań"
+      },
+      "environment": {
+        "title": "Środowisko"
       },
       "fan_made_content": {
         "all": "Pokaż wszystko",
@@ -1303,7 +1315,9 @@
         "focus_search": "Skup na wyszukiwaniu",
         "move_down": "Przejdź w dół",
         "move_up": "Przejdź w górę",
+        "next_card": "Następna karta",
         "open_card_modal": "Otwórz okno karty dla zaznaczonej karty",
+        "previous_card": "Poprzednia karta",
         "reset_filters": "Resetuj filtry",
         "show_limited_access": "Pokaż karty z limitowanym dostępem",
         "show_limited_access_help": "Badacze mogą mieć limitowany, opcjonalny dostęp do kart na podstawie poziomu, klasy, cechy, typu i/lub innych kryteriów. Kiedy ta opcja jest włączona, karty z limitowanym dostępem będą pokazywane.",
@@ -1368,6 +1382,9 @@
     },
     "rules": {
       "title": "Zasady gry"
+    },
+    "search": {
+      "title": "Wyniki wyszukiwania"
     },
     "settings": {
       "backup": {
@@ -1441,6 +1458,7 @@
         "card_show_details": "Pokazuj szczegóły karty",
         "card_show_icon": "Pokazuj ikonę karty",
         "card_show_thumbnail": "Pokazuj miniaturkę karty",
+        "card_show_unique_icon": "Pokazuj symbol unikalnej karty",
         "card_size": "Rozmiar",
         "card_size_sm": "Skondensowany",
         "card_size_standard": "Standardowy",
@@ -1451,6 +1469,8 @@
         "font_size_preview": "Nie ma zatem takiego człowieka, który kocha cierpienie samo w sobie, kto by do niego dążył lub chciał go doświadczyć, tylko dlatego, że jest to cierpienie, a dlatego, że czasami zdarzają się takie okoliczności, w których to cierpienie może doprowadzić go do jakiejś wielkiej przyjemności. Dając przykład banalny: któż z nas kiedyś nie podejmował się trudnego wysiłku fizycznego mając na względzie uzyskanie z tego korzyści?",
         "hide_weaknesses": "Ukryj osłabienia w liście kart gracza",
         "hide_weaknesses_help": "Jeśli ta opcja jest zaznaczona, osłabienia są domyślnie ukryte w liście kart gracza. Aby je wyświetlić, należy użyć filtra <strong>Podtyp</strong>.",
+        "show_card_modal_popular_decks": "Pokazuj popularne talie w oknie karty",
+        "show_card_modal_popular_decks_help": "Jeśli ta opcja jest zaznaczona, popularne talie zawierające wyświetloną kartę będą pokazywane w jej oknie.",
         "show_move_to_side_deck": "Pokazuj przycisk \"Przenieś do talii pobocznej\"",
         "show_move_to_side_deck_help": "Jeśli ta opcja jest zaznaczona, przycisk pozwalający na przeniesienie kart z talii do talii pobocznej będzie zawsze widoczny w trakcie edytowania talii. Pomocne jeśli budujesz swoją talię poprzez przepełnienie talli, a następnie jej redukowanie.",
         "sort_ignore_punctuation": "Sortowanie ignoruje interpunkcję",
@@ -1508,6 +1528,9 @@
         "collapse": "Zwiń sekcję",
         "expand": "Rozwiń sekcję",
         "toggle": "Przełącz sekcję"
+      },
+      "combobox": {
+        "unknown_option": "Nieznana opcja"
       },
       "copy_to_clipboard": "Kopiuj do schowka",
       "copy_to_clipboard_success": "Skopiowano.",

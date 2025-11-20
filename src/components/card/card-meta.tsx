@@ -1,14 +1,18 @@
+import { useStore } from "@/store";
 import type { CardWithRelations, ResolvedCard } from "@/store/lib/types";
-import { isCardWithRelations } from "@/store/lib/types";
-import { cycleOrPack } from "@/utils/card-utils";
+import {
+  type Printing as PrintingT,
+  selectPrintingsForCard,
+} from "@/store/selectors/shared";
 import { cx } from "@/utils/cx";
-import { displayPackName } from "@/utils/formatting";
 import EncounterIcon from "../icons/encounter-icon";
-import PackIcon from "../icons/pack-icon";
+import { Printing, PrintingInner } from "../printing";
 import css from "./card.module.css";
 
 type Props = {
+  hideCollectorInfo?: boolean;
   resolvedCard: ResolvedCard | CardWithRelations;
+  onPrintingSelect?: (cardCode: string) => void;
   size: "tooltip" | "compact" | "full";
 };
 
@@ -25,7 +29,7 @@ export function CardMetaBack(props: { illustrator?: string | null }) {
 }
 
 export function CardMeta(props: Props) {
-  const { resolvedCard, size } = props;
+  const { onPrintingSelect, resolvedCard, size } = props;
 
   const illustrator = resolvedCard.card.illustrator;
 
@@ -39,58 +43,82 @@ export function CardMeta(props: Props) {
         </p>
       )}
       {card.encounter_code ? (
-        <EncounterEntry resolvedCard={resolvedCard} size={size} />
+        <EncounterEntry
+          onPrintingSelect={onPrintingSelect}
+          resolvedCard={resolvedCard}
+          size={size}
+        />
       ) : (
-        <PlayerEntry resolvedCard={resolvedCard} size={size} />
+        <PlayerEntry
+          onPrintingSelect={onPrintingSelect}
+          resolvedCard={resolvedCard}
+          size={size}
+        />
       )}
     </footer>
   );
 }
 
 function PlayerEntry(props: Props) {
-  const { resolvedCard } = props;
-  const { card, cycle, pack } = resolvedCard;
+  const { onPrintingSelect, resolvedCard } = props;
 
-  const duplicates = isCardWithRelations(resolvedCard)
-    ? resolvedCard.relations?.duplicates
-    : [];
-
-  const displayPack = cycleOrPack(cycle, pack);
+  const printings = useStore((state) =>
+    selectPrintingsForCard(state, resolvedCard.card.code),
+  );
 
   return (
     <>
-      {duplicates?.map((duplicate) => (
-        <p className={css["meta-property"]} key={duplicate.card.code}>
-          {displayPackName(duplicate.pack)}{" "}
-          <PackIcon code={duplicate.pack.code} /> {duplicate.card.position}{" "}
-          <i className="icon-card-outline-bold" /> ×{duplicate.card.quantity}
+      <hr className={css["meta-divider"]} />
+
+      {printings?.map((printing) => (
+        <p className={css["meta-property"]} key={printing.id}>
+          <Printing
+            active={printingActive(resolvedCard.card.code, printing, printings)}
+            key={printing.id}
+            printing={printing}
+            onClick={onPrintingSelect}
+          />
         </p>
       ))}
-      <p className={css["meta-property"]}>
-        {displayPackName(displayPack)} <PackIcon code={displayPack.code} />{" "}
-        {card.position} <i className="icon-card-outline-bold" /> ×
-        {card.quantity}
-      </p>
     </>
   );
 }
 
 function EncounterEntry(props: Props) {
-  const { card, cycle, encounterSet, pack } = props.resolvedCard;
-  if (!encounterSet) return null;
+  const { resolvedCard } = props;
 
-  const displayPack = cycleOrPack(cycle, pack);
+  const printings = useStore((state) =>
+    selectPrintingsForCard(state, resolvedCard.card.code),
+  );
+
+  const { card, encounterSet } = resolvedCard;
+
+  if (!encounterSet) return null;
 
   return (
     <>
+      <hr className={css["meta-divider"]} />
       <p className={css["meta-property"]}>
-        {encounterSet.name} <EncounterIcon code={card.encounter_code} />{" "}
-        {getEncounterPositions(card.encounter_position ?? 1, card.quantity)}
+        <PrintingInner
+          cardCode={card.code}
+          icon={<EncounterIcon code={card.encounter_code} />}
+          name={encounterSet.name}
+          position={getEncounterPositions(
+            card.encounter_position ?? 1,
+            card.quantity,
+          )}
+        />
       </p>
-      <p className={css["meta-property"]}>
-        {displayPackName(displayPack)} <PackIcon code={displayPack.code} />{" "}
-        {card.position}
-      </p>
+      <hr className={css["meta-divider"]} />
+      {printings?.map((printing) => (
+        <p className={css["meta-property"]} key={printing.id}>
+          <Printing
+            active={printingActive(resolvedCard.card.code, printing, printings)}
+            key={printing.id}
+            printing={printing}
+          />
+        </p>
+      ))}
     </>
   );
 }
@@ -100,4 +128,15 @@ function getEncounterPositions(position: number, quantity: number) {
   const start = position;
   const end = position + quantity - 1;
   return `${start}-${end}`;
+}
+
+function printingActive(
+  cardCode: string,
+  printing: PrintingT,
+  printings: PrintingT[],
+) {
+  return (
+    cardCode === printing.card.code &&
+    printings.filter((p) => p.card.code !== cardCode).length > 0
+  );
 }

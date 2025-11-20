@@ -73,8 +73,10 @@ test.describe("filters", () => {
     await page.getByTestId("combobox-input").fill("enemy");
     await page.getByTestId("combobox-input").click();
     await page.getByTestId("combobox-menu-item-enemy").click();
+    await page.getByTestId("combobox-input").fill("asset");
     await page.getByTestId("combobox-menu-item-asset").click();
     await expect(page.getByTestId("listcard-01181")).toBeVisible();
+    await page.getByTestId("combobox-input").fill("enemy");
     await page.getByTestId("combobox-menu-item-enemy").click();
     await expect(page.getByTestId("listcard-01181")).not.toBeVisible();
   });
@@ -317,9 +319,17 @@ test.describe("filters", () => {
     await typeFilter.getByTestId("combobox-input").fill("enemy");
     await page.getByTestId("combobox-menu-item-enemy").click();
     await expect(page.getByTestId("listcard-01121a")).toBeVisible();
+    await typeFilter.getByTestId("combobox-input").fill("enemy");
     await page.getByTestId("combobox-menu-item-enemy").click();
     await typeFilter.getByTestId("combobox-input").fill("location");
     await page.getByTestId("combobox-menu-item-location").click();
     await expect(page.getByTestId("listcard-01121a")).not.toBeVisible();
+  });
+
+  test("duplicate card's packs show up in pack filter", async ({ page }) => {
+    await page.getByRole("heading", { name: "Pack" }).click();
+    await page.getByTestId("combobox-input").click();
+    await page.getByTestId("combobox-input").fill("revised core");
+    await expect(page.getByTestId("combobox-menu-item-rcore")).toBeVisible();
   });
 });

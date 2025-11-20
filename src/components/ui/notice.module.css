@@ -8,6 +8,10 @@
   padding: 0.5rem;
 }
 
+.notice-icon {
+  flex: 0 0 auto;
+}
+
 .notice.info {
   border-color: var(--nord-9);
 }
