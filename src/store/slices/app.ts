@@ -69,7 +69,7 @@ export const createAppSlice: StateCreator<StoreState, [], [], AppSlice> = (
     queryMetadata,
     queryDataVersion,
     queryCards,
-    { refresh, locale, overrides, keepListState } = {},
+    { refresh, locale, overrides } = {},
   ) {
     const persistedState = await hydrate();
 
@@ -86,7 +86,10 @@ export const createAppSlice: StateCreator<StoreState, [], [], AppSlice> = (
 
         return {
           ...merged,
-          lists: keepListState ? merged.lists : makeLists(merged.settings),
+          lists: {
+            ...makeLists(merged.settings),
+            ...merged.lists,
+          },
           metadata,
           ui: {
             ...prev.ui,
@@ -208,7 +211,10 @@ export const createAppSlice: StateCreator<StoreState, [], [], AppSlice> = (
             Object.values(merged.data.decks),
           ),
         },
-        lists: merged.lists,
+        lists: {
+          ...makeLists(merged.settings),
+          ...merged.lists,
+        },
       };
     });
 

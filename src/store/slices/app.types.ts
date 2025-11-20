@@ -23,7 +23,6 @@ export type AppSlice = {
       locale?: Locale;
       overrides?: Partial<StoreState>;
       refresh?: boolean;
-      keepListState?: boolean;
     },
   ): Promise<boolean>;
 
