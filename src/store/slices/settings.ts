@@ -117,7 +117,6 @@ export const createSettingsSlice: StateCreator<
             ...settings,
           },
         },
-        keepListState,
       });
     } else {
       set({
