@@ -118,7 +118,8 @@ const selectLimitedCardPoolCards = createSelector(
   (metadata, cardPool) => {
     return cardPool
       ?.filter((str) => str.startsWith("card:"))
-      .map((str) => metadata.cards[str.replace("card:", "")]);
+      .map((str) => metadata.cards[str.replace("card:", "")])
+      .filter(Boolean);
   },
 );
 
