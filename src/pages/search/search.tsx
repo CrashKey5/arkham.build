@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "wouter";
+import { Redirect, useSearchParams } from "wouter";
 import { CardModalProvider } from "@/components/card-modal/card-modal-provider";
 import { ListLayoutContextProvider } from "@/layouts/list-layout-context-provider";
 import { ListLayoutNoSidebar } from "@/layouts/list-layout-no-sidebar";
 import { useStore } from "@/store";
+import { selectListCards } from "@/store/selectors/lists";
 import { selectIsInitialized } from "@/store/selectors/shared";
 import { useDocumentTitle } from "@/utils/use-document-title";
 
@@ -23,6 +24,7 @@ function Search() {
   const addList = useStore((state) => state.addList);
   const setActiveList = useStore((state) => state.setActiveList);
   const removeList = useStore((state) => state.removeList);
+  const mounted = useRef(false);
 
   const listKey = "search";
 
@@ -47,9 +49,19 @@ function Search() {
     };
   }, [addList, removeList, setActiveList, searchParams]);
 
+  const listCards = useStore((state) =>
+    selectListCards(state, undefined, undefined),
+  );
+
   if (!activeList || !isInitalized || !activeListId?.startsWith(listKey)) {
     return null;
   }
+
+  if (!mounted.current && listCards?.totalCardCount === 1) {
+    return <Redirect to={`/card/${listCards.cards[0].code}`} />;
+  }
+
+  mounted.current = true;
 
   return (
     <CardModalProvider>
