@@ -1359,6 +1359,7 @@ export const selectPropertyOptions = createSelector(
       { key: "bonded", label: t("common.decks.bondedSlots_short") },
       { key: "customizable", label: t("common.customizable") },
       { key: "exile", label: t("common.exile") },
+      { key: "exceptional", label: t("common.exceptional") },
       { key: "fast", label: t("common.fast") },
       {
         key: "healsDamage",
@@ -1372,6 +1373,7 @@ export const selectPropertyOptions = createSelector(
         key: "multiClass",
         label: t("common.factions.multiclass"),
       },
+      { key: "myriad", label: t("common.myriad") },
       { key: "permanent", label: t("common.permanent") },
       { key: "seal", label: t("common.seal") },
       { key: "specialist", label: t("common.specialist") },
@@ -1698,8 +1700,7 @@ function selectLevelChanges(value: LevelFilter) {
     const max = levelToString(value.range[1]);
     str = `${str}-${max}`;
   }
-  if (value.exceptional) str = `${str}, ${i18n.t("common.exceptional")}`;
-  if (value.nonexceptional) str = `${str}, ${i18n.t("common.nonexceptional")}`;
+
   return str;
 }
 

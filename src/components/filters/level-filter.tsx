@@ -9,8 +9,6 @@ import {
 } from "@/store/selectors/lists";
 import { isLevelFilterObject } from "@/store/slices/lists.type-guards";
 import { assert } from "@/utils/assert";
-import { Checkbox } from "../ui/checkbox";
-import { CheckboxGroup } from "../ui/checkboxgroup";
 import { RangeSelect } from "../ui/range-select";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import type { FilterProps } from "./filters.types";
@@ -61,24 +59,6 @@ export function LevelFilter({ id, resolvedDeck, targetDeck }: FilterProps) {
       onOpenChange(val);
     },
     [onChangeRange, filter.value.range, onOpenChange],
-  );
-
-  const onSetExceptional = useCallback(
-    (val: boolean) => {
-      onChange({
-        exceptional: val,
-      });
-    },
-    [onChange],
-  );
-
-  const onSetNonexceptional = useCallback(
-    (val: boolean) => {
-      onChange({
-        nonexceptional: val,
-      });
-    },
-    [onChange],
   );
 
   const onApplyLevelShortcut = useCallback(
@@ -139,20 +119,6 @@ export function LevelFilter({ id, resolvedDeck, targetDeck }: FilterProps) {
         }}
         value={filter.value.range ?? [0, 5]}
       />
-      <CheckboxGroup>
-        <Checkbox
-          checked={filter.value.exceptional}
-          id="exceptional"
-          label={t("common.exceptional")}
-          onCheckedChange={onSetExceptional}
-        />
-        <Checkbox
-          checked={filter.value.nonexceptional}
-          id="nonexceptional"
-          label={t("common.nonexceptional")}
-          onCheckedChange={onSetNonexceptional}
-        />
-      </CheckboxGroup>
     </FilterContainer>
   );
 }

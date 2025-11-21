@@ -546,8 +546,6 @@ function makeFilterValue(type: FilterKey, initialValue?: unknown) {
           ? initialValue
           : {
               range: undefined,
-              exceptional: false,
-              nonexceptional: false,
             },
       );
     }
@@ -625,10 +623,12 @@ function makeFilterValue(type: FilterKey, initialValue?: unknown) {
               bonded: false,
               customizable: false,
               exile: false,
+              exceptional: false,
               fast: false,
               healsDamage: false,
               healsHorror: false,
               multiClass: false,
+              myriad: false,
               permanent: false,
               seal: false,
               specialist: false,
@@ -764,10 +764,12 @@ function properties() {
   return [
     "customizable",
     "exile",
+    "exceptional",
     "fast",
     "healsDamage",
     "healsHorror",
     "multiClass",
+    "myriad",
     "permanent",
     "seal",
     "specialist",

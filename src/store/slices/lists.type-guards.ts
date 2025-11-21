@@ -171,13 +171,7 @@ export function isCostFilter(value: unknown): value is CostFilter {
 }
 
 export function isLevelFilter(value: unknown): value is LevelFilter {
-  return (
-    typeof value === "object" &&
-    value != null &&
-    "range" in value &&
-    "exceptional" in value &&
-    "nonexceptional" in value
-  );
+  return typeof value === "object" && value != null && "range" in value;
 }
 
 export function isRangeFilter(value: unknown): value is [number, number] {

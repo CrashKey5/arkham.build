@@ -334,10 +334,6 @@ function filterExceptional(card: Card) {
   return !!card.exceptional;
 }
 
-function filterNonexceptional(card: Card) {
-  return !card.exceptional;
-}
-
 function isLevelInRange(
   level: number | null | undefined,
   value: [number, number],
@@ -371,10 +367,12 @@ type FilterCardLevelOptions = {
 };
 
 function filterCardLevel(
-  value: [number, number],
+  value: [number, number] | undefined,
   options?: FilterCardLevelOptions,
 ) {
   return (card: Card) => {
+    if (!value) return true;
+
     const level = cardLevel(card);
 
     if (
@@ -401,29 +399,13 @@ function filterCardLevel(
 }
 
 export function filterLevel(filterState: LevelFilter, investigator?: Card) {
-  const filters = [];
-
-  if (filterState.range) {
-    filters.push(
-      filterCardLevel(filterState.range, {
-        investigator,
-        customizable: {
-          level: "all",
-          properties: "all",
-        },
-      }),
-    );
-  }
-
-  if (filterState.exceptional !== filterState.nonexceptional) {
-    if (filterState.exceptional) {
-      filters.push(filterExceptional);
-    } else {
-      filters.push(filterNonexceptional);
-    }
-  }
-
-  return and(filters);
+  return filterCardLevel(filterState.range, {
+    investigator,
+    customizable: {
+      level: "all",
+      properties: "all",
+    },
+  });
 }
 
 /**
@@ -583,6 +565,10 @@ function filterHealsHorror(checkUnselectedCustomizations: boolean) {
   return filterTag("hh", checkUnselectedCustomizations);
 }
 
+function filterMyriad(card: Card) {
+  return !!card.myriad;
+}
+
 /**
  * Restrictions
  */
@@ -655,6 +641,14 @@ export function filterProperties(
 
   if (filterState.multiClass) {
     filters.push(filterMulticlass);
+  }
+
+  if (filterState.myriad) {
+    filters.push(filterMyriad);
+  }
+
+  if (filterState.exceptional) {
+    filters.push(filterExceptional);
   }
 
   return and(filters);

@@ -19,8 +19,6 @@ export type CostFilter = {
 
 export type LevelFilter = {
   range: undefined | [number, number];
-  exceptional: boolean;
-  nonexceptional: boolean;
 };
 
 export type MultiselectFilter = string[];
@@ -32,14 +30,16 @@ export type FanMadeContentFilter = "fan-made" | "official" | "all";
 export type PropertiesFilter = {
   bonded: boolean;
   customizable: boolean;
+  exceptional: boolean;
   exile: boolean;
   fast: boolean;
-  multiClass: boolean;
   healsDamage: boolean;
   healsHorror: boolean;
+  multiClass: boolean;
+  myriad: boolean;
   permanent: boolean;
-  specialist: boolean;
   seal: boolean;
+  specialist: boolean;
   succeedBy: boolean;
   unique: boolean;
   victory: boolean;

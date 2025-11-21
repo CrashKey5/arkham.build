@@ -59,10 +59,7 @@ export const selectAvailableUpgrades = createSelector(
 
     const filters = [
       filterDuplicates,
-      filterLevel(
-        { range: [1, 5], exceptional: true, nonexceptional: true },
-        suzi,
-      ),
+      filterLevel({ range: [1, 5] }, suzi),
       cardAccessFilter,
       (c: Card) =>
         !c.real_text?.includes("Researched") && !c.customization_options,
