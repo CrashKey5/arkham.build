@@ -544,11 +544,9 @@ function getSwaps(slotDiff: Diff) {
     const swapped = slotDiff.removes.find((diff) => {
       const x = diff[0];
       return (
-        (x.real_name === card.real_name &&
-          x.xp === card.xp &&
-          x.subname === card.subname &&
-          !!x.duplicate_of_code) ||
-        !!card.duplicate_of_code
+        x.real_name === card.real_name &&
+        x.xp === card.xp &&
+        x.subname === card.subname
       );
     });
 
