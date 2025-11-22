@@ -566,8 +566,6 @@ describe("filter: level", () => {
 
     const config = {
       range: undefined,
-      nonexceptional: false,
-      exceptional: false,
     };
 
     expect(applyFilter(state, "60505", config)).toBeTruthy();
@@ -582,8 +580,6 @@ describe("filter: level", () => {
 
     const config = {
       range: [0, 0] as [number, number],
-      nonexceptional: false,
-      exceptional: false,
     };
 
     expect(applyFilter(state, "60505", config)).toBeTruthy();
@@ -598,8 +594,6 @@ describe("filter: level", () => {
 
     const config = {
       range: [0, 5] as [number, number],
-      nonexceptional: false,
-      exceptional: false,
     };
 
     expect(applyFilter(state, "60505", config)).toBeTruthy();
@@ -614,8 +608,6 @@ describe("filter: level", () => {
 
     const config = {
       range: [1, 5] as [number, number],
-      nonexceptional: false,
-      exceptional: false,
     };
 
     expect(applyFilter(state, "60505", config)).toBeFalsy();
@@ -623,32 +615,6 @@ describe("filter: level", () => {
     expect(applyFilter(state, "02005", config)).toBeFalsy(); // investigator
     expect(applyFilter(state, "02014", config)).toBeFalsy(); // signature
     expect(applyFilter(state, "02015", config)).toBeFalsy(); // weakness
-  });
-
-  it("handles case: exceptional", () => {
-    const state = store.getState();
-
-    const config = {
-      range: undefined,
-      nonexceptional: false,
-      exceptional: true,
-    };
-
-    expect(applyFilter(state, "60505", config)).toBeFalsy();
-    expect(applyFilter(state, "07268", config)).toBeTruthy();
-  });
-
-  it("handles case: non-exceptional", () => {
-    const state = store.getState();
-
-    const config = {
-      range: undefined,
-      nonexceptional: true,
-      exceptional: false,
-    };
-
-    expect(applyFilter(state, "60505", config)).toBeTruthy();
-    expect(applyFilter(state, "07268", config)).toBeFalsy();
   });
 
   it("handles case: customizable access", () => {
