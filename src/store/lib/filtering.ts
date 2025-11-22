@@ -1240,6 +1240,7 @@ export function filterDuplicatesFromContext(
   }
 
   const resolutions = filteredCards.reduce((acc, card) => {
+    // if the deck contains the card, prefer this version.
     if (containsCard(deck, card)) {
       acc.set(card.code, true);
       return acc;
@@ -1258,6 +1259,14 @@ export function filterDuplicatesFromContext(
 
     const reprintCodes = Object.keys(reprints ?? {});
     const duplicateCodes = Object.keys(duplicates ?? {});
+
+    // if the deck contains any other printing, hide this one.
+    if (
+      [...duplicateCodes].some((c) => containsCard(deck, metadata.cards[c]))
+    ) {
+      acc.set(card.code, false);
+      return acc;
+    }
 
     // any matching reprint is displayed.
     for (const c of reprintCodes) {
