@@ -75,6 +75,9 @@ const tests = [
     "customizable_dtrh_purchase",
   ],
   ["Customizable: Checkbox removals", "customizable_xp_removed"],
+  // Duplicates
+  ["Duplicates: Add duplicate upgrade", "duplicate_add"],
+  ["Duplicates: Swap in duplicate", "duplicate_swap"],
   // Exile
   ["Exile: Repurchase without discounts", "exile_repurchase"],
   ["Exile: Replace with lvl. 0 cards", "exile_level_0"],

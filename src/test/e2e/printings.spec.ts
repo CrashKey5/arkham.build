@@ -101,7 +101,7 @@ test.describe("printings", () => {
       await expect(card(page, DEDUCTION_REPRINT_CODE)).toBeVisible();
     });
 
-    test("always shows cards that are in deck", async ({ page }) => {
+    test("always prefer cards that are in deck", async ({ page }) => {
       await createDeck(page);
       await fillSearch(page, "deduction");
       await adjustListCardQuantity(page, "02150", "increment");
@@ -113,7 +113,6 @@ test.describe("printings", () => {
       await setCardPoolPack(page, "Revised Core Set", "rcore");
       await setCardPoolPack(page, "Harvey Walters", "har");
       await expect(card(page, "01539")).toBeVisible();
-      await expect(card(page, "60219")).toBeVisible();
     });
   });
 });
