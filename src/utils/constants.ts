@@ -178,6 +178,8 @@ export const SPECIAL_CARD_CODES = {
   MANDY: "06002",
   /** Scales with investigator deck size selection. */
   OCCULT_EVIDENCE: "06008",
+  /** Fake-bonded card, should be excluded from things liks draw simulator. */
+  ON_THE_MEND: "09006",
   /** Has option to add cards to ignore deck limit slots. */
   PARALLEL_AGNES: "90017",
   /** Has spirit deck. */

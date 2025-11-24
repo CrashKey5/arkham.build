@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import type { ResolvedDeck } from "@/store/lib/types";
 import type { Card } from "@/store/schemas/card.schema";
 import type { Id } from "@/store/schemas/deck.schema";
+import { SPECIAL_CARD_CODES } from "@/utils/constants";
 import { cx } from "@/utils/cx";
 import { isEmpty } from "@/utils/is-empty";
 import { range } from "@/utils/range";
@@ -268,7 +269,13 @@ function drawReducer(state: State, action: Action): State {
 
 function prepareBag(deck: ResolvedDeck) {
   const cards = Object.values(deck.cards.slots).reduce((acc, { card }) => {
-    if (!card.permanent && !card.double_sided && !card.back_link_id) {
+    const drawable =
+      !card.permanent &&
+      !card.double_sided &&
+      !card.back_link_id &&
+      card.code !== SPECIAL_CARD_CODES.ON_THE_MEND;
+
+    if (drawable) {
       const quantity = deck.slots[card.code] ?? 0;
       for (const _ of range(0, quantity)) {
         acc.push(card.code);
