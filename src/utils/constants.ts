@@ -109,6 +109,7 @@ export const ASSET_SLOT_ORDER = [
   "Ally",
   "Arcane",
   "Arcane x2",
+  "Head",
   "Body",
   "Tarot",
   // followed by:

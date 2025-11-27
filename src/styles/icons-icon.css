@@ -161,6 +161,9 @@
 .icon-seal_a:before {
   content: "\e908";
 }
+.icon-head_inverted:before {
+  content: "\e949";
+}
 .icon-tarot_inverted:before {
   content: "\41";
 }

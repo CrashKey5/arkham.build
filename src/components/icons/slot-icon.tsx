@@ -20,6 +20,8 @@ const getIcon = (code: string) => {
       return <i className="icon-body_inverted" />;
     case "Tarot":
       return <i className="icon-tarot_inverted" />;
+    case "Head":
+      return <i className="icon-head_inverted" />;
     default:
       return null;
   }

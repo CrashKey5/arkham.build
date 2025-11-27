@@ -245,6 +245,7 @@
         "body": "Body",
         "hand": "Hand",
         "hand x2": "Hand x2",
+        "head": "Head",
         "none": "No Slot",
         "tarot": "Tarot"
       },
