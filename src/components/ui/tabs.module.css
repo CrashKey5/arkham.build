@@ -15,7 +15,12 @@
 
 .list.vertical {
   flex-direction: column;
+  flex-wrap: nowrap;
   border-bottom: none;
+
+  & > * {
+    flex: 0 0 auto;
+  }
 }
 
 .trigger {
