@@ -12,7 +12,9 @@ export function ownedCardCount(
   strict = false,
 ) {
   // Treat fan-made content as owned when not checking the pack filter.
-  if (showAllCards || (!strict && !card.official)) return card.quantity;
+  if (!card.official && !strict) return card.quantity;
+
+  if (card.official && showAllCards) return card.quantity;
 
   let quantityOwned = 0;
 
