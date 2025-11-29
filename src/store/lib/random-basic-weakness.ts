@@ -43,7 +43,7 @@ export function randomBasicWeaknessForDeck(
       lookupTables,
       collection,
       !useLimitedPool && settings.showAllCards,
-      true,
+      useLimitedPool,
     );
 
     if (
