@@ -150,7 +150,7 @@ test.describe("card view: display", () => {
   });
 
   test("renders stories", async ({ page }) => {
-    await page.goto("/card/03065");
+    await page.goto("/card/05263");
     await expect(page.getByTestId("main")).toHaveScreenshot({
       mask: defaultScreenshotMask(page),
     });

@@ -1,4 +1,4 @@
-import localCards from "@/store/services/data/cards.json";
+import localCards from "@/store/services/data/card-patches";
 import localCycles from "@/store/services/data/cycles.json";
 import localEncounters from "@/store/services/data/encounter_sets.json";
 import localPacks from "@/store/services/data/packs.json";
