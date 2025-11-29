@@ -1,4 +1,8 @@
-import { countExperience, realCardLevel } from "@/utils/card-utils";
+import {
+  countExperience,
+  realCardLevel,
+  splitMultiValue,
+} from "@/utils/card-utils";
 import { SPECIAL_CARD_CODES } from "@/utils/constants";
 import { range } from "@/utils/range";
 import type { Card } from "../schemas/card.schema";
@@ -187,35 +191,45 @@ function calculateXpSpent(
     investigatorCode === SPECIAL_CARD_CODES.PARALLEL_AGNES ||
     investigatorCode === SPECIAL_CARD_CODES.PARALLEL_SKIDS;
 
-  const { modifiers, modifierFlags } = getModifiers(prev, next);
+  const { modifiers, modifiersAvailable, modifierFlags } = getModifiers(
+    prev,
+    next,
+  );
 
   const originalModifiers = structuredClone(modifiers);
 
-  function applyDownTheRabbitHole(_cost: number, quantity: number) {
+  function applyDownTheRabbitHole(_cost: number) {
+    // regardless of how many discounts actually apply, DtRH can only apply to two cards.
+    if ((modifiersAvailable.downTheRabbitHole ?? 0) <= 0) return _cost;
+
     let cost = _cost;
 
-    for (const _ of range(0, Math.min(modifiers.downTheRabbitHole, quantity))) {
-      if (cost > 0) {
-        cost -= 1;
-        modifiers.downTheRabbitHole -= 1;
-      }
+    if (cost > 0) {
+      cost -= 1;
+      modifiers.downTheRabbitHole -= 1;
+    }
+
+    if (modifiersAvailable.downTheRabbitHole) {
+      modifiersAvailable.downTheRabbitHole -= 1;
     }
 
     return cost;
   }
 
-  function applyArcaneResearch(card: Card, _cost: number) {
+  function applyArcaneResearch(_cost: number) {
+    // regardless of how many discounts actually apply, AR can only apply to one card.
+    if ((modifiersAvailable.arcaneResearch ?? 0) <= 0) return _cost;
+
     let cost = _cost;
 
-    if (card.real_traits?.includes("Spell.")) {
-      for (const _ of range(0, modifiers.arcaneResearch)) {
-        if (cost > 0) {
-          cost -= 1;
-          modifiers.arcaneResearch -= 1;
-        }
+    for (const _ of range(0, modifiers.arcaneResearch)) {
+      if (cost > 0) {
+        cost -= 1;
+        modifiers.arcaneResearch -= 1;
       }
     }
 
+    modifiersAvailable.arcaneResearch = 0;
     return cost;
   }
 
@@ -322,7 +336,7 @@ function calculateXpSpent(
         cost = applyDejaVu(card, cost, quantity);
       }
 
-      // ignored cards (||Agnes, ||Skids) require full XP cost to purchase.
+      // ignored cards (||Agnes, ||Skids) require full XP cost to purchase, as well as any DtRH penalties.
       if (
         investigatorCanIgnore &&
         Object.values(next.cards.ignoreDeckLimitSlots).some(
@@ -330,23 +344,39 @@ function calculateXpSpent(
         )
       ) {
         xp += cost;
+        if (modifierFlags.downTheRabbitHole) {
+          xp += quantity;
+        }
         continue;
       }
 
       const upgradedFrom = upgrades[card.code];
 
+      const isSpell = splitMultiValue(card.real_traits).includes("Spell");
+
       // if an XP card is upgraded, i.e. (1) => (5), subtract the previous upgrade's XP cost.
       if (upgradedFrom) {
         const upgradedCount = upgradedFrom[1];
-        cost -= countExperience(upgradedFrom[0], upgradedCount);
-        if (dtrhFirst) {
-          cost = applyDownTheRabbitHole(cost, upgradedCount);
-          cost = applyArcaneResearch(card, cost);
-        } else {
-          cost = applyArcaneResearch(card, cost);
-          cost = applyDownTheRabbitHole(cost, upgradedCount);
+
+        // handle these one by one to account for discounts properly.
+        for (const _ of range(0, upgradedCount)) {
+          cost -= countExperience(upgradedFrom[0], 1);
+
+          const spent =
+            countExperience(card, 1) - countExperience(upgradedFrom[0], 1);
+
+          // upgrades can be discounted via DtRH and Arcane Research (spells).
+          let discounted = spent;
+          if (dtrhFirst) {
+            discounted = applyDownTheRabbitHole(discounted);
+            if (isSpell) discounted = applyArcaneResearch(discounted);
+          } else {
+            if (isSpell) discounted = applyArcaneResearch(discounted);
+            discounted = applyDownTheRabbitHole(discounted);
+          }
+
+          cost -= spent - discounted;
         }
-        // upgrades can be discounted via DtRH and Arcane Research (spells).
       } else if (level === 0) {
         cost = applyFree0Swaps(cost, quantity);
         // if an XP card is new and DtRH is in deck, a penalty of 1XP is applied,
@@ -375,15 +405,16 @@ function calculateXpSpent(
   for (const [code, entries] of Object.entries(changes.customizations)) {
     if (prev.slots[code] && !next.exileSlots[code]) {
       const card = prev.cards.slots[code].card;
+      const isSpell = splitMultiValue(card.real_traits).includes("Spell");
+
       let cost = entries.reduce((acc, curr) => acc + curr.xp_spent, 0);
 
       if (dtrhFirst) {
-        // Dtrh can discount each customizable only once.
-        cost = applyDownTheRabbitHole(cost, 1);
-        cost = applyArcaneResearch(card, cost);
+        cost = applyDownTheRabbitHole(cost);
+        if (isSpell) cost = applyArcaneResearch(cost);
       } else {
-        cost = applyArcaneResearch(card, cost);
-        cost = applyDownTheRabbitHole(cost, 1);
+        if (isSpell) cost = applyArcaneResearch(cost);
+        cost = applyDownTheRabbitHole(cost);
       }
 
       xp += cost;
@@ -411,8 +442,9 @@ function getModifiers(
   prev: ResolvedDeck,
   next: ResolvedDeck,
 ): {
-  modifiers: Modifiers;
   modifierFlags: ModifierFlags;
+  modifiers: Modifiers;
+  modifiersAvailable: Partial<Modifiers>;
 } {
   const modifiers = {
     adaptable: (next.slots[SPECIAL_CARD_CODES.ADAPTABLE] ?? 0) * 2,
@@ -426,7 +458,12 @@ function getModifiers(
     Object.entries(modifiers).map(([key, val]) => [key, !!val]),
   ) as ModifierFlags;
 
-  return { modifiers, modifierFlags };
+  const modifiersAvailable = {
+    arcaneResearch: modifiers.arcaneResearch,
+    downTheRabbitHole: modifiers.downTheRabbitHole,
+  };
+
+  return { modifiers, modifierFlags, modifiersAvailable };
 }
 
 function getSlotDiff(
@@ -435,7 +472,7 @@ function getSlotDiff(
   slots: Record<string, number>,
   slotKey: "slots" | "extraSlots" = "slots",
 ) {
-  return Object.entries(slots).reduce<Diff>(
+  const diffs = Object.entries(slots).reduce<Diff>(
     (acc, [code, quantity]) => {
       const isAdd = quantity > 0;
 
@@ -460,6 +497,41 @@ function getSlotDiff(
     },
     { adds: [], removes: [] },
   );
+
+  // Sort additions first by whether they are spells, then by XP cost diff.
+  // This makes it so the combination of DtRH and Arcane Research is calculated optimally.
+  diffs.adds.sort((a, b) => {
+    const aCard = a[0];
+    const bCard = b[0];
+
+    const aLevel = realCardLevel(aCard) ?? -1;
+    const bLevel = realCardLevel(bCard) ?? -1;
+
+    const aUpgradedFrom = diffs.removes.find((diff) =>
+      findUpgraded(diff, aCard),
+    );
+
+    const bUpgradedFrom = diffs.removes.find((diff) =>
+      findUpgraded(diff, bCard),
+    );
+
+    if (!aUpgradedFrom || !bUpgradedFrom) {
+      return bLevel - aLevel;
+    }
+
+    const aSpell = aCard.real_traits?.includes("Spell.") ? 1 : 0;
+    const bSpell = bCard.real_traits?.includes("Spell.") ? 1 : 0;
+    if (aSpell !== bSpell) return aSpell - bSpell;
+
+    const aCardBaseLevel = realCardLevel(aUpgradedFrom[0]) ?? 0;
+    const bCardBaseLevel = realCardLevel(bUpgradedFrom[0]) ?? 0;
+
+    const aDiff = aLevel - aCardBaseLevel;
+    const bDiff = bLevel - bCardBaseLevel;
+    return bDiff - aDiff;
+  });
+
+  return diffs;
 }
 
 function countFreeLevel0Cards(
@@ -520,6 +592,7 @@ function getDirectUpgrades(slotDiff: Diff) {
   const upgrades: Record<string, SlotDiff | undefined> = {};
   for (const [card, quantityAdded] of slotDiff.adds) {
     const removed = slotDiff.removes.find((diff) => findUpgraded(diff, card));
+
     if (removed) {
       const quantityRemoved = Math.abs(removed[1]);
       upgrades[card.code] = [
