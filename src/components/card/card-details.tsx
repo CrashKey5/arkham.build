@@ -52,6 +52,12 @@ export function CardDetails(props: Props) {
         {showDoom && (
           <p>
             {t("common.doom")}: {numericalStr(card.doom)}
+            {card.doom_per_investigator && (
+              <>
+                {" "}
+                <i className="icon-text icon-per_investigator" />
+              </>
+            )}
           </p>
         )}
 

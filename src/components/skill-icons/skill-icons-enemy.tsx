@@ -14,26 +14,32 @@ type Props = {
 export function SkillIconsEnemy(props: Props) {
   const { className, card, iconClassName } = props;
 
-  const entries: [string, number | null | undefined][] = [
-    ["combat", card.enemy_fight],
-    ["health", card.health],
-    ["agility", card.enemy_evade],
+  const entries: [
+    string,
+    number | null | undefined,
+    boolean | null | undefined,
+  ][] = [
+    ["combat", card.enemy_fight, card.enemy_fight_per_investigator],
+    ["health", card.health, card.health_per_investigator],
+    ["agility", card.enemy_evade, card.enemy_evade_per_investigator],
   ];
 
   return (
     <ol className={cx(css["skills"], className)}>
-      {entries.map(([key, val]) => {
+      {entries.map(([key, val, perInvestigator]) => {
         return (
           <Fragment key={key}>
             <li className={cx(css["skill_numbered"], iconClassName)} key={key}>
               <CostIcon className={css["skill-cost"]} cost={val} />
-              {key === "health" ? (
-                card.health_per_investigator ? (
-                  <i className="icon-per_investigator" />
-                ) : (
-                  <div className={css["skill-stub"]} />
-                )
-              ) : (
+              {perInvestigator && (
+                <i
+                  className={cx(
+                    css["skill-per-investigator"],
+                    "icon-per_investigator",
+                  )}
+                />
+              )}
+              {key !== "health" && (
                 <SkillIconFancy className={css["skill-icon"]} skill={key} />
               )}
             </li>
