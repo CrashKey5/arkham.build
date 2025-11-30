@@ -194,6 +194,12 @@
 .icon-sanity:before {
   content: "\52";
 }
+.icon-sanity_inverted:before {
+  content: "\53";
+}
+.icon-health_inverted:before {
+  content: "\54";
+}
 .icon-numNull1:before {
   content: "\30";
 }

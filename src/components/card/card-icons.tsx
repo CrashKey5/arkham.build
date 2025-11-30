@@ -3,6 +3,7 @@ import { isEnemyLike } from "@/utils/card-utils";
 import { cx } from "@/utils/cx";
 import { range } from "@/utils/range";
 import { CardHealth } from "../card-health";
+import { HealthIcon, SanityIcon } from "../icons/health-icons";
 import { SkillIcons } from "../skill-icons/skill-icons";
 import { SkillIconsEnemy } from "../skill-icons/skill-icons-enemy";
 import { SkillIconsInvestigator } from "../skill-icons/skill-icons-investigator";
@@ -47,11 +48,11 @@ export function CardIcons(props: Props) {
           <div className={css["icons-damage"]}>
             {!!card.enemy_damage &&
               range(0, card.enemy_damage).map((i) => (
-                <i className="icon-health color-health" key={i} />
+                <HealthIcon key={i} hideCost />
               ))}
             {!!card.enemy_horror &&
               range(0, card.enemy_horror).map((i) => (
-                <i className="icon-sanity color-sanity" key={i} />
+                <SanityIcon key={i} hideCost />
               ))}
           </div>
         </>
