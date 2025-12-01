@@ -10,6 +10,7 @@ import { assert } from "@/utils/assert";
 import { useResolvedDeck } from "@/utils/use-resolved-deck";
 import { Footer } from "../footer";
 import { CardGrid } from "./card-grid";
+import { CardGridGrouped } from "./card-grid-grouped";
 import { CardList } from "./card-list";
 import css from "./card-list-container.module.css";
 import { CardlistCount } from "./card-list-count";
@@ -106,26 +107,41 @@ export const CardListContainer = forwardRef(function CardListContainer(
           onSelectGroup={onSelectGroup}
           viewMode={listDisplay.viewMode}
         />
-        {data &&
-          (listDisplay.viewMode === "scans" ? (
-            <CardGrid
-              {...rest}
-              data={data}
-              listDisplay={listDisplay}
-              metadata={metadata}
-              resolvedDeck={ctx.resolvedDeck}
-              search={search}
-            />
-          ) : (
-            <CardList
-              {...rest}
-              data={data}
-              listDisplay={listDisplay}
-              metadata={metadata}
-              resolvedDeck={ctx.resolvedDeck}
-              search={search}
-            />
-          ))}
+        {data && (
+          <>
+            {listDisplay.viewMode === "scans" && (
+              <CardGrid
+                {...rest}
+                data={data}
+                listDisplay={listDisplay}
+                metadata={metadata}
+                resolvedDeck={ctx.resolvedDeck}
+                search={search}
+              />
+            )}
+            {listDisplay.viewMode === "scans-grouped" && (
+              <CardGridGrouped
+                {...rest}
+                data={data}
+                listDisplay={listDisplay}
+                metadata={metadata}
+                resolvedDeck={ctx.resolvedDeck}
+                search={search}
+              />
+            )}
+            {listDisplay.viewMode !== "scans" &&
+              listDisplay.viewMode !== "scans-grouped" && (
+                <CardList
+                  {...rest}
+                  data={data}
+                  listDisplay={listDisplay}
+                  metadata={metadata}
+                  resolvedDeck={ctx.resolvedDeck}
+                  search={search}
+                />
+              )}
+          </>
+        )}
         <Footer className={css["footer"]} />
       </div>
     </CenterLayout>

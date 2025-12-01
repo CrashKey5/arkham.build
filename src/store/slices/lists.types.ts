@@ -141,7 +141,12 @@ export type SortingType =
   | "subtype"
   | "type";
 
-export type ViewMode = "compact" | "card-text" | "full-cards" | "scans";
+export type ViewMode =
+  | "compact"
+  | "card-text"
+  | "full-cards"
+  | "scans"
+  | "scans-grouped";
 
 export type ListDisplay = {
   grouping: GroupingType[];

@@ -75,6 +75,7 @@
       "section_actions": "Aktionen",
       "section_deckbuilding": "Deckbau",
       "section_faq": "FAQ",
+      "section_printings": "Editionen",
       "thumbnail": "Thumbnail für {{code}}"
     },
     "choose_investigator": {
@@ -191,6 +192,7 @@
         "value": "Stufe {{level}}"
       },
       "more_actions": "Weitere Aktionen",
+      "myriad": "Unzählig",
       "no_entries": "Keine Einträge",
       "none": "Keine Auswahl",
       "nonexceptional": "Nicht-Außergewöhnlich",
@@ -243,6 +245,7 @@
         "body": "Körperslot",
         "hand": "Handslot",
         "hand x2": "2x Handslots",
+        "head": "Kopf",
         "none": "Kein Slot",
         "tarot": "Tarot-Slot"
       },
@@ -283,6 +286,7 @@
       "taboo_chained": "Kostet {{xp}} weitere Erfahrungspunkte.",
       "taboo_mutated": "Mutiert",
       "taboo_none": "Keine Tabuliste",
+      "taboo_original_text": "Ursprünglicher Kartentext",
       "taboo_unchained": "Kostet {{xp}} Erfahrungspunkte weniger.",
       "total": "insgesamt",
       "trait_one": "Merkmal",
@@ -870,6 +874,8 @@
           "campaign_playalong": "Campaign Play-Along",
           "campaign_playalong_help": "\"Campaign Play-Along\" ist ein regelmäßiges Event, das auf dem Mythos Busters Discord-Server stattfindet. Während des jeweiligen Events wird eine Kampagne zusammen, mit einem eingeschränkten Kartenpool, gespielt.",
           "choose_cycle_placeholder": "Zyklus auswählen...",
+          "collection": "Sammlung",
+          "collection_help": "Setze deine aktuelle <settings_link>Sammlung</settings_link> als Kartenpool für dieses Deck. Dies kann praktisch sein während du deine Sammlung aufbaust - oder wenn mehrere Spieler eine Sammlung teilen.",
           "configure_environment": "Umgebung auswählen",
           "current": "Current",
           "current_help": "In der \"Current\" Umgebung dürfen Decks Karten aus dem Basisspiel, den Starter-Decks und den drei neuesten Ermittlererweiterungen verwenden.",
@@ -1035,6 +1041,7 @@
       },
       "import_failed": "Import fehlgeschlagen: {{error}}",
       "import_success": "Deck wurde erfolgreich importiert.",
+      "latest_version": "<a>Zur aktuellen Version</a>.",
       "list": "Liste",
       "loading": "Deck wird geladen...",
       "newer_version": "Dieses Deck ist schreibgeschützt, da eine <a>aktuellere Version</a> verfügbar ist.",
@@ -1327,8 +1334,11 @@
         "display_as_list": "Liste",
         "display_as_list_text": "Liste mit Kartentext",
         "display_as_scans": "Scans",
+        "display_as_scans_grouped": "Scans (gruppiert)",
         "jump_to": "Springe zu...",
-        "list_settings": "Listenoptionen"
+        "list_settings": "Listenoptionen",
+        "sort": "Sortierung",
+        "sort_default": "Nutzereinstellung"
       },
       "reset": "Zurücksetzen",
       "search": {
@@ -1357,6 +1367,9 @@
     },
     "rules": {
       "title": "Spielregeln"
+    },
+    "search": {
+      "title": "Ergebnisse"
     },
     "settings": {
       "backup": {
@@ -1498,6 +1511,9 @@
         "collapse": "Schließen",
         "expand": "Erweitern",
         "toggle": "Umschalten"
+      },
+      "combobox": {
+        "unknown_option": "Unbekannte Auswahl"
       },
       "copy_to_clipboard": "In die Zwischenablage kopieren",
       "copy_to_clipboard_success": "Kopiert.",

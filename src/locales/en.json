@@ -74,8 +74,8 @@
       "scan": "Scan of {{code}}",
       "section_actions": "Actions",
       "section_deckbuilding": "Deckbuilding",
-      "section_printings": "Printings",
       "section_faq": "FAQ",
+      "section_printings": "Printings",
       "thumbnail": "Thumbnail of {{code}}"
     },
     "choose_investigator": {
@@ -710,9 +710,9 @@
         "edit_short": "Edit",
         "export_json": "Export JSON",
         "export_text": "Export text",
+        "unarchive": "Unarchive deck",
         "upgrade": "Upgrade deck",
-        "upgrade_short": "Upgrade",
-        "unarchive": "Unarchive deck"
+        "upgrade_short": "Upgrade"
       },
       "annotation": "Annotation",
       "annotation_tooltip": "Card has an annotation",
@@ -1334,6 +1334,7 @@
         "display_as_list": "List",
         "display_as_list_text": "List with card text",
         "display_as_scans": "Scans",
+        "display_as_scans_grouped": "Scans (grouped)",
         "jump_to": "Jump to...",
         "list_settings": "List settings",
         "sort": "Sort",

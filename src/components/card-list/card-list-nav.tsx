@@ -132,10 +132,15 @@ function DisplaySettings({ viewMode }: { viewMode: ViewMode }) {
     setListViewMode("scans");
   }, [setListViewMode]);
 
+  const onToggleScansGrouped = useCallback(() => {
+    setListViewMode("scans-grouped");
+  }, [setListViewMode]);
+
   useHotkey("alt+l", onToggleList);
   useHotkey("alt+shift+l", onToggleCardText);
   useHotkey("alt+d", onToggleFullCards);
   useHotkey("alt+s", onToggleScans);
+  useHotkey("alt+shift+s", onToggleScansGrouped);
 
   return (
     <Popover placement="bottom-end">
@@ -167,6 +172,12 @@ function DisplaySettings({ viewMode }: { viewMode: ViewMode }) {
                 </DropdownRadioGroupItem>
                 <DropdownRadioGroupItem hotkey="alt+s" value="scans">
                   {t("lists.nav.display_as_scans")}
+                </DropdownRadioGroupItem>
+                <DropdownRadioGroupItem
+                  hotkey="alt+shift+s"
+                  value="scans-grouped"
+                >
+                  {t("lists.nav.display_as_scans_grouped")}
                 </DropdownRadioGroupItem>
               </RadioGroup>
             </DropdownMenuSection>
