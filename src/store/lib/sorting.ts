@@ -40,7 +40,7 @@ function sortByLevel(a: Card, b: Card) {
     return +(a.parallel ?? false) - +(b.parallel ?? false);
   }
 
-  return (a.xp ?? -1) - (b.xp ?? -1);
+  return (a.xp ?? 100) - (b.xp ?? 100);
 }
 
 export function sortByPosition(a: Card, b: Card) {

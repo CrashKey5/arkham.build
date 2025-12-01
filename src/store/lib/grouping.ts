@@ -156,7 +156,7 @@ function groupByLevel(cards: Card[]) {
   omitEmptyGroupings(results);
 
   results.groupings.sort((a, b) =>
-    a === NONE ? -1 : b === NONE ? 1 : sortNumerical(a as number, b as number),
+    a === NONE ? 1 : b === NONE ? -1 : sortNumerical(a as number, b as number),
   );
 
   return toGroupingResult(results);
