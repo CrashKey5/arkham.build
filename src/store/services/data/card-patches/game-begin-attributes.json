@@ -23,5 +23,15 @@
     "code": "03009",
     "starts_in_play": true,
     "patch": true
+  },
+  {
+    "code": "54015",
+    "sticky_mulligan": true,
+    "patch": true
+  },
+  {
+    "code": "05042",
+    "sticky_mulligan": true,
+    "patch": true
   }
 ]

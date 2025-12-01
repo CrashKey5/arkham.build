@@ -1102,6 +1102,7 @@
     },
     "draw_simulator": {
       "draw_tooltip": "Ziehe {{count}} {{cards}}.",
+      "mulligan_mode": "Mulligan-Modus",
       "redraw": "Auswahl ersetzen",
       "redraw_tooltip": "Ausgewählte Karten werden unter das Deck gelegt und mit neuen Karten ersetzt.",
       "reset": "Zurücksetzen",

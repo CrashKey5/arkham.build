@@ -218,6 +218,7 @@ const JsonDataCardSchema = z.object({
   stage: z.number().nullish(),
   starts_in_hand: z.boolean().nullish(),
   starts_in_play: z.boolean().nullish(),
+  sticky_mulligan: z.boolean().nullish(),
   subname: z.string().nullish(),
   subtype_code: z.enum(["basicweakness", "weakness"]).nullish(),
   tags: z.string().nullish(),

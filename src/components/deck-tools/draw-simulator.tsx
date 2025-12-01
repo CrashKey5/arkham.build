@@ -12,6 +12,7 @@ import { shuffle } from "@/utils/shuffle";
 import { CardScan } from "../card-scan";
 import { PortaledCardTooltip } from "../card-tooltip/card-tooltip-portaled";
 import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 import { Plane } from "../ui/plane";
 import { useRestingTooltip } from "../ui/tooltip.hooks";
 import css from "./draw-simulator.module.css";
@@ -66,9 +67,12 @@ export function DrawSimulator(props: Props) {
 
   const [state, dispatch] = useReducer(drawReducer, initialState(deck));
 
-  const drawAmount = useCallback((count: number) => {
-    dispatch({ type: "draw", amount: count });
-  }, []);
+  const drawAmount = useCallback(
+    (count: number) => {
+      dispatch({ type: "draw", amount: count, deck });
+    },
+    [deck],
+  );
 
   const reset = useCallback(() => {
     dispatch({ type: "reset" });
@@ -79,7 +83,11 @@ export function DrawSimulator(props: Props) {
   }, []);
 
   const redraw = useCallback(() => {
-    dispatch({ type: "redraw" });
+    dispatch({ type: "redraw", deck });
+  }, [deck]);
+
+  const toggleMulligan = useCallback(() => {
+    dispatch({ type: "toggleMulligan" });
   }, []);
 
   return (
@@ -89,6 +97,14 @@ export function DrawSimulator(props: Props) {
           <ShuffleIcon /> {t("draw_simulator.title")}
         </h4>
       </header>
+      <div className={css["nav"]}>
+        <Checkbox
+          id="mulligan-mode"
+          label={t("draw_simulator.mulligan_mode")}
+          checked={state.mulliganMode}
+          onCheckedChange={toggleMulligan}
+        />
+      </div>
       <nav className={css["nav"]}>
         {[1, 2, 5].map((count) => (
           <Button
@@ -152,6 +168,7 @@ type InitAction = {
 type DrawAction = {
   type: "draw";
   amount: number;
+  deck: ResolvedDeck;
 };
 
 type ReshuffleAction = {
@@ -160,6 +177,7 @@ type ReshuffleAction = {
 
 type RedrawAction = {
   type: "redraw";
+  deck: ResolvedDeck;
 };
 
 type ResetAction = {
@@ -171,30 +189,44 @@ type SelectAction = {
   index: number;
 };
 
+type ToggleMulliganAction = {
+  type: "toggleMulligan";
+};
+
 type Action =
   | DrawAction
   | InitAction
   | ReshuffleAction
   | RedrawAction
   | ResetAction
-  | SelectAction;
+  | SelectAction
+  | ToggleMulliganAction;
 
 type State = {
   bag: string[];
   drawn: string[];
   selection: number[];
   deckId: Id;
+  mulliganMode: boolean;
 };
 
 function initialState(deck: ResolvedDeck): State {
   const bag = prepareBag(deck);
 
   return drawReducer(
-    { bag, drawn: [], selection: [], deckId: deck.id },
+    { bag, drawn: [], selection: [], deckId: deck.id, mulliganMode: true },
     {
       type: "init",
       deck,
     },
+  );
+}
+
+function shouldAutoRedrawInMulligan(card: Card): boolean {
+  return (
+    (card.subtype_code === "weakness" ||
+      card.subtype_code === "basicweakness") &&
+    !card.sticky_mulligan
   );
 }
 
@@ -211,15 +243,47 @@ function drawReducer(state: State, action: Action): State {
         ...state,
         bag: shuffle([...state.bag, ...state.drawn]),
         drawn: [],
+        mulliganMode: state.mulliganMode,
         selection: [],
       };
     }
 
     case "draw": {
+      if (!state.mulliganMode) {
+        return {
+          ...state,
+          bag: state.bag.slice(action.amount),
+          drawn: [...state.drawn, ...state.bag.slice(0, action.amount)],
+        };
+      }
+
+      const drawn = [...state.drawn];
+      const bag = [...state.bag];
+
+      const toReturn = [];
+
+      let drawsRemaining = action.amount;
+
+      while (drawsRemaining > 0 && bag.length > 0) {
+        const code = bag.shift();
+        if (!code) break;
+
+        const card = action.deck.cards.slots[code].card;
+
+        if (card && shouldAutoRedrawInMulligan(card)) {
+          toReturn.push(code);
+        } else {
+          drawn.push(code);
+          drawsRemaining--;
+        }
+      }
+
+      bag.push(...toReturn);
+
       return {
         ...state,
-        bag: state.bag.slice(action.amount),
-        drawn: [...state.drawn, ...state.bag.slice(0, action.amount)],
+        bag,
+        drawn,
       };
     }
 
@@ -234,12 +298,41 @@ function drawReducer(state: State, action: Action): State {
         (_, index) => !state.selection.includes(index),
       );
 
-      for (const _ of range(0, codes.length)) {
-        // biome-ignore lint/style/noNonNullAssertion: we extend the bag for each draw, so this is safe.
-        drawn.push(bag.shift()!);
+      if (!state.mulliganMode) {
+        for (const _ of range(0, codes.length)) {
+          // biome-ignore lint/style/noNonNullAssertion: we extend the bag for each draw, so this is safe.
+          drawn.push(bag.shift()!);
+        }
+
+        return { ...state, bag, drawn, selection: [] };
       }
 
-      return { ...state, bag, drawn, selection: [] };
+      let drawsRemaining = codes.length;
+
+      const toReturn = [];
+
+      while (drawsRemaining > 0 && bag.length > 0) {
+        const code = bag.shift();
+        if (!code) break;
+
+        const card = action.deck.cards.slots[code].card;
+
+        if (card && shouldAutoRedrawInMulligan(card)) {
+          toReturn.push(code);
+        } else {
+          drawn.push(code);
+          drawsRemaining--;
+        }
+      }
+
+      bag.push(...toReturn);
+
+      return {
+        ...state,
+        bag,
+        drawn,
+        selection: [],
+      };
     }
 
     case "reshuffle": {
@@ -262,6 +355,14 @@ function drawReducer(state: State, action: Action): State {
         selection: state.selection.includes(action.index)
           ? state.selection.filter((i) => i !== action.index)
           : [...state.selection, action.index],
+      };
+    }
+
+    case "toggleMulligan": {
+      return {
+        ...state,
+        bag: shuffle(state.bag),
+        mulliganMode: !state.mulliganMode,
       };
     }
   }
