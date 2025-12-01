@@ -216,6 +216,8 @@ const JsonDataCardSchema = z.object({
   skill_willpower: z.number().nullish(),
   slot: z.string().nullish(),
   stage: z.number().nullish(),
+  starts_in_hand: z.boolean().nullish(),
+  starts_in_play: z.boolean().nullish(),
   subname: z.string().nullish(),
   subtype_code: z.enum(["basicweakness", "weakness"]).nullish(),
   tags: z.string().nullish(),

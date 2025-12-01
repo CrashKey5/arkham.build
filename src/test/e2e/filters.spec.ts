@@ -95,7 +95,7 @@ test.describe("filters", () => {
     await expect(page.getByTestId("card-text").first()).toBeVisible();
     await expect(page.getByTestId("card-text").nth(1)).toBeVisible();
 
-    await page.getByLabel("Scans").click();
+    await page.getByLabel("Scans (Grouped)").click();
 
     await expect(page.getByTestId("card-text").first()).not.toBeVisible();
     await expect(page.getByTestId("card-text").nth(1)).not.toBeVisible();

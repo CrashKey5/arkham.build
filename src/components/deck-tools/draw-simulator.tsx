@@ -273,6 +273,8 @@ function prepareBag(deck: ResolvedDeck) {
       !card.permanent &&
       !card.double_sided &&
       !card.back_link_id &&
+      !card.starts_in_play &&
+      !card.starts_in_hand &&
       card.code !== SPECIAL_CARD_CODES.ON_THE_MEND;
 
     if (drawable) {
