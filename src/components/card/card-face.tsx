@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import type { CardWithRelations, ResolvedCard } from "@/store/lib/types";
+import type { Card } from "@/store/schemas/card.schema";
 import { displayAttribute, sideways } from "@/utils/card-utils";
 import { cx } from "@/utils/cx";
 import { CardScan } from "../card-scan";
@@ -17,7 +18,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   slotHeaderActions?: React.ReactNode;
   resolvedCard: CardWithRelations | ResolvedCard;
-  onPrintingSelect?: (cardCode: string) => void;
+  onPrintingSelect?: (card: Card) => void;
   titleLinks?: "card" | "card-modal" | "dialog";
   size: "compact" | "tooltip" | "full";
 }

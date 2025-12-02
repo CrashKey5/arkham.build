@@ -1,5 +1,6 @@
 import { useStore } from "@/store";
 import type { CardWithRelations, ResolvedCard } from "@/store/lib/types";
+import type { Card } from "@/store/schemas/card.schema";
 import {
   type Printing as PrintingT,
   selectPrintingsForCard,
@@ -12,7 +13,7 @@ import css from "./card.module.css";
 type Props = {
   hideCollectorInfo?: boolean;
   resolvedCard: ResolvedCard | CardWithRelations;
-  onPrintingSelect?: (cardCode: string) => void;
+  onPrintingSelect?: (card: Card) => void;
   size: "tooltip" | "compact" | "full";
 };
 
@@ -100,7 +101,7 @@ function EncounterEntry(props: Props) {
       <hr className={css["meta-divider"]} />
       <p className={css["meta-property"]}>
         <PrintingInner
-          cardCode={card.code}
+          card={card}
           icon={<EncounterIcon code={card.encounter_code} />}
           name={encounterSet.name}
           position={getEncounterPositions(

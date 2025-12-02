@@ -7,6 +7,7 @@ import {
   getRelatedCards,
 } from "@/store/lib/resolve-card";
 import type { ResolvedDeck } from "@/store/lib/types";
+import type { Card } from "@/store/schemas/card.schema";
 import { selectShowFanMadeRelations } from "@/store/selectors/shared";
 import { cx } from "@/utils/cx";
 import { formatRelationTitle } from "@/utils/formatting";
@@ -25,7 +26,7 @@ type Props = {
   canToggleBack?: boolean;
   className?: string;
   deck: ResolvedDeck;
-  onPrintingSelect?: (code: string) => void;
+  onPrintingSelect?: (card: Card) => void;
   readonly?: boolean;
   showRelated?: boolean;
   size: "tooltip" | "full";

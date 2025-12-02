@@ -9,6 +9,7 @@ import {
   getRelatedCardQuantity,
   getRelatedCards,
 } from "@/store/lib/resolve-card";
+import type { Card as CardT } from "@/store/schemas/card.schema";
 import { selectCardWithRelations } from "@/store/selectors/card-view";
 import { selectShowFanMadeRelations } from "@/store/selectors/shared";
 import type { CardModalConfig } from "@/store/slices/ui.types";
@@ -92,6 +93,13 @@ export function CardModal(props: Props) {
 
   const canRenderFull = useMedia("(min-width: 45rem)");
 
+  const handlePrintingSelect = useCallback(
+    (card: CardT) => {
+      openCardModal(card.code);
+    },
+    [openCardModal],
+  );
+
   if (!cardWithRelations) return null;
 
   const showQuantities =
@@ -114,7 +122,7 @@ export function CardModal(props: Props) {
       <Card
         className={cx(css["card"], css["shadow"])}
         resolvedCard={cardWithRelations}
-        onPrintingSelect={openCardModal}
+        onPrintingSelect={handlePrintingSelect}
         size={canRenderFull ? "full" : "compact"}
         slotCardFooter={
           <>

@@ -1,3 +1,4 @@
+import type { Card } from "@/store/schemas/card.schema";
 import type { Printing as PrintingT } from "@/store/selectors/shared";
 import { cx } from "@/utils/cx";
 import { displayPackName } from "@/utils/formatting";
@@ -7,7 +8,7 @@ import css from "./printing.module.css";
 type Props = {
   active?: boolean;
   className?: string;
-  onClick?: (id: string) => void;
+  onClick?: (card: Card) => void;
   printing: PrintingT;
 };
 
@@ -18,7 +19,7 @@ export function Printing({ active, className, onClick, printing }: Props) {
     <PrintingInner
       active={active}
       className={className}
-      cardCode={card.code}
+      card={card}
       icon={<PackIcon code={pack.code} />}
       name={displayPackName(pack)}
       onClick={onClick}
@@ -30,18 +31,18 @@ export function Printing({ active, className, onClick, printing }: Props) {
 
 type PrintingInnerProps = {
   active?: boolean;
-  cardCode: string;
+  card: Card;
   className?: string;
   icon: React.ReactNode;
   name: string;
-  onClick?: (id: string) => void;
+  onClick?: (card: Card) => void;
   position: number | string;
   quantity?: number;
 };
 
 export function PrintingInner({
   active,
-  cardCode,
+  card,
   className,
   icon,
   name,
@@ -54,7 +55,7 @@ export function PrintingInner({
   return (
     <El
       className={cx(css["printing"], active && css["active"], className)}
-      onClick={onClick ? () => onClick(cardCode) : undefined}
+      onClick={onClick ? () => onClick(card) : undefined}
     >
       <span className={css["printing-icon"]}>{icon}</span> {name}
       <span className="nowrap">&#65119;{position}</span>

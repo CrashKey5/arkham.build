@@ -29,8 +29,8 @@ export function DeckInvestigatorModal(props: Props) {
           canToggleBack={false}
           deck={deck}
           readonly={readonly}
-          onPrintingSelect={(code) => {
-            updateInvestigatorCode(deck.id, code);
+          onPrintingSelect={(card) => {
+            updateInvestigatorCode(deck.id, card.code);
           }}
           showRelated
           size="full"

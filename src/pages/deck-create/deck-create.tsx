@@ -114,10 +114,22 @@ function DeckCreateInner() {
 function DeckCreateInvestigator() {
   const { back, front } = useStore(selectDeckCreateInvestigators);
 
+  const setInvestigatorCode = useStore(
+    (state) => state.deckCreateSetInvestigatorCode,
+  );
+
   return (
     <div className={css["cards"]}>
       <CardContainer size="full">
-        <CardFace resolvedCard={front} size="full" />
+        <CardFace
+          onPrintingSelect={(card) => {
+            if (!card.parallel) {
+              setInvestigatorCode(card.code);
+            }
+          }}
+          resolvedCard={front}
+          size="full"
+        />
         <CardBack card={back.card} size="full" />
       </CardContainer>
     </div>
