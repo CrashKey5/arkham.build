@@ -649,7 +649,7 @@ function makeFilterValue(type: FilterKey, initialValue?: unknown) {
               weakness: true,
               basicweakness: true,
             },
-        !initialValue,
+        false,
       );
     }
 
@@ -786,7 +786,14 @@ function cardsFilters({
   showOwnershipFilter = false,
   showInvestigatorsFilter = false,
 }) {
-  const filters: FilterKey[] = ["card_type", "faction", "type", "level"];
+  const filters: FilterKey[] = [
+    "card_type",
+    "faction",
+    "type",
+    "level",
+    "cost",
+    "trait",
+  ];
 
   if (showOwnershipFilter) {
     filters.push("ownership");
@@ -799,13 +806,11 @@ function cardsFilters({
   }
 
   filters.push(
-    "subtype",
-    "cost",
-    "trait",
     "asset",
     "skill_icons",
     "properties",
     "action",
+    "subtype",
     "pack",
     "encounter_set",
     "taboo_set",
