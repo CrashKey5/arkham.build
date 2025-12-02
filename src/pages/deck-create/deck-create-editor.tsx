@@ -3,6 +3,8 @@ import { ArrowRightLeftIcon, Settings2Icon } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "wouter";
+import { LimitedCardPoolField } from "@/components/limited-card-pool/limited-card-pool-field";
+import { SealedDeckField } from "@/components/limited-card-pool/sealed-deck-field";
 import { ListCard } from "@/components/list-card/list-card";
 import { TabooSelect } from "@/components/taboo-select";
 import { Button } from "@/components/ui/button";
@@ -19,6 +21,7 @@ import {
   selectDeckCreateChecked,
   selectDeckCreateInvestigators,
 } from "@/store/selectors/deck-create";
+import { selectLimitedPoolPacks } from "@/store/selectors/lists";
 import { selectConnectionLock } from "@/store/selectors/shared";
 import type { StorageProvider } from "@/utils/constants";
 import { formatProviderName } from "@/utils/formatting";
@@ -28,7 +31,6 @@ import { useGoBack } from "@/utils/use-go-back";
 import { useAccentColor } from "../../utils/use-accent-color";
 import { SelectionEditor } from "../deck-edit/editor/selection-editor";
 import css from "./deck-create.module.css";
-import { DeckCreateCardPool } from "./deck-create-card-pool";
 
 export function DeckCreateEditor() {
   const { t } = useTranslation();
@@ -313,4 +315,45 @@ function getInvestigatorOptions(
       label: t(`deck_edit.config.sides.parallel_${type}`),
     },
   ];
+}
+
+function DeckCreateCardPool({ investigator }: { investigator: Card }) {
+  const { t } = useTranslation();
+
+  const setCardPool = useStore((state) => state.deckCreateSetCardPool);
+  const setSealedDeck = useStore((state) => state.deckCreateSetSealed);
+
+  const deckCreate = useStore((state) => state.deckCreate);
+
+  const sealedDeck = useMemo(
+    () =>
+      deckCreate?.sealed
+        ? {
+            name: deckCreate.sealed.name,
+            cards: deckCreate.sealed.cards,
+          }
+        : undefined,
+    [deckCreate],
+  );
+
+  const selectedPacks = useStore((state) =>
+    selectLimitedPoolPacks(state, deckCreate?.cardPool),
+  );
+
+  const selectedItems = useMemo(
+    () => selectedPacks.map((p) => p.code),
+    [selectedPacks],
+  );
+
+  return (
+    <Field full padded bordered>
+      <FieldLabel>{t("deck_edit.config.card_pool.section_title")}</FieldLabel>
+      <LimitedCardPoolField
+        investigator={investigator}
+        onValueChange={setCardPool}
+        selectedItems={selectedItems}
+      />
+      <SealedDeckField onValueChange={setSealedDeck} value={sealedDeck} />
+    </Field>
+  );
 }

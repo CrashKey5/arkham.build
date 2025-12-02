@@ -1,11 +1,24 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useSearch } from "wouter";
+import { CardBack } from "@/components/card/card-back";
+import { CardContainer } from "@/components/card/card-container";
+import { CardFace } from "@/components/card/card-face";
 import { CardModalProvider } from "@/components/card-modal/card-modal-provider";
+import { CardSet } from "@/components/cardset";
+import { Footer } from "@/components/footer";
+import { Masthead } from "@/components/masthead";
 import { useToast } from "@/components/ui/toast.hooks";
 import { useStore } from "@/store";
+import {
+  selectDeckCreateCardSets,
+  selectDeckCreateInvestigators,
+} from "@/store/selectors/deck-create";
 import { querySealedDeck } from "@/store/services/queries";
-import { DeckCreateInner } from "./deck-create-inner";
+import { cx } from "@/utils/cx";
+import { useAccentColor } from "@/utils/use-accent-color";
+import css from "./deck-create.module.css";
+import { DeckCreateEditor } from "./deck-create-editor";
 
 function DeckCreate() {
   const { code } = useParams<{ code: string }>();
@@ -76,6 +89,76 @@ function DeckCreate() {
       <DeckCreateInner />
     </CardModalProvider>
   ) : null;
+}
+
+function DeckCreateInner() {
+  return (
+    <div className={cx(css["layout"], "fade-in")}>
+      <Masthead className={css["layout-header"]} />
+      <div className={css["layout-sidebar"]}>
+        <DeckCreateEditor />
+      </div>
+      <div className={css["layout-content"]}>
+        <DeckCreateInvestigator />
+      </div>
+      <div className={css["layout-selections"]}>
+        <DeckCreateCardSets />
+      </div>
+      <footer className={css["layout-footer"]}>
+        <Footer />
+      </footer>
+    </div>
+  );
+}
+
+function DeckCreateInvestigator() {
+  const { back, front } = useStore(selectDeckCreateInvestigators);
+
+  return (
+    <div className={css["cards"]}>
+      <CardContainer size="full">
+        <CardFace resolvedCard={front} size="full" />
+        <CardBack card={back.card} size="full" />
+      </CardContainer>
+    </div>
+  );
+}
+
+function DeckCreateCardSets() {
+  const onChangeCardQuantity = useStore(
+    (state) => state.deckCreateChangeExtraCardQuantity,
+  );
+
+  const toggleConfigureCardSet = useStore(
+    (state) => state.deckCreateToggleCardSet,
+  );
+
+  const cardSets = useStore(selectDeckCreateCardSets);
+
+  const onCheckedChange = useCallback(
+    (id: string) => {
+      toggleConfigureCardSet(id);
+    },
+    [toggleConfigureCardSet],
+  );
+
+  const { investigator } = useStore(selectDeckCreateInvestigators);
+  const cssVariables = useAccentColor(investigator.card);
+
+  return (
+    <div className={css["card-selections"]} style={cssVariables}>
+      {cardSets.map((set) =>
+        set.cards.length ? (
+          <CardSet
+            key={set.id}
+            onChangeCardQuantity={onChangeCardQuantity}
+            onSelect={onCheckedChange}
+            set={set}
+          />
+        ) : null,
+      )}
+    </div>
+  );
 }
 
 export default DeckCreate;
