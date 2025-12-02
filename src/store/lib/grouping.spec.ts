@@ -463,22 +463,6 @@ describe("getGroupedCards", () => {
           {
             "cards": [
               {
-                "code": "7",
-                "real_name": "7",
-                "xp": null,
-              },
-              {
-                "code": "8",
-                "real_name": "8",
-                "xp": null,
-              },
-            ],
-            "key": "none",
-            "type": "level",
-          },
-          {
-            "cards": [
-              {
                 "code": "1",
                 "real_name": "1",
                 "xp": 0,
@@ -522,6 +506,22 @@ describe("getGroupedCards", () => {
               },
             ],
             "key": "2",
+            "type": "level",
+          },
+          {
+            "cards": [
+              {
+                "code": "7",
+                "real_name": "7",
+                "xp": null,
+              },
+              {
+                "code": "8",
+                "real_name": "8",
+                "xp": null,
+              },
+            ],
+            "key": "none",
             "type": "level",
           },
         ],
