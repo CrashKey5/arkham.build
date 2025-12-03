@@ -229,6 +229,10 @@ test.describe("settings", () => {
     await page.getByTestId("combobox-input").click();
     await page.getByTestId("combobox-menu-item-dwlp").click();
 
+    await page
+      .getByTestId("subtype-filter")
+      .getByTestId("collapsible-trigger")
+      .click();
     await page.getByTestId("subtype-none").click();
     await page.getByTestId("subtype-weakness").click();
 
@@ -260,6 +264,10 @@ test.describe("settings", () => {
     await page.getByTestId("combobox-input").click();
     await page.getByTestId("combobox-menu-item-dwlp").click();
 
+    await page
+      .getByTestId("subtype-filter")
+      .getByTestId("collapsible-trigger")
+      .click();
     await page.getByTestId("subtype-none").click();
     await page.getByTestId("subtype-weakness").click();
 
@@ -276,6 +284,10 @@ test.describe("settings", () => {
     await page.getByTestId("combobox-input").click();
     await page.getByTestId("combobox-menu-item-dwlp").click();
 
+    await page
+      .getByTestId("subtype-filter")
+      .getByTestId("collapsible-trigger")
+      .click();
     await page.getByTestId("subtype-none").click();
     await page.getByTestId("subtype-basicweakness").click();
 
@@ -291,6 +303,10 @@ test.describe("settings", () => {
     await page.getByTestId("combobox-input").click();
     await page.getByTestId("combobox-menu-item-dwlp").click();
 
+    await page
+      .getByTestId("subtype-filter")
+      .getByTestId("collapsible-trigger")
+      .click();
     await page.getByTestId("subtype-none").click();
     await page.getByTestId("subtype-basicweakness").click();
 
