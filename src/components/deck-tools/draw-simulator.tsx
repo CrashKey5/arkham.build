@@ -376,7 +376,10 @@ function prepareBag(deck: ResolvedDeck) {
       !card.back_link_id &&
       !card.starts_in_play &&
       !card.starts_in_hand &&
-      card.code !== SPECIAL_CARD_CODES.ON_THE_MEND;
+      card.code !== SPECIAL_CARD_CODES.ON_THE_MEND &&
+      Object.entries(deck.attachments ?? {}).every(
+        ([_, attached]) => !attached?.[card.code],
+      );
 
     if (drawable) {
       const quantity = deck.slots[card.code] ?? 0;
