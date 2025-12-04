@@ -63,7 +63,9 @@
         "usable_by": "Card pool: {{prefix}}{{name}}",
         "usable_by_interpolated": "Card pool: <tooltip>{{name}}</tooltip>",
         "view_backside": "Backside",
-        "who_can_take": "Who can take this card?"
+        "who_can_take": "Who can take this card?",
+        "show_original_image": "Show original card image",
+        "show_taboo_image": "Show taboo card image"
       },
       "faq": {
         "empty": "No FAQ entries available.",

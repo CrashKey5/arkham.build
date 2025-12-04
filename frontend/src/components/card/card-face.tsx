@@ -1,10 +1,13 @@
+import { ImageIcon } from "lucide-react";
 import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { CardWithRelations, ResolvedCard } from "@/store/lib/types";
 import type { Card } from "@/store/schemas/card.schema";
 import { displayAttribute, sideways } from "@/utils/card-utils";
 import { cx } from "@/utils/cx";
 import { CardScan } from "../card-scan";
 import { CardThumbnail } from "../card-thumbnail";
+import { Button } from "../ui/button";
 import css from "./card.module.css";
 import { CardDetails } from "./card-details";
 import { CardHeader } from "./card-header";
@@ -35,8 +38,11 @@ export function CardFace(props: Props) {
     ...rest
   } = props;
 
+  const { t } = useTranslation();
+
   const { card } = resolvedCard;
   const [isSideways, setSideways] = useState(sideways(card));
+  const [ignoreTaboo, setIgnoreTaboo] = useState(false);
 
   const showImage = size === "full" || card.type_code !== "story";
 
@@ -75,7 +81,16 @@ export function CardFace(props: Props) {
           typeCode={card.type_code}
           victory={card.victory}
         />
-        <CardTabooText card={card} showOriginalText={size !== "tooltip"} />
+        <CardTabooText card={card} showOriginalText={size !== "tooltip"}>
+          {!!card.taboo_set_id && (
+            <Button onClick={() => setIgnoreTaboo((p) => !p)} size="xs">
+              <ImageIcon />
+              {ignoreTaboo
+                ? t("card_view.actions.show_taboo_image")
+                : t("card_view.actions.show_original_image")}
+            </Button>
+          )}
+        </CardTabooText>
         <CardMeta
           onPrintingSelect={onPrintingSelect}
           resolvedCard={resolvedCard}
@@ -87,7 +102,7 @@ export function CardFace(props: Props) {
       {showImage &&
         (size === "full" ? (
           <div className={css["image"]}>
-            <CardScan card={card} onFlip={onFlip} />
+            <CardScan card={card} onFlip={onFlip} ignoreTaboo={ignoreTaboo} />
           </div>
         ) : (
           <div className={css["image"]}>

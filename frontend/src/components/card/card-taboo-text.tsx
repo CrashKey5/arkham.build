@@ -7,6 +7,7 @@ import css from "./card.module.css";
 
 type Props = {
   card: Card;
+  children?: React.ReactNode;
   showOriginalText?: boolean;
 };
 
@@ -15,7 +16,7 @@ const TOOLTIP_OPTIONS = {
 };
 
 export function CardTabooText(props: Props) {
-  const { card, showOriginalText } = props;
+  const { card, children, showOriginalText } = props;
   const { original, real_taboo_text_change, taboo_xp } = card;
 
   const { t } = useTranslation();
@@ -72,6 +73,7 @@ export function CardTabooText(props: Props) {
           )}
         </div>
       )}
+      {children && <div className={css["taboo-extra"]}>{children}</div>}
       {taboo_xp != null && (
         <p className={css["taboo-chain"]}>
           <i className="icon-tablet color-taboo icon-text" />

@@ -22,6 +22,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   draggable?: boolean;
   flipped: boolean;
   hideFlipButton?: boolean;
+  ignoreTaboo?: boolean;
   lazy?: boolean;
   onFlip?: (value: boolean, sideways: boolean) => void;
   preventFlip?: boolean;
@@ -51,6 +52,7 @@ export function CardScanControlled(props: Props) {
     onFlip,
     card,
     hideFlipButton,
+    ignoreTaboo,
     lazy,
     suffix,
     ...rest
@@ -72,7 +74,7 @@ export function CardScanControlled(props: Props) {
     card.taboo_set_id && card.taboo_set_id <= 9 ? card.taboo_set_id : undefined;
 
   const imageCode = useAgathaEasterEggTransform(
-    tabooSetId
+    !ignoreTaboo && tabooSetId
       ? `${code}${suffix ?? ""}-${tabooSetId}`
       : `${code}${suffix ?? ""}`,
   );

@@ -424,6 +424,10 @@
   margin-top: 0.25rem;
 }
 
+.taboo-extra {
+  margin-top: 0.25rem;
+}
+
 :lang(ko, zh, zh-Hant, zh-Hans) :where(.sub) {
   font-style: normal;
 }

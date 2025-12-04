@@ -52,10 +52,12 @@ test.describe("deck collection", () => {
     await page.getByTestId("collection-more-actions").click();
     await page.getByTestId("collection-import-button").click();
 
+    const directory = import.meta.dirname;
+
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles([
-      path.join(process.cwd(), "src/test/fixtures/decks/extra_slots.json"),
-      path.join(process.cwd(), "src/test/fixtures/decks/faction_select.json"),
+      path.join(directory, "../fixtures/decks/extra_slots.json"),
+      path.join(directory, "../fixtures/decks/faction_select.json"),
     ]);
 
     await expect(page.getByTestId("collection-deck")).toHaveCount(3);

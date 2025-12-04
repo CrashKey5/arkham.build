@@ -48,8 +48,11 @@ export async function importDeckFromFile(
   await page.getByTestId("collection-import-button").click();
 
   const fileChooser = await fileChooserPromise;
+
+  const directory = import.meta.dirname;
+
   await fileChooser.setFiles([
-    path.join(process.cwd(), "src/test/fixtures/decks", deckPath),
+    path.join(directory, "../fixtures/decks", deckPath),
   ]);
 
   if (navigate) {
