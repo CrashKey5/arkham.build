@@ -62,6 +62,11 @@ test.describe("filters", () => {
     await page.getByTestId("search-input").click();
     await fillSearch(page, "king in yellow");
     await expect(page.getByTestId("listcard-03011")).toBeVisible();
+
+    await page
+      .getByTestId("subtype-filter")
+      .getByTestId("collapsible-trigger")
+      .click();
     await page.getByTestId("subtype-weakness").click();
     await expect(page.getByTestId("listcard-03011")).not.toBeVisible();
   });
