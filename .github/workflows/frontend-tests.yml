@@ -6,11 +6,11 @@ on:
       - main
     paths:
       - "frontend/**"
-      - ".github/workflows/frontend-ci.yml"
+      - ".github/workflows/frontend-tests.yml"
   pull_request:
     paths:
       - "frontend/**"
-      - ".github/workflows/frontend-ci.yml"
+      - ".github/workflows/frontend-tests.yml"
 
 jobs:
   check:
