@@ -1,4 +1,4 @@
-name: [Frontend] Production smoke tests
+name: "[Frontend] Production smoke tests"
 
 on:
   schedule:

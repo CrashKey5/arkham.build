@@ -1,4 +1,4 @@
-name: [Frontend] Upload stats to RelativeCI
+name: "[Frontend] Upload stats to RelativeCI"
 
 on:
   workflow_run:
