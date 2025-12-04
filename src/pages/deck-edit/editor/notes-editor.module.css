@@ -1,8 +1,0 @@
-.notes-editor {
-  padding-right: 0.625rem;
-  max-width: 90ch;
-}
-
-.notes-editor > * + * {
-  margin-top: 0.375rem;
-}

@@ -1,0 +1,7 @@
+.actions > * + * {
+  margin-left: 0.375rem;
+}
+
+.input {
+  display: none !important;
+}
