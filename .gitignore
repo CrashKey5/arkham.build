@@ -1,1 +1,16 @@
+.DS_Store
+
+npm-debug.log*
 node_modules
+
+.env
+.env.*
+!.env.example
+!.env.test
+
+.claude
+.vscode/*
+!.vscode/extensions.json
+
+coverage
+dist
