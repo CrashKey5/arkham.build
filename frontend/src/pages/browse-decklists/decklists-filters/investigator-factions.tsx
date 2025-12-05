@@ -12,7 +12,7 @@ export function InvestigatorFactions({
   const { t } = useTranslation();
 
   const factionOptions = FACTION_ORDER.filter(
-    (faction) => faction !== "mythos",
+    (faction) => faction !== "mythos" && faction !== "multiclass",
   ).map((faction) => ({
     code: faction,
     name: t(`common.faction.${faction}`),
