@@ -15,7 +15,7 @@ type DeckSearchResponse = {
 export type DeckSearchResult = Deck & {
   description_word_count: number;
   user_name: string;
-  user_reputation: string;
+  user_reputation: number;
   like_count: number;
 };
 

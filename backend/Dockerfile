@@ -6,7 +6,7 @@ FROM node:24-alpine AS base
 
 RUN apk add --update busybox-suid && rm -rf /var/cache/apk/*
 COPY --from=dbmate /usr/local/bin/dbmate /usr/local/bin/dbmate
-COPY config/crontab /app/config/crontab
+COPY backend/config/crontab /app/config/crontab
 
 # Dependencies stage
 FROM base AS deps
@@ -14,7 +14,8 @@ FROM base AS deps
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-COPY tsconfig.json ./
+COPY backend/package.json ./backend/package.json
+COPY shared/package.json ./shared/package.json
 
 RUN npm ci --only=production && npm cache clean --force
 
@@ -26,9 +27,10 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
-COPY --from=deps /app/node_modules ./node_modules
 COPY package.json ./
-COPY src ./src
+COPY --from=deps /app/node_modules ./node_modules
+COPY backend ./backend
+COPY shared ./shared
 
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001 && \
@@ -37,4 +39,4 @@ RUN addgroup -g 1001 -S nodejs && \
 USER nodejs
 
 EXPOSE $PORT
-CMD ["npm", "start"]
+CMD ["npm", "run", "start", "-w", "backend"]

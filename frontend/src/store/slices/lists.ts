@@ -48,7 +48,10 @@ const SYSTEM_FILTERS: Filter[] = [
   (card: Card) =>
     !card.hidden || card.code === SPECIAL_CARD_CODES.RANDOM_BASIC_WEAKNESS,
   // Bonded investigators
-  (card: Card) => card.type_code !== "investigator" || !!card.deck_limit,
+  (card: Card) =>
+    card.type_code !== "investigator" ||
+    !!card.deck_limit ||
+    !!card.encounter_code,
 ];
 
 function getInitialList() {

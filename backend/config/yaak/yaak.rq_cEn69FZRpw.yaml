@@ -2,11 +2,12 @@ type: http_request
 model: http_request
 id: rq_cEn69FZRpw
 createdAt: 2025-08-02T23:24:07.114533
-updatedAt: 2025-08-03T15:08:08.685275
+updatedAt: 2025-12-05T11:10:30.331030
 workspaceId: wk_bBoraEVHnK
 folderId: fl_ZDDpsyiw3d
 authentication: {}
 authenticationType: null
+body: {}
 bodyType: null
 description: ''
 headers: []
@@ -22,4 +23,4 @@ urlParameters:
 - enabled: true
   name: ''
   value: ''
-  id: Mh8RxPBQmP
+  id: dqgt2c725S

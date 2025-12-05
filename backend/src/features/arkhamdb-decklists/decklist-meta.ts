@@ -1,16 +1,13 @@
-import z from "zod";
+import {
+  type DecklistMetaResponse,
+  DecklistMetaResponseSchema,
+} from "@arkham-build/shared";
 import type { Database } from "../../db/db.ts";
 
-export const decklistMetaResponseSchema = z.object({
-  date_creation: z.date(),
-  description_word_count: z.coerce.number().int().min(0),
-  like_count: z.coerce.number().int().min(0),
-  user_id: z.coerce.number().int().min(1),
-  user_name: z.string(),
-  user_reputation: z.coerce.number().int().min(0),
-});
-
-export async function getDecklistMeta(db: Database, id: number) {
+export async function getDecklistMeta(
+  db: Database,
+  id: number,
+): Promise<DecklistMetaResponse> {
   const res = await db
     .selectFrom("arkhamdb_decklist")
     .innerJoin("arkhamdb_user", "arkhamdb_user.id", "arkhamdb_decklist.user_id")
@@ -28,5 +25,5 @@ export async function getDecklistMeta(db: Database, id: number) {
   if (!res) {
   }
 
-  return res;
+  return DecklistMetaResponseSchema.parse(res);
 }

@@ -1,5 +1,5 @@
 {
-  "name": "arkham.build",
+  "name": "@arkham-build/frontend",
   "private": true,
   "version": "3.7.0",
   "type": "module",
@@ -58,7 +58,7 @@
     "reselect": "5.1.1",
     "victory": "37.3.6",
     "wouter": "3.7.1",
-    "zod": "4.0.14",
+    "zod": "4.1.13",
     "zustand": "5.0.7"
   },
   "devDependencies": {
@@ -73,7 +73,6 @@
     "happy-dom": "20.0.2",
     "postcss-extend-rule": "4.0.0",
     "rollup-plugin-webpack-stats": "2.1.1",
-    "typescript": "5.9.2",
     "vite": "7.1.5",
     "vitest": "3.2.4",
     "wrangler": "4.27.0"

@@ -2,10 +2,7 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import type { HonoEnv } from "../../lib/hono-env.ts";
 import { statusText } from "../../lib/http-status.ts";
-import {
-  decklistMetaResponseSchema,
-  getDecklistMeta,
-} from "./decklist-meta.ts";
+import { getDecklistMeta } from "./decklist-meta.ts";
 import {
   search,
   searchRequestFromQuery,
@@ -33,7 +30,6 @@ export function arkhamDbDecklistsRouter() {
     }
 
     const res = await search(c.get("db"), searchReq.data);
-
     return c.json(searchResponseSchema.parse(res));
   });
 
@@ -48,7 +44,7 @@ export function arkhamDbDecklistsRouter() {
       });
     }
 
-    return c.json(decklistMetaResponseSchema.parse(meta));
+    return c.json(meta);
   });
 
   return routes;

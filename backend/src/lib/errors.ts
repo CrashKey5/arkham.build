@@ -9,6 +9,16 @@ export function errorHandler(err: unknown, c: Context<HonoEnv>) {
     return c.json(formatError(err), err.status);
   }
 
+  if (err instanceof ZodError) {
+    return c.json(
+      {
+        message: "Validation Error",
+        cause: formatErrorCause(err),
+      },
+      400,
+    );
+  }
+
   const config = c.get("config");
   const logger = c.get("logger");
 
@@ -23,7 +33,7 @@ export function errorHandler(err: unknown, c: Context<HonoEnv>) {
   return c.json({ message: statusText(500) }, 500);
 }
 
-function formatError(err: HTTPException) {
+function formatError(err: HTTPException & { cause?: unknown }) {
   return {
     message: err.message || statusText(err.status),
     cause: formatErrorCause(err.cause),

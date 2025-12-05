@@ -15,11 +15,13 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@arkham-build/shared": ["../shared/src/index.ts"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../shared/src"],
   "exclude": ["functions/**/*"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
