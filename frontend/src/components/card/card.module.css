@@ -424,6 +424,10 @@
   margin-top: 0.25rem;
 }
 
+.card:not(.full) .taboo-extra {
+  display: none;
+}
+
 .taboo-extra {
   margin-top: 0.25rem;
 }

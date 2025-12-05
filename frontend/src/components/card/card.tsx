@@ -43,6 +43,8 @@ export function Card(props: Props) {
   } = props;
 
   const [backVisible, toggleBack] = useState(!canToggleBackside);
+  const [ignoreTaboo, setIgnoreTaboo] = useState(false);
+
   const { t } = useTranslation();
 
   const { back, card } = resolvedCard;
@@ -54,6 +56,8 @@ export function Card(props: Props) {
       onPrintingSelect={onPrintingSelect}
       resolvedCard={resolvedCard}
       size={size}
+      ignoreTaboo={ignoreTaboo}
+      setIgnoreTaboo={setIgnoreTaboo}
       slotHeaderActions={slotHeaderActions}
       titleLinks={titleLinks}
     >
@@ -64,9 +68,11 @@ export function Card(props: Props) {
   let backNode = null;
 
   if (card.double_sided && !back) {
-    backNode = <CardBack card={card} size={size} />;
+    backNode = <CardBack card={card} size={size} ignoreTaboo={ignoreTaboo} />;
   } else if (back) {
-    backNode = <CardFace resolvedCard={back} size={size} />;
+    backNode = (
+      <CardFace resolvedCard={back} size={size} ignoreTaboo={ignoreTaboo} />
+    );
   }
 
   const backToggle = !!backNode && canToggleBackside && (

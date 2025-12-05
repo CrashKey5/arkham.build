@@ -17,21 +17,25 @@ import { CardTabooText } from "./card-taboo-text";
 import { CardText } from "./card-text";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  className?: string;
   children?: React.ReactNode;
-  slotHeaderActions?: React.ReactNode;
-  resolvedCard: CardWithRelations | ResolvedCard;
+  className?: string;
+  ignoreTaboo?: boolean;
   onPrintingSelect?: (card: Card) => void;
-  titleLinks?: "card" | "card-modal" | "dialog";
+  resolvedCard: CardWithRelations | ResolvedCard;
+  setIgnoreTaboo?: React.Dispatch<React.SetStateAction<boolean>>;
   size: "compact" | "tooltip" | "full";
+  slotHeaderActions?: React.ReactNode;
+  titleLinks?: "card" | "card-modal" | "dialog";
 }
 
 export function CardFace(props: Props) {
   const {
     children,
     className,
+    ignoreTaboo,
     onPrintingSelect,
     resolvedCard,
+    setIgnoreTaboo,
     size,
     slotHeaderActions,
     titleLinks,
@@ -42,7 +46,6 @@ export function CardFace(props: Props) {
 
   const { card } = resolvedCard;
   const [isSideways, setSideways] = useState(sideways(card));
-  const [ignoreTaboo, setIgnoreTaboo] = useState(false);
 
   const showImage = size === "full" || card.type_code !== "story";
 
@@ -82,7 +85,7 @@ export function CardFace(props: Props) {
           victory={card.victory}
         />
         <CardTabooText card={card} showOriginalText={size !== "tooltip"}>
-          {!!card.taboo_set_id && (
+          {!!card.taboo_set_id && !!setIgnoreTaboo && (
             <Button onClick={() => setIgnoreTaboo((p) => !p)} size="xs">
               <ImageIcon />
               {ignoreTaboo
