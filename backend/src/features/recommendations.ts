@@ -90,6 +90,7 @@ async function getRecommendationsByAbsolutePercentage(
 
       const conditions = [
         ...deckFilterConds(eb.ref("is_duplicate"), eb.ref("is_searchable")),
+        eb("like_count", ">", 0),
         canonicalInvestigatorCodeCond(
           eb.ref("arkhamdb_decklist.canonical_investigator_code"),
           canonical_investigator_code,
@@ -180,6 +181,7 @@ async function getRecommendationsByPercentileRank(
         .where((eb) =>
           eb.and([
             ...deckFilterConds(eb.ref("is_duplicate"), eb.ref("is_searchable")),
+            eb("like_count", ">", 0),
             requiredSlotsCond({
               analyzeSideDecks: analyze_side_decks,
               slots: eb.ref("slots"),

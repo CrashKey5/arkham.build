@@ -107,13 +107,12 @@ async function ingest(config: Config, db: Database) {
           );
           const likeCount = statsByDecklistId.get(Number(deck.id)) ?? 0;
           const slotsHash = hashSlots(slots, weaknessCodes);
-          const sideSlotsHash = hashSlots(sideSlots, weaknessCodes);
 
           const backCode = meta.alternate_back || deck.investigator_code;
           const frontCode = meta.alternate_front || deck.investigator_code;
           const canonicalInvestigatorCode = `${resolveId(frontCode, resolutions)}-${resolveId(backCode, resolutions)}`;
 
-          const hash = `${canonicalInvestigatorCode}-${slotsHash}-${sideSlotsHash}`;
+          const hash = `${canonicalInvestigatorCode}-${slotsHash}`;
 
           delete (deck as any).sideSlots;
           delete (deck as any).ignoreDeckLimitSlots;
