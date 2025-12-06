@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 import type { Deck } from "@/store/schemas/deck.schema";
 import {
   cardToApiFormat,

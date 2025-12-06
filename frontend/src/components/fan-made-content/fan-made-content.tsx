@@ -12,7 +12,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "wouter";
-import * as z from "zod";
+import { z } from "zod";
 import type { SettingProps } from "@/pages/settings/types";
 import { useStore } from "@/store";
 import {

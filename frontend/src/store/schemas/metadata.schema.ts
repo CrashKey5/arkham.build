@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 
 const FactionSchema = z.object({
   code: z.string(),

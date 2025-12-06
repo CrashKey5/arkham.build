@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 import {
   COMPARISON_OPERATOR,
   FACTION_ORDER,

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 import { FanMadeCardSchema } from "./card.schema";
 
 const ContentTypeSchema = z.enum([

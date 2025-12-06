@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 
 const idSchema = z.union([z.number(), z.string()]);
 export type Id = z.infer<typeof idSchema>;

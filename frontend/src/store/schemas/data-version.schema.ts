@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 
 const DataVersionSchema = z.object({
   // ArkhamCards increments this version in reaction to breaking changes in the card data.
