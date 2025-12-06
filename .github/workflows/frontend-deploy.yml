@@ -1,17 +1,17 @@
 name: "[Frontend] Deploy to Cloudflare Pages"
 
 on:
-  workflow_dispatch:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["[Backend] Deploy"]
+    types: [completed]
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Call deploy hook
-        env:
+      - env:
           CF_DEPLOY_HOOK: ${{ secrets.CF_DEPLOY_HOOK }}
         run: |
           curl -X POST "$CF_DEPLOY_HOOK"
