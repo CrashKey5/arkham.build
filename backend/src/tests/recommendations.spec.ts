@@ -73,7 +73,7 @@ describe("GET /v2/public/recommendations", () => {
     dependencies,
   }) => {
     const res = await dependencies.app.request(
-      "/v2/public/recommendations/06005-06005?algo=percentile_rank",
+      "/v2/public/recommendations/06005-06005?analysis_algorithm=percentile_rank",
       {
         method: "GET",
       },
@@ -207,7 +207,7 @@ describe("GET /v2/public/recommendations", () => {
 
   test("can exclude side decks from calculations", async ({ dependencies }) => {
     const a = await dependencies.app.request(
-      "/v2/public/recommendations/05001-05001?side_decks=false",
+      "/v2/public/recommendations/05001-05001?analyze_side_decks=false",
       {
         method: "GET",
       },
@@ -282,7 +282,7 @@ describe("GET /v2/public/recommendations", () => {
 
   test("can apply a custom date range", async ({ dependencies }) => {
     const a = await dependencies.app.request(
-      "/v2/public/recommendations/05001-05001?date_start=2020-01&date_end=2020-12",
+      "/v2/public/recommendations/05001-05001?date_range=2020-01&date_range=2020-12",
       {
         method: "GET",
       },
@@ -360,7 +360,7 @@ describe("GET /v2/public/recommendations", () => {
 
   test("can apply required cards", async ({ dependencies }) => {
     const a = await dependencies.app.request(
-      "/v2/public/recommendations/05001-05001?with=01088&with=01093",
+      "/v2/public/recommendations/05001-05001?required_cards=01088&required_cards=01093",
       {
         method: "GET",
       },
