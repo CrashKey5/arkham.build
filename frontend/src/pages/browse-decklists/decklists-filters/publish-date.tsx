@@ -9,10 +9,10 @@ export function PublishDate({ formState, setFormState }: DecklistFilterProps) {
         onValueChange={(range) => {
           setFormState((prev) => ({
             ...prev,
-            dateRange: range,
+            date_range: range,
           }));
         }}
-        value={formState.dateRange}
+        value={formState.date_range}
       />
     </Field>
   );

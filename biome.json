@@ -36,13 +36,18 @@
         "noImportantStyles": "off",
         "useLiteralKeys": "off"
       },
-      "nursery": {},
       "performance": {
         "noBarrelFile": "error",
         "noReExportAll": "error"
       },
       "suspicious": {
         "useAwait": "error",
+        "noConsole": {
+          "level": "error",
+          "options": {
+            "allow": ["warn", "error", "time", "timeEnd", "debug", "info"]
+          }
+        },
         "noDuplicateProperties": "off",
         "noUselessEscapeInString": "off",
         "noUnknownAtRules": {

@@ -1,3 +1,9 @@
+import {
+  encodeSearch,
+  type RecommendationsRequest,
+  type RecommendationsResponse,
+  RecommendationsResponseSchema,
+} from "@arkham-build/shared";
 import encounterSets from "@/store/services/data/encounter_sets.json";
 import packs from "@/store/services/data/packs.json";
 import { packToApiFormat } from "@/utils/arkhamdb-json-format";
@@ -12,7 +18,6 @@ import { type Deck, type Id, isDeck } from "../schemas/deck.schema";
 import type { JsonDataEncounterSet } from "../schemas/encounter-set.schema";
 import type { FanMadeProject } from "../schemas/fan-made-project.schema";
 import type { Pack } from "../schemas/pack.schema";
-import type { Recommendations } from "../schemas/recommendations.schema";
 import type { TabooSet } from "../schemas/taboo-set.schema";
 import type { History } from "../selectors/decks";
 import type { Locale } from "../slices/settings.types";
@@ -330,35 +335,20 @@ export async function upgradeDeck(
   return await res.json();
 }
 
-type RecommendationApiResponse = {
-  data: {
-    recommendations: Recommendations;
-  };
-};
-
 export async function getRecommendations(
-  canonicalInvestigatorCode: string,
-  analyzeSideDecks: boolean,
-  relativeAnalysis: boolean,
-  requiredCards: string[],
-  dateRange: [string, string],
-) {
-  const search = new URLSearchParams([
-    ["algo", relativeAnalysis ? "percentile_rank" : "absolute_rank"],
-    ["side_decks", analyzeSideDecks ? "true" : "false"],
-    ["date_start", dateRange[0]],
-    ["date_end", dateRange[1]],
-    ...requiredCards.map((card) => ["with", card]),
-  ]);
+  req: RecommendationsRequest,
+): Promise<RecommendationsResponse["data"]["recommendations"]> {
+  const search = encodeSearch(req).toString();
 
   const res = await apiV2Request(
-    `/v2/public/recommendations/${canonicalInvestigatorCode}?${search.toString()}`,
+    `/v2/public/recommendations/${req.canonical_investigator_code}?${search}`,
     {
       method: "GET",
     },
   );
-  const { data }: RecommendationApiResponse = await res.json();
-  return data.recommendations;
+
+  const json = await res.json();
+  return RecommendationsResponseSchema.parse(json).data.recommendations;
 }
 
 export async function querySealedDeck(id: string): Promise<SealedDeck> {

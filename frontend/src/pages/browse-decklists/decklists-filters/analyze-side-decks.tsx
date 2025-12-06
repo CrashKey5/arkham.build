@@ -12,13 +12,13 @@ export function AnalyzeSideDecks({
   return (
     <Field full>
       <Checkbox
-        checked={formState.analyzeSideDecks}
+        checked={formState.analyze_side_decks}
         id="analyze-side-decks"
         label={t("deck_edit.recommendations.analyze_side_decks")}
         onCheckedChange={(checked) => {
           setFormState((prev) => ({
             ...prev,
-            analyzeSideDecks: checked === true,
+            analyze_side_decks: checked === true,
           }));
         }}
       />

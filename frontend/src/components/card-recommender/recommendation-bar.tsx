@@ -1,7 +1,7 @@
+import type { Recommendation } from "@arkham-build/shared";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { Card } from "@/store/schemas/card.schema";
-import type { Recommendation } from "@/store/schemas/recommendations.schema";
 import { displayAttribute, getCardColor } from "@/utils/card-utils";
 import { cx } from "@/utils/cx";
 import { DefaultTooltip } from "../ui/tooltip";

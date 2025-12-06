@@ -1,83 +1,20 @@
-import type { Context } from "hono";
+import {
+  type DecklistSearchRequest,
+  DecklistSearchResponseSchema,
+} from "@arkham-build/shared";
 import type { ExpressionBuilder } from "kysely";
 import { sql } from "kysely";
-import z from "zod";
 import type { Database } from "../../db/db.ts";
 import type { Card, DB } from "../../db/schema.types.ts";
-import { arkhamdbDecklistSchema } from "../../db/schemas/arkhamdb-decklist.schema.ts";
 import {
   canonicalInvestigatorCodeCond,
-  dateRangeSchema,
   deckFilterConds,
   excludedSlotsCond,
   inDateRangeConds,
-  rangeFromQuery,
   requiredSlotsCond,
 } from "../../lib/decklists-helpers.ts";
 
-export const searchRequestSchema = z.object({
-  analyze_side_decks: z.boolean().optional().default(true),
-  author_name: z.string().max(255).optional(),
-  canonical_investigator_code: z.string().optional(),
-  description_length: z.coerce.number().int().min(0).max(1000).optional(),
-  date_range: dateRangeSchema,
-  excluded_cards: z.array(z.string()).optional(),
-  investigator_factions: z.array(z.string()).optional(),
-  limit: z.coerce.number().int().min(1).max(100).optional().default(10),
-  name: z.string().max(255).optional(),
-  offset: z.coerce.number().int().min(0).optional().default(0),
-  required_cards: z.array(z.string()).optional(),
-  sort_by: z
-    .enum(["user_reputation", "date", "likes", "popularity"])
-    .default("popularity"),
-  sort_dir: z.enum(["asc", "desc"]).optional().default("desc"),
-});
-
-export function searchRequestFromQuery(c: Context) {
-  return searchRequestSchema.safeParse({
-    analyze_side_decks: c.req.query("side_decks") !== "false",
-    author_name: c.req.query("author"),
-    canonical_investigator_code: c.req.query("investigator"),
-    description_length: c.req.query("description_length"),
-    date_range: rangeFromQuery("date", c),
-    excluded_cards: c.req.queries("without"),
-    investigator_factions: c.req.queries("faction"),
-    name: c.req.query("name"),
-    limit: c.req.query("limit"),
-    offset: c.req.query("offset"),
-    required_cards: c.req.queries("with"),
-    sort_by: c.req.query("sort_by"),
-    sort_dir: c.req.query("sort_dir"),
-  });
-}
-
-export const searchResponseSchema = z.object({
-  meta: z.object({
-    limit: z.number().int().min(1).max(100),
-    offset: z.number().int().min(0),
-    total: z.coerce.number().int().min(0),
-  }),
-  data: z.array(
-    arkhamdbDecklistSchema
-      .omit({
-        description_md: true,
-        // TECH DEBT: legacy field names
-        side_slots: true,
-        ignore_deck_limit_slots: true,
-      })
-      .extend({
-        // TECH DEBT: legacy field names
-        ignoreDeckLimitSlots: z.record(z.string(), z.number()).nullable(),
-        sideSlots: z.record(z.string(), z.number()).nullable(),
-        user_name: z.string(),
-        user_reputation: z.coerce.number().int().min(0),
-      }),
-  ),
-});
-
-type SearchRequest = z.infer<typeof searchRequestSchema>;
-
-export async function search(db: Database, search: SearchRequest) {
+export async function search(db: Database, search: DecklistSearchRequest) {
   const conditions = (
     eb: ExpressionBuilder<
       DB & {
@@ -109,24 +46,24 @@ export async function search(db: Database, search: SearchRequest) {
       );
     }
 
-    if (search.required_cards) {
+    if (search.required) {
       conditions.push(
         requiredSlotsCond({
           slots: eb.ref("arkhamdb_decklist.slots"),
           sideSlots: eb.ref("arkhamdb_decklist.side_slots"),
           analyzeSideDecks: search.analyze_side_decks,
-          requiredCards: search.required_cards,
+          requiredCards: search.required,
         }),
       );
     }
 
-    if (search.excluded_cards) {
+    if (search.excluded) {
       conditions.push(
         excludedSlotsCond({
           slots: eb.ref("arkhamdb_decklist.slots"),
           sideSlots: eb.ref("arkhamdb_decklist.side_slots"),
           analyzeSideDecks: search.analyze_side_decks,
-          requiredCards: search.excluded_cards,
+          requiredCards: search.excluded,
         }),
       );
     }
@@ -220,23 +157,12 @@ export async function search(db: Database, search: SearchRequest) {
       .execute(),
   ]);
 
-  return {
-    // TECH DEBT: legacy field names
-    data: data.map(
-      ({
-        side_slots: sideSlots,
-        ignore_deck_limit_slots: ignoreDeckLimitSlots,
-        ...deck
-      }) => ({
-        ...deck,
-        sideSlots,
-        ignoreDeckLimitSlots,
-      }),
-    ),
+  return DecklistSearchResponseSchema.parse({
+    data,
     meta: {
       limit: search.limit,
       offset: search.offset,
       total: countResult?.count || data.length,
     },
-  };
+  });
 }

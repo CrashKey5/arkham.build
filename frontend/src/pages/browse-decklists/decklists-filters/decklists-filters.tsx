@@ -53,12 +53,12 @@ export function DecklistsFilters({
           <form className={css["filters"]} onSubmit={handleSubmit}>
             <div className={css["filters-col"]}>
               <CanonicalInvestigator
-                disabled={!!formState.investigatorFactions.length}
+                disabled={!!formState.investigator_factions?.length}
                 formState={formState}
                 setFormState={setFormState}
               />
               <InvestigatorFactions
-                disabled={!!formState.canonicalInvestigatorCode}
+                disabled={!!formState.canonical_investigator_code}
                 formState={formState}
                 setFormState={setFormState}
               />

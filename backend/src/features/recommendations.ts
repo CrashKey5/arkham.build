@@ -1,64 +1,40 @@
+import {
+  decodeSearch,
+  type RecommendationsRequest,
+  RecommendationsRequestSchema,
+  RecommendationsResponseSchema,
+} from "@arkham-build/shared";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { expressionBuilder, sql } from "kysely";
-import z from "zod";
 import type { Database } from "../db/db.ts";
 import { getCardById } from "../db/queries/get-card-by-id.ts";
 import type { DB } from "../db/schema.types.ts";
 import {
   canonicalInvestigatorCodeCond,
-  dateRangeSchema,
   deckFilterConds,
   inDateRangeConds,
-  rangeFromQuery,
   requiredSlotsCond,
 } from "../lib/decklists-helpers.ts";
 import type { HonoEnv } from "../lib/hono-env.ts";
-
-const recommendationsRequestSchema = z.object({
-  analysis_algorithm: z
-    .enum(["absolute_rank", "percentile_rank"])
-    .optional()
-    .default("absolute_rank"),
-  analyze_side_decks: z.boolean().optional().default(true),
-  author_name: z.string().max(255).optional(),
-  canonical_investigator_code: z.string(),
-  date_range: dateRangeSchema,
-  required_cards: z.array(z.string()).optional().default([]),
-});
-
-const recommendationsResponseSchema = z.object({
-  data: z.object({
-    recommendations: z.object({
-      decks_analyzed: z.number(),
-      recommendations: z.array(
-        z.object({
-          card_code: z.string().max(36),
-          recommendation: z.number(),
-          decks_matched: z.number().optional(),
-        }),
-      ),
-    }),
-  }),
-});
-
-type RecommendationsRequest = z.infer<typeof recommendationsRequestSchema>;
 
 export function recommendationsRouter() {
   const routes = new Hono<HonoEnv>();
 
   routes.get("/:canonical_investigator_code", async (c) => {
-    const req = recommendationsRequestSchema.parse({
-      analyze_side_decks: c.req.query("side_decks") !== "false",
-      analysis_algorithm: c.req.query("algo"),
-      canonical_investigator_code: c.req.param("canonical_investigator_code"),
-      date_range: rangeFromQuery("date", c),
-      required_cards: c.req.queries("with"),
-    });
+    const req = decodeSearch<RecommendationsRequest>(
+      RecommendationsRequestSchema,
+      {
+        ...c.req.queries(),
+        canonical_investigator_code: [
+          c.req.param("canonical_investigator_code"),
+        ],
+      },
+    );
 
     const recommendations = await getRecommendations(c.get("db"), req);
 
-    const res = recommendationsResponseSchema.parse({
+    const res = RecommendationsResponseSchema.parse({
       data: { recommendations },
     });
 

@@ -83,7 +83,7 @@ function patchLocale(
     if (translation) {
       obj[key] = translation;
     } else {
-      console.log(`[${lng}] ArkhamCards missing translation for ${key}`);
+      console.info(`[${lng}] ArkhamCards missing translation for ${key}`);
     }
   }
 }

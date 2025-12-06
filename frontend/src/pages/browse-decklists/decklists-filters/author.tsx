@@ -12,13 +12,13 @@ export function Author({ formState, setFormState }: DecklistFilterProps) {
       <SearchInput
         id="author"
         omitSearchIcon
-        onChangeValue={(authorName) => {
-          setFormState((prev) => ({ ...prev, authorName }));
+        onChangeValue={(author_name) => {
+          setFormState((prev) => ({ ...prev, author_name }));
         }}
         label={t("decklists.filters.author")}
         placeholder={t("decklists.filters.author_placeholder")}
         type="text"
-        value={formState.authorName}
+        value={formState.author_name ?? ""}
       />
     </Field>
   );

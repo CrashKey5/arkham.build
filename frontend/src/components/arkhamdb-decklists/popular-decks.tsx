@@ -28,11 +28,11 @@ export function PopularDecks(props: Props) {
 
   const scopeParams = {
     filters: {
-      canonicalInvestigatorCode:
+      canonical_investigator_code:
         scope.type_code === "investigator"
           ? `${scope.code}-${scope.code}`
           : undefined,
-      requiredCards:
+      required:
         scope.type_code !== "investigator" ? [getCanonicalCardCode(scope)] : [],
     },
   };

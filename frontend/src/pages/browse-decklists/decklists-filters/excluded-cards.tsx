@@ -10,6 +10,8 @@ import {
   selectPlayerCardsSort,
 } from "./shared";
 
+const EMPTY_ARRAY: never[] = [];
+
 export function ExcludedCards({
   formState,
   setFormState,
@@ -36,12 +38,14 @@ export function ExcludedCards({
         onValueChange={(cards) => {
           setFormState((prev) => ({
             ...prev,
-            excludedCards: cards.map((card) => card.code),
+            excluded: cards.map((card) => card.code),
           }));
         }}
-        selectedItems={formState.excludedCards
-          .map((code) => metadata.cards[code])
-          .filter(Boolean)}
+        selectedItems={
+          formState.excluded
+            ?.map((code) => metadata.cards[code])
+            .filter(Boolean) ?? EMPTY_ARRAY
+        }
         showLabel
       />
     </Field>

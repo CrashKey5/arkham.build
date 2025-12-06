@@ -111,7 +111,7 @@ function BrowseDecklists() {
               <Sorting
                 disabled={isPlaceholderData}
                 onSortByChange={onSortByChange}
-                sortBy={state.sortBy}
+                sortBy={state.sort_by}
               />
             </nav>
             <Pagination

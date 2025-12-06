@@ -22,6 +22,7 @@ export const log: Logger = (
   message: string,
   details?: Record<string, unknown>,
 ) => {
+  // biome-ignore lint/suspicious/noConsole: logger utility
   console.log(
     JSON.stringify({
       level,

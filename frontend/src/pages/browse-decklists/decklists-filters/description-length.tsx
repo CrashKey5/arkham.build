@@ -15,7 +15,7 @@ export function DescriptionLength({
   const handleValueChange = (value: string) => {
     setFormState((prev) => ({
       ...prev,
-      descriptionLength: Number(value),
+      description_length: Number(value),
     }));
   };
 
@@ -27,9 +27,9 @@ export function DescriptionLength({
       <div>
         <RadioButtonGroup
           value={
-            formState.descriptionLength === undefined
+            formState.description_length === undefined
               ? ""
-              : String(formState.descriptionLength)
+              : String(formState.description_length)
           }
           onValueChange={handleValueChange}
         >

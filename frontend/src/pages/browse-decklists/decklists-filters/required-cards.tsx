@@ -10,6 +10,8 @@ import {
   selectPlayerCardsSort,
 } from "./shared";
 
+const EMPTY_ARRAY: never[] = [];
+
 export function RequiredCards({
   formState,
   setFormState,
@@ -37,12 +39,14 @@ export function RequiredCards({
         onValueChange={(cards) => {
           setFormState((prev) => ({
             ...prev,
-            requiredCards: cards.map((card) => card.code),
+            required: cards.map((card) => card.code),
           }));
         }}
-        selectedItems={formState.requiredCards
-          .map((code) => metadata.cards[code])
-          .filter(Boolean)}
+        selectedItems={
+          formState.required
+            ?.map((code) => metadata.cards[code])
+            .filter(Boolean) ?? EMPTY_ARRAY
+        }
         showLabel
       />
     </Field>

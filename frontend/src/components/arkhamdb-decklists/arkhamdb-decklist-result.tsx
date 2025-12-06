@@ -1,3 +1,4 @@
+import type { DecklistSearchResult } from "@arkham-build/shared";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useStore } from "@/store";
@@ -7,7 +8,6 @@ import {
   selectLookupTables,
   selectMetadata,
 } from "@/store/selectors/shared";
-import type { DeckSearchResult } from "@/store/services/requests/decklists-search";
 import { ResolvedDeckProvider } from "@/utils/use-resolved-deck";
 import { DeckDetails } from "../deck-details";
 import { DeckSummary } from "../deck-summary/deck-summary";
@@ -17,7 +17,7 @@ import { ArkhamdbDecklistMeta } from "./arkhamdb-decklist-meta";
 import css from "./arkhamdb-decklist-result.module.css";
 
 type Props = {
-  result: DeckSearchResult;
+  result: DecklistSearchResult;
   showDetails?: boolean;
 };
 
@@ -32,7 +32,6 @@ export function ArkhamDBDecklistResult({ result, showDetails }: Props) {
     const deps = { lookupTables, metadata, sharing };
     return resolveDeck(deps, collator, {
       ...result,
-      source: "arkhamdb",
     });
   }, [result, lookupTables, metadata, sharing, collator]);
 

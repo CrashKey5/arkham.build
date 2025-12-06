@@ -1,13 +1,14 @@
+import {
+  type DecklistSearchRequest,
+  DecklistSearchRequestSchema,
+  decodeSearch,
+} from "@arkham-build/shared";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import type { HonoEnv } from "../../lib/hono-env.ts";
 import { statusText } from "../../lib/http-status.ts";
 import { getDecklistMeta } from "./decklist-meta.ts";
-import {
-  search,
-  searchRequestFromQuery,
-  searchResponseSchema,
-} from "./decklists-search.ts";
+import { search } from "./decklists-search.ts";
 
 export function arkhamDbDecklistsRouter() {
   const routes = new Hono<HonoEnv>();
@@ -20,17 +21,13 @@ export function arkhamDbDecklistsRouter() {
   });
 
   routes.get("/search", async (c) => {
-    const searchReq = searchRequestFromQuery(c);
+    const searchReq = decodeSearch<DecklistSearchRequest>(
+      DecklistSearchRequestSchema,
+      c.req.queries(),
+    );
 
-    if (!searchReq.success) {
-      throw new HTTPException(400, {
-        message: statusText(400),
-        cause: searchReq.error,
-      });
-    }
-
-    const res = await search(c.get("db"), searchReq.data);
-    return c.json(searchResponseSchema.parse(res));
+    const res = await search(c.get("db"), searchReq);
+    return c.json(res);
   });
 
   routes.get("/:id/meta", async (c) => {

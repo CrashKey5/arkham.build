@@ -4,6 +4,8 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { FACTION_ORDER } from "@/utils/constants";
 import type { DecklistFilterProps } from "./shared";
 
+const EMPTY_ARRAY: never[] = [];
+
 export function InvestigatorFactions({
   disabled,
   formState,
@@ -26,11 +28,11 @@ export function InvestigatorFactions({
       <FactionToggle
         disabled={disabled}
         options={factionOptions}
-        value={formState.investigatorFactions}
-        onValueChange={(value) => {
+        value={formState.investigator_factions ?? EMPTY_ARRAY}
+        onValueChange={(investigator_factions) => {
           setFormState((prev) => ({
             ...prev,
-            investigatorFactions: value,
+            investigator_factions,
           }));
         }}
       />

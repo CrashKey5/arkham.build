@@ -1,15 +1,17 @@
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { cx } from "@/utils/cx";
 import { RangeSelect } from "../ui/range-select";
 import css from "./decklists-date-range-input.module.css";
 
 type Props = {
+  className?: string;
   onValueChange: (value: [string, string]) => void;
-  value?: [string, string];
+  value?: [string, string] | undefined | null;
 };
 
 export function DecklistsDateRangeInput(props: Props) {
-  const { onValueChange, value } = props;
+  const { className, onValueChange, value } = props;
 
   const { t } = useTranslation();
 
@@ -32,7 +34,7 @@ export function DecklistsDateRangeInput(props: Props) {
 
   return (
     <RangeSelect
-      className={css["date-range"]}
+      className={cx(css["date-range"], className)}
       data-testid="deck-date-range"
       id="deck-date-range-select"
       label={t("deck_edit.recommendations.publication_date")}

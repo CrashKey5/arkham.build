@@ -55,7 +55,7 @@ export function CanonicalInvestigator({
   const collator = useStore(selectLocaleSortingCollator);
   const locale = useStore((state) => state.settings.locale);
 
-  const choices = formState.canonicalInvestigatorCode?.split("-");
+  const choices = formState.canonical_investigator_code?.split("-");
   const selectedCard = choices ? metadata.cards[choices[1]] : undefined;
 
   const resolvedCanonicalCard = useMemo(() => {
@@ -104,7 +104,7 @@ export function CanonicalInvestigator({
           const card = cards[0];
           setFormState((prev) => ({
             ...prev,
-            canonicalInvestigatorCode: card
+            canonical_investigator_code: card
               ? `${card.code}-${card.code}`
               : undefined,
           }));
@@ -133,7 +133,7 @@ export function CanonicalInvestigator({
                   : t("deck_edit.config.sides.parallel_front"),
             }))}
             required
-            value={formState.canonicalInvestigatorCode?.split("-")[0]}
+            value={formState.canonical_investigator_code?.split("-")[0] ?? ""}
           />
           <Select
             disabled={disabled}
@@ -152,7 +152,7 @@ export function CanonicalInvestigator({
               }));
             }}
             required
-            value={formState.canonicalInvestigatorCode?.split("-")[1]}
+            value={formState.canonical_investigator_code?.split("-")[1] ?? ""}
           />
         </div>
       )}

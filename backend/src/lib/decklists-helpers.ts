@@ -1,6 +1,6 @@
+import type { DateRange } from "@arkham-build/shared";
 import type { Context } from "hono";
 import { type Expression, expressionBuilder, sql } from "kysely";
-import z from "zod";
 import type { DB } from "../db/schema.types.ts";
 
 export function canonicalInvestigatorCodeCond(
@@ -25,19 +25,6 @@ export function deckFilterConds(
     eb(isSearchable, "=", eb.lit(true)),
   ];
 }
-
-export const dateRangeSchema = z
-  .tuple([z.coerce.date(), z.coerce.date()])
-  .optional()
-  .default(
-    () =>
-      [
-        new Date("2016-09"),
-        new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
-      ] as [Date, Date],
-  );
-
-export type DateRange = z.infer<typeof dateRangeSchema>;
 
 export function excludedSlotsCond({
   analyzeSideDecks,
@@ -72,10 +59,13 @@ export function inDateRangeConds(
 ) {
   const eb = expressionBuilder<DB>();
 
-  const conds = [eb(dateCreation, ">=", dateRange[0])];
+  const startDate = new Date(dateRange[0]);
+
+  const conds = [eb(dateCreation, ">=", startDate)];
 
   const now = new Date();
-  const endDate = dateRange[1];
+  const endDate = new Date(dateRange[1]);
+
   if (
     endDate.getFullYear() !== now.getFullYear() ||
     endDate.getMonth() !== now.getMonth()

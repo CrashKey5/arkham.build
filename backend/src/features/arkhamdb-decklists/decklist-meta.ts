@@ -7,7 +7,7 @@ import type { Database } from "../../db/db.ts";
 export async function getDecklistMeta(
   db: Database,
   id: number,
-): Promise<DecklistMetaResponse> {
+): Promise<DecklistMetaResponse | undefined> {
   const res = await db
     .selectFrom("arkhamdb_decklist")
     .innerJoin("arkhamdb_user", "arkhamdb_user.id", "arkhamdb_decklist.user_id")
@@ -23,6 +23,7 @@ export async function getDecklistMeta(
     .executeTakeFirst();
 
   if (!res) {
+    return undefined;
   }
 
   return DecklistMetaResponseSchema.parse(res);

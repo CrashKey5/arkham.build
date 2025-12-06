@@ -75,6 +75,10 @@
   font-family: var(--font-family-ui);
 }
 
+.toolbar-date-range {
+  padding-inline: 2px;
+}
+
 .toggle-container {
   display: flex;
   justify-content: space-between;

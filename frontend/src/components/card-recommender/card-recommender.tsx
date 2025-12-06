@@ -1,3 +1,8 @@
+import {
+  type Recommendation,
+  RecommendationsRequestSchema,
+  type RecommendationsResponse,
+} from "@arkham-build/shared";
 import { useQuery } from "@tanstack/react-query";
 import { forwardRef, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,10 +13,6 @@ import {
 import { useStore } from "@/store";
 import type { ResolvedDeck } from "@/store/lib/types";
 import type { Card } from "@/store/schemas/card.schema";
-import type {
-  Recommendation,
-  Recommendations,
-} from "@/store/schemas/recommendations.schema";
 import { type ListState, selectListCards } from "@/store/selectors/lists";
 import { selectMetadata } from "@/store/selectors/shared";
 import { getRecommendations } from "@/store/services/queries";
@@ -71,11 +72,13 @@ export const CardRecommender = forwardRef(function CardRecommender(
     const canonicalizedInvestigatorCode = `${canonicalFrontCode}-${canonicalBackCode}`;
 
     return getRecommendations(
-      canonicalizedInvestigatorCode,
-      includeSideDeck,
-      isRelative,
-      coreCards[resolvedDeck.id] || [],
-      dateRange,
+      RecommendationsRequestSchema.parse({
+        canonical_investigator_code: canonicalizedInvestigatorCode,
+        analyze_side_decks: includeSideDeck,
+        analysis_algorithm: isRelative ? "percentile_rank" : "absolute_rank",
+        required_cards: coreCards[resolvedDeck.id] || [],
+        date_range: dateRange,
+      }),
     );
   };
 
@@ -130,6 +133,7 @@ export const CardRecommender = forwardRef(function CardRecommender(
             slotRight={slotRight}
           />
           <DecklistsDateRangeInput
+            className={css["toolbar-date-range"]}
             value={dateRange}
             onValueChange={setFilterValue}
           />
@@ -182,7 +186,7 @@ function DeckCount(props: { decksAnalyzed?: number }) {
 
 function CardRecommenderInner(
   props: Omit<CardListProps, "slotLeft" | "slotRight"> & {
-    data: Recommendations;
+    data: RecommendationsResponse["data"]["recommendations"];
     listState: ListState;
     resolvedDeck: ResolvedDeck;
     investigator: Card;

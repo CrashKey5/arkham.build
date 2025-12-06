@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const arkhamdbDecklistSchema = z.object({
+export const ArkhamDbDecklistSchema = z.object({
   canonical_investigator_code: z.string(),
   date_creation: z.date(),
   date_update: z.date().nullable(),
