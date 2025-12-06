@@ -10,20 +10,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          node-version-file: "package.json"
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.4
           bundler-cache: false
-
       - run: gem install kamal
-
       - run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 159.65.176.31 >> ~/.ssh/known_hosts
-
+      - run: npm ci
       - working-directory: backend
         env:
           KAMAL_REGISTRY_USERNAME: ${{ secrets.KAMAL_REGISTRY_USERNAME }}
