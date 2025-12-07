@@ -11,7 +11,16 @@ function RulesReference() {
   const html = `<div class="main white container rules-reference">
 
 <div class="row">
-<div class="col-md-4">
+<div class="col-md-4"><body><nav id="rop-nav">
+        <button class="button" id="rop-back">
+          <svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6"></path>
+          </svg>
+          Back
+        </button>
+        <a class="button" href="#masthead">Back to top</a>
+      </nav>
+      </body>
 
 <h1 id="rop">Table of Contents</h1>
 
@@ -316,24 +325,15 @@ function RulesReference() {
 </div>
 <div class="col-md-8" id="rules">
 
-<div><body><nav id="rop-nav">
-        <button class="button" id="rop-back">
-          <svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m15 18-6-6 6-6"></path>
-          </svg>
-          Back
-        </button>
-        <a class="button" href="#masthead">Back to top</a>
-      </nav>
-      </body><body>
+<div>
+
+<h2 id="Intro"><body>
       <h1 id="top">Rules reference</h1>
     </body><body>
       <blockquote>
         The content on this page is sourced from <a href="https://arkhamdb.com">ArkhamDB</a> and maintained by <a href="https://github.com/Kamalisk/arkhamdb/commits/arkham/src/AppBundle/Resources/views/Default/rulesreference.html.twig">its contributors</a>. The source code is available <a href="https://github.com/Kamalisk/arkhamdb/blob/arkham/src/AppBundle/Resources/views/Default/rulesreference.html.twig">on GitHub</a>.
       </blockquote>
-    </body>
-
-<h2 id="Intro">A Note from ArkhamDB</h2>
+    </body>A Note from ArkhamDB</h2>
 
 <p>This page contains a replica of the Rules Reference found in any copy of the Core Set of Arkham Horror: The Card Game. It also includes updates to the Rules Reference: rules added in deluxe expansions <span style="color:var(--red);">(marked in red)</span> and rules added in the official FAQ for the game <span style="color:var(--blue);">(marked in blue)</span>.</p>
 

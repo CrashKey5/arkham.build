@@ -30,7 +30,7 @@ async function main() {
 
   doc.querySelector("#rop")?.parentElement?.prepend();
 
-  doc.querySelector("#Intro")?.parentElement?.prepend(
+  doc.querySelector("#rop")?.parentElement?.prepend(
     htmlFromString(
       `<nav id="rop-nav">
         <button class="button" id="rop-back">
@@ -54,6 +54,9 @@ async function main() {
       </nav>
       `,
     ),
+  );
+
+  doc.querySelector("#Intro")?.prepend(
     htmlFromString(`
       <h1 id="top">Rules reference</h1>
     `),

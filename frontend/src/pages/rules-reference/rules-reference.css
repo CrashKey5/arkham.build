@@ -18,7 +18,7 @@ html[data-theme="light"] .rules {
 .rules .col-md-4 {
   background: var(--palette-point-five);
   border-radius: var(--rounded);
-  padding: 0.5rem;
+  padding: 0 0.5rem 0.5rem;
   border: 1px solid var(--palette-1);
   position: relative;
 }
@@ -28,6 +28,7 @@ html[data-theme="light"] .rules {
 }
 
 .rules .rop {
+  position: relative;
   margin-top: 0.5rem;
 }
 
@@ -42,7 +43,7 @@ html[data-theme="light"] .rules {
 }
 
 .rules #rop-nav {
-  background: var(--palette-0);
+  background: var(--palette-point-five);
   text-align: center;
   position: sticky;
   top: 0;
@@ -50,9 +51,12 @@ html[data-theme="light"] .rules {
   display: flex;
   flex-flow: row wrap;
   gap: 0.375rem;
+  padding-bottom: 0.25rem;
+  z-index: 2;
 }
 
 .rules #rop-nav .button {
+  background: var(--palette-1);
   display: inline-flex;
   gap: 0.125rem;
   background: var(--palette-1);
