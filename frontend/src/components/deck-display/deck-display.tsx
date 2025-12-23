@@ -304,12 +304,6 @@ function TitleEditModal(props: TitleEditModalProps) {
           tags: values.get("tags")?.toString() || "",
         });
 
-        toast.show({
-          children: t("deck_edit.save_success"),
-          variant: "success",
-          duration: 3000,
-        });
-
         onCloseModal();
       } catch (err) {
         toast.show({

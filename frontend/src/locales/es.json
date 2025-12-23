@@ -691,17 +691,13 @@
         "delete_confirm": "¿Seguro que quieres eliminar este mazo?",
         "delete_error": "Error al eliminar el mazo: {{error}}",
         "delete_loading": "Eliminando mazo...",
-        "delete_success": "Mazo eliminado correctamente.",
         "delete_upgrade_confirm": "¿Seguro que quieres eliminar esta mejora?",
         "delete_upgrade_error": "Error al eliminar la mejora: {{error}}",
         "delete_upgrade_loading": "Eliminando mejora...",
-        "delete_upgrade_success": "Mejora eliminada correctamente.",
         "duplicate_error": "Error al duplicar el mazo: {{error}}",
-        "duplicate_success": "Mazo duplicado correctamente.",
         "export_error": "Error al exportar el mazo: {{error}}",
         "upload_error": "Error al subir el mazo a {{provider}}: {{error}}",
-        "upload_loading": "Subiendo mazo a {{provider}}...",
-        "upload_success": "Mazo subido correctamente."
+        "upload_loading": "Subiendo mazo a {{provider}}..."
       },
       "tools": {
         "cards": "Cartas",
@@ -733,7 +729,6 @@
       "delete_all_confirm": "¿Seguro que quieres eliminar todos los mazos locales?",
       "delete_all_error": "Error al eliminar los mazos locales: {{error}}",
       "delete_all_loading": "Eliminando mazos locales...",
-      "delete_all_success": "Mazos locales eliminados correctamente.",
       "import": "Importar",
       "import_arkhamdb": "Importar desde ArkhamDB",
       "import_arkhamdb_help": "Introduce una ID de mazo público de ArkhamDB, URL del mazo o URL de la guía del mazo. El mazo se <strong>copiará</strong>, sin embargo el historial y las mejoras no se importarán. Si quieres sincronizar tus mazos de ArkhamDB con ArkhamBuild, <settings_link>conecta con tu cuenta de ArkhamDB.</settings_link>",
@@ -770,10 +765,8 @@
       "random_basic_weakness": "Debilidad básica aleatoria",
       "sealed_deck": {
         "error": "Error al obtener el mazo Sealed: {{error}}",
-        "loading": "Obteniendo mazo Sealed...",
-        "success": "Mazo Sealed aplicado correctamente."
-      },
-      "success": "Mazo creado correctamente."
+        "loading": "Obteniendo mazo Sealed..."
+      }
     },
     "deck_edit": {
       "actions": {
@@ -874,7 +867,6 @@
       "save_error": "Error al guardar el mazo: {{error}}",
       "save_loading": "Guardando mazo...",
       "save_short": "Guardar",
-      "save_success": "Mazo guardado correctamente.",
       "tab_card_list": "Lista de cartas",
       "tab_config": "Ajustes",
       "tab_notes": "Notas y presentación",
@@ -920,7 +912,6 @@
         "upgrade_xp": "XP disponible: {{xp}}{{adjustment}} (gastado: {{spent}})"
       },
       "import_failed": "Error al importar el mazo: {{error}}",
-      "import_success": "Mazo importado correctamente.",
       "list": "Lista",
       "loading": "Obteniendo mazo...",
       "newer_version": "Hay una <a>versión más nueva</a> de este mazo. Este mazo es de sólo lectura.",
@@ -945,7 +936,6 @@
         "great_work_label": "Fui usurpado por el homúnculo",
         "great_work_status_usurped": "La gran obra será eliminada de tu mazo junto con cada una de tus cartas características. Tu investigador será reemplazado por el homúnculo.",
         "loading": "Mejorando mazo...",
-        "success": "Mazo mejorado correctamente.",
         "title": "Mejorar mazo con XP",
         "xp_gained": "XP obtenido"
       }
@@ -1162,7 +1152,6 @@
         "loading": "Cargando últimos datos de cartas...",
         "locale": "Idioma",
         "sync": "Sincronizar datos de cartas",
-        "sync_success": "Datos de cartas sincronizados correctamente.",
         "title": "Datos de cartas",
         "up_to_date": "Los datos de cartas están actualizados.",
         "update_available": "Nuevos datos de cartas disponibles."
@@ -1193,7 +1182,6 @@
         "lock": "Hay otra operación de {{provider}} en curso, por favor espera...",
         "no_errors": "Sin errores",
         "provider_error": "La sincronización con {{provider}} falló: {{error}}",
-        "provider_success": "{{provider}} sincronizado correctamente.",
         "provider_syncing": "Sincronizando {{provider}}...",
         "reconnect": "Refrescar",
         "sync": "Sincronizar",
@@ -1243,7 +1231,6 @@
       "preview": "Vista previa",
       "save": "Guardar ajustes",
       "saving": "Guardando ajustes...",
-      "success": "Ajustes guardados correctamente.",
       "title": "Ajustes"
     },
     "ui": {

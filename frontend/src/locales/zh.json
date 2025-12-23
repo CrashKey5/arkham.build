@@ -755,17 +755,13 @@
         "delete_confirm": "你确定要删除这个卡组吗？",
         "delete_error": "删除卡组失败：{{error}}",
         "delete_loading": "正在删除卡组...",
-        "delete_success": "卡组删除成功。",
         "delete_upgrade_confirm": "你确定要删除这个升级吗？",
         "delete_upgrade_error": "无法删除升级项：{{error}}",
         "delete_upgrade_loading": "正在删除升级...",
-        "delete_upgrade_success": "升级已成功删除。",
         "duplicate_error": "复制卡组失败：{{error}}",
-        "duplicate_success": "卡组复制成功。",
         "export_error": "导出卡组失败：{{error}}",
         "upload_error": "上传卡组到{{provider}}失败：{{error}}",
-        "upload_loading": "正在将卡组上传至{{provider}}...",
-        "upload_success": "卡组上传成功。"
+        "upload_loading": "正在将卡组上传至{{provider}}..."
       },
       "tools": {
         "cards": "卡牌",
@@ -801,7 +797,6 @@
       "delete_all_confirm": "确定要删除收藏中的所有本地卡组吗？",
       "delete_all_error": "删除本地卡组失败：{{error}}",
       "delete_all_loading": "正在删除本地卡组...",
-      "delete_all_success": "本地卡组已成功删除。",
       "import": "导入",
       "import_arkhamdb": "从ArkhamDB导入",
       "import_arkhamdb_help": "输入公开的ArkhamDB卡组ID、卡组网址或卡组指南网址。卡组将被<strong>复制</strong>过来，但不会导入卡组历史记录和升级状态。若需同步ArkhamDB卡组与本应用，请<settings_link>关联你的ArkhamDB账户</settings_link>。",
@@ -838,10 +833,8 @@
       "random_basic_weakness": "随机基础弱点",
       "sealed_deck": {
         "error": "获取封印卡组失败：{{error}}",
-        "loading": "获取封印卡组中...",
-        "success": "已成功应用封印卡组。"
-      },
-      "success": "卡组创建成功。"
+        "loading": "获取封印卡组中..."
+      }
     },
     "deck_edit": {
       "actions": {
@@ -989,7 +982,6 @@
       "save_error": "保存卡组失败：{{error}}",
       "save_loading": "正在保存卡组...",
       "save_short": "保存",
-      "save_success": "卡组保存成功。",
       "tab_card_list": "卡牌列表",
       "tab_config": "配置",
       "tab_notes": "笔记",
@@ -1035,7 +1027,6 @@
         "upgrade_xp": "可用经验值：{{xp}}{{adjustment}} (已消耗：{{spent}})"
       },
       "import_failed": "导入卡组失败：{{error}}",
-      "import_success": "卡组导入成功。",
       "latest_version": "<a>跳转至最新版本</a>.",
       "list": "列表",
       "loading": "正在获取卡组...",
@@ -1061,7 +1052,6 @@
         "great_work_label": "我被人造人篡位了",
         "great_work_status_usurped": "《大作》将与你的专属卡牌一同从卡组中移除。你的调查员将被替换为人造人。",
         "loading": "升级卡组",
-        "success": "卡组升级成功。",
         "title": "使用经验值升级卡组",
         "xp_gained": "获得经验值"
       }
@@ -1379,7 +1369,6 @@
         "loading": "正在加载最新卡牌数据...",
         "locale": "语言",
         "sync": "同步卡牌数据",
-        "sync_success": "卡牌数据同步成功。",
         "title": "卡牌数据",
         "up_to_date": "卡牌数据已是最新。",
         "update_available": "新卡牌数据已可用。"
@@ -1410,7 +1399,6 @@
         "lock": "另一个{{provider}}操作正在进行中，请稍候...",
         "no_errors": "无错误",
         "provider_error": "同步{{provider}}失败：{{error}}",
-        "provider_success": "{{provider}} 同步成功。",
         "provider_syncing": "正在同步 {{provider}}...",
         "reconnect": "重新连接",
         "sync": "同步",
@@ -1476,7 +1464,6 @@
       "preview": "预览",
       "save": "保存设置",
       "saving": "正在保存设置...",
-      "success": "设置已成功保存。",
       "title": "设置"
     },
     "suzi_standalone_setup": {

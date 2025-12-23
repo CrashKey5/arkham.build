@@ -59,12 +59,6 @@ export function EditorActions(props: Props) {
         const id = await saveDeck(deck.id);
         toast.dismiss(toastId);
 
-        toast.show({
-          children: t("deck_edit.save_success"),
-          duration: 3000,
-          variant: "success",
-        });
-
         if (!stayOnPage) navigate(`~/deck/view/${id}`);
       } catch (err) {
         toast.dismiss(toastId);

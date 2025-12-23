@@ -224,12 +224,6 @@ function SidebarActions(props: {
     try {
       const id = await importSharedDeck(deck, type);
 
-      toast.show({
-        children: t("deck_view.import_success"),
-        variant: "success",
-        duration: 3000,
-      });
-
       navigate(`/deck/view/${id}`);
     } catch (err) {
       toast.show({

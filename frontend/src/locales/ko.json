@@ -774,17 +774,13 @@
         "delete_confirm": "덱을 완전히 삭제하려는 게 맞습니까??",
         "delete_error": "덱을 삭제하는데 실패함: {{error}}",
         "delete_loading": "덱을 삭제하는 중...",
-        "delete_success": "덱을 삭제하는데 성공하였습니다.",
         "delete_upgrade_confirm": "이번 향상을 제거하려는 게 맞습니까?",
         "delete_upgrade_error": "향상을 제거하는데 실패함: {{error}}",
         "delete_upgrade_loading": "향상을 제거하는 중...",
-        "delete_upgrade_success": "향상을 제거하는데 성공하였습니다.",
         "duplicate_error": "덱을 복제하는데 실패함: {{error}}",
-        "duplicate_success": "덱을 복제하는데 성공하였습니다.",
         "export_error": "덱을 내보내는데 실패함: {{error}}",
         "upload_error": "덱을 {{provider}}에 업로드하는데 실패함: {{error}}",
-        "upload_loading": "덱을 {{provider}}에 업로드하는 중...",
-        "upload_success": "덱을 업로드하는데 성공하였습니다."
+        "upload_loading": "덱을 {{provider}}에 업로드하는 중..."
       },
       "tools": {
         "cards": "카드",
@@ -820,7 +816,6 @@
       "delete_all_confirm": "보유 게임에 있는 모든 로컬 덱을 삭제하시겠습니까??",
       "delete_all_error": "로컬 덱을 삭제하는데 실패함: {{error}}",
       "delete_all_loading": "로컬 덱 삭제하는 중...",
-      "delete_all_success": "로컬 덱 삭제가 완료되었습니다.",
       "import": "가져오기",
       "import_arkhamdb": "아컴디비 사이트에서 가져오기",
       "import_arkhamdb_help": "아컴디비 사이트에서 공개되어 있는 덱 ID, 덱 URL 또는 덱 가이드 URL을 입력하세요. 덱은 <strong>복사</strong>되며 덱 기록은 가져오지 않습니다.",
@@ -857,10 +852,8 @@
       "random_basic_weakness": "무작위 기본 약점",
       "sealed_deck": {
         "error": "봉인된 덱을 가져오는데 실패함: {{error}}",
-        "loading": "봉인된 덱을 가져오는 중...",
-        "success": "봉인된 덱 적용이 성공하였습니다."
-      },
-      "success": "덱 생성이 완료되었습니다."
+        "loading": "봉인된 덱을 가져오는 중..."
+      }
     },
     "deck_edit": {
       "actions": {
@@ -1010,7 +1003,6 @@
       "save_error": "덱을 저장하는데 실패함: {{error}}",
       "save_loading": "덱 저장하는 중...",
       "save_short": "저장",
-      "save_success": "덱 저장에 성공하였습니다.",
       "tab_card_list": "카드 목록",
       "tab_config": "구성",
       "tab_notes": "메모",
@@ -1056,7 +1048,6 @@
         "upgrade_xp": "사용 가능 경험치: {{xp}}{{adjustment}} ({{spent}}점 소비됨)"
       },
       "import_failed": "덱 가져오기에 실패함: {{error}}",
-      "import_success": "덱 가져오기에 성공하였습니다.",
       "latest_version": "<a>최신 버전으로 건너뛰기</a>.",
       "list": "목록",
       "loading": "덱 읽어오는 중...",
@@ -1082,7 +1073,6 @@
         "great_work_label": "호문쿨루스가 당신의 육신을 찬탈하였습니다.",
         "great_work_status_usurped": "대업은 당신의 덱에서 모든 전용 카드와 함께 제거됩니다. 당신의 조사자는 호문쿨루스로 교체됩니다.",
         "loading": "덱 향상하기",
-        "success": "덱 향상이 성공하였습니다.",
         "title": "경험치로 덱 향상",
         "xp_gained": "얻은 경험치"
       }
@@ -1407,7 +1397,6 @@
         "loading": "최신 카드 데이터 불러오는 중...",
         "locale": "언어",
         "sync": "카드 데이터 동기화",
-        "sync_success": "카드 데이터 동기화 완료.",
         "title": "카드 데이터",
         "up_to_date": "카드 데이터가 최신입니다.",
         "update_available": "새로운 카드 데이터가 사용 가능합니다."
@@ -1438,7 +1427,6 @@
         "lock": "다른 {{provider}} 작업이 진행 중입니다. 잠시만 기다려 주십시오...",
         "no_errors": "오류 없음",
         "provider_error": "{{provider}}에 동기화 실패: {{error}}",
-        "provider_success": "{{provider}}에 동기화 완료.",
         "provider_syncing": "{{provider}}에 동기화 중...",
         "reconnect": "새로고침",
         "sync": "동기화",
@@ -1504,7 +1492,6 @@
       "preview": "미리보기",
       "save": "설정 저장",
       "saving": "설정 저장하는 중...",
-      "success": "설정 저장이 완료되었습니다.",
       "title": "설정"
     },
     "suzi_standalone_setup": {

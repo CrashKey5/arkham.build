@@ -133,12 +133,6 @@ export function UpgradeModal(props: Props) {
         toast.dismiss(toastId);
         onCloseModal();
 
-        toast.show({
-          duration: 3000,
-          children: t("deck_view.upgrade_modal.success"),
-          variant: "success",
-        });
-
         navigate(`/deck/${path}/${newDeck.id}`);
       } catch (err) {
         toast.dismiss(toastId);
