@@ -690,17 +690,13 @@
         "delete_confirm": "Voulez-vous vraiment supprimer ce deck ?",
         "delete_error": "Échec de la suppression du deck : {{error}}",
         "delete_loading": "Suppression du deck...",
-        "delete_success": "Deck supprimé avec succès.",
         "delete_upgrade_confirm": "Voulez-vous vraiment supprimer cette amélioration ?",
         "delete_upgrade_error": "Échec de la suppression de l’amélioration : {{error}}",
         "delete_upgrade_loading": "Suppression de l’amélioration...",
-        "delete_upgrade_success": "Amélioration supprimée avec succès.",
         "duplicate_error": "Échec de la duplication du deck : {{error}}",
-        "duplicate_success": "Deck dupliqué avec succès.",
         "export_error": "Échec de l’exportation du deck : {{error}}",
         "upload_error": "Échec du téléversement du deck vers {{provider}} : {{error}}",
-        "upload_loading": "Téléversement du deck vers {{provider}}...",
-        "upload_success": "Deck téléversé avec succès."
+        "upload_loading": "Téléversement du deck vers {{provider}}..."
       },
       "tools": {
         "cards": "Cartes",
@@ -732,7 +728,6 @@
       "delete_all_confirm": "Voulez-vous vraiment supprimer tous les decks locaux de votre collection ?",
       "delete_all_error": "Échec de la suppression des decks locaux : {{error}}",
       "delete_all_loading": "Suppression des decks locaux...",
-      "delete_all_success": "Tous les decks locaux ont été supprimés avec succès.",
       "import": "Importer",
       "import_arkhamdb": "Importer depuis ArkhamDB",
       "import_arkhamdb_help": "Saisissez un ID de deck ArkhamDB public, une URL de deck ou l’URL d’un guide de deck. Les decks seront <strong>copiés</strong>, et l’historique ainsi que l’état d’amélioration ne seront pas importés. Si vous souhaitiez synchroniser vos decks ArkhamDB, <settings_link>connectez votre compte ArkhamDB.</settings_link>",
@@ -769,10 +764,8 @@
       "random_basic_weakness": "Faiblesse basique aléatoire",
       "sealed_deck": {
         "error": "Échec de la récupération du deck scellé : {{error}}",
-        "loading": "Récupération du deck scellé...",
-        "success": "Deck scellé appliqué avec succès."
-      },
-      "success": "Deck créé avec succès."
+        "loading": "Récupération du deck scellé..."
+      }
     },
     "deck_edit": {
       "actions": {
@@ -873,7 +866,6 @@
       "save_error": "Échec de l’enregistrement du deck : {{error}}",
       "save_loading": "Enregistrement du deck...",
       "save_short": "Sauvegarder",
-      "save_success": "Deck enregistré avec succès.",
       "tab_card_list": "Liste de cartes",
       "tab_config": "Configuration",
       "tab_notes": "Notes",
@@ -919,7 +911,6 @@
         "upgrade_xp": "XP disponible : {{xp}}{{adjustment}} (dépensé : {{spent}})"
       },
       "import_failed": "Échec de l’importation du deck : {{error}}",
-      "import_success": "Deck importé avec succès.",
       "list": "Liste",
       "loading": "Récupération du deck...",
       "newer_version": "Il existe une <a>version plus récente</a> de ce deck. Celui-ci est en lecture seule.",
@@ -944,7 +935,6 @@
         "great_work_label": "J’ai été remplacé par l’homoncule",
         "great_work_status_usurped": "Le Grand Œuvre sera retiré de votre deck ainsi que chacune de vos cartes signature. Votre investigateur sera remplacé par l’homoncule.",
         "loading": "Amélioration du deck",
-        "success": "Deck amélioré avec succès.",
         "title": "Améliorer le deck avec de l’XP",
         "xp_gained": "XP gagné"
       }
@@ -1161,7 +1151,6 @@
         "loading": "Chargement des dernières données de cartes…",
         "locale": "Langue des cartes",
         "sync": "Synchroniser les données de cartes",
-        "sync_success": "Données de cartes synchronisées avec succès.",
         "title": "Données de cartes",
         "up_to_date": "Les données de cartes sont à jour.",
         "update_available": "De nouvelles données de cartes sont disponibles."
@@ -1192,7 +1181,6 @@
         "lock": "Une autre opération {{provider}} est en cours, veuillez patienter…",
         "no_errors": "Aucune erreur",
         "provider_error": "Échec de la synchronisation avec {{provider}} : {{error}}",
-        "provider_success": "{{provider}} synchronisé avec succès.",
         "provider_syncing": "Synchronisation avec {{provider}}…",
         "reconnect": "Rafraîchir",
         "sync": "Synchroniser",
@@ -1242,7 +1230,6 @@
       "preview": "Aperçu",
       "save": "Enregistrer les paramètres",
       "saving": "Enregistrement des paramètres…",
-      "success": "Paramètres enregistrés avec succès.",
       "title": "Paramètres"
     },
     "ui": {

@@ -8,6 +8,7 @@
   flex-flow: column nowrap;
   max-width: min(90%, 45ch);
   min-width: min(75%, 30ch);
+  scrollbar-gutter: stable;
 }
 
 .toast {

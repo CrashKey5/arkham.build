@@ -27,11 +27,6 @@ export function useDeleteDeck() {
         try {
           await deleteDeck(deckId, () => navigate("~/"));
           toast.dismiss(toastId);
-          toast.show({
-            children: t("deck.toasts.delete_success"),
-            duration: 3000,
-            variant: "success",
-          });
         } catch (err) {
           toast.dismiss(toastId);
           toast.show({
@@ -64,11 +59,6 @@ export function useDeleteUpgrade() {
         try {
           await deleteUpgrade(deckId, (id) => navigate(`/deck/view/${id}`));
           toast.dismiss(toastId);
-          toast.show({
-            duration: 3000,
-            children: t("deck.toasts.delete_upgrade_success"),
-            variant: "success",
-          });
         } catch (err) {
           toast.dismiss(toastId);
           toast.show({
@@ -96,11 +86,6 @@ export function useDuplicateDeck() {
       try {
         const id = await duplicateDeck(deckId);
         navigate(`/deck/view/${id}`);
-        toast.show({
-          duration: 3000,
-          children: t("deck.toasts.duplicate_success"),
-          variant: "success",
-        });
       } catch (err) {
         toast.show({
           children: t("deck.toasts.duplicate_error", {
@@ -186,11 +171,6 @@ export function useUploadDeck() {
       try {
         const id = await uploadDeck(deckId, "arkhamdb");
         toast.dismiss(toastId);
-        toast.show({
-          children: t("deck.toasts.upload_success"),
-          duration: 3000,
-          variant: "success",
-        });
         navigate(`/deck/view/${id}`, { replace: true });
       } catch (err) {
         toast.dismiss(toastId);

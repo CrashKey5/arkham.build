@@ -56,11 +56,6 @@ function DeckCreate() {
 
         setSealedDeck(sealedDeck);
         toast.dismiss(toastId);
-        toast.show({
-          variant: "success",
-          children: t("deck_create.sealed_deck.success"),
-          duration: 3000,
-        });
       } catch (err) {
         if (!mounted) return;
         toast.dismiss(toastId);

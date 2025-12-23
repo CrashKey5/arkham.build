@@ -761,17 +761,13 @@
         "delete_confirm": "Are you sure you want to delete this deck?",
         "delete_error": "Failed to delete deck: {{error}}",
         "delete_loading": "Deleting deck...",
-        "delete_success": "Deck deleted successfully.",
         "delete_upgrade_confirm": "Are you sure you want to delete this upgrade?",
         "delete_upgrade_error": "Failed to delete upgrade: {{error}}",
         "delete_upgrade_loading": "Deleting upgrade...",
-        "delete_upgrade_success": "Upgrade deleted successfully.",
         "duplicate_error": "Failed to duplicate deck: {{error}}",
-        "duplicate_success": "Deck duplicated successfully.",
         "export_error": "Failed to export deck: {{error}}",
         "upload_error": "Failed to upload deck to {{provider}}: {{error}}",
-        "upload_loading": "Uploading deck to {{provider}}...",
-        "upload_success": "Deck uploaded successfully."
+        "upload_loading": "Uploading deck to {{provider}}..."
       },
       "tools": {
         "cards": "Cards",
@@ -807,7 +803,6 @@
       "delete_all_confirm": "Are you sure you want to delete all local decks in your collection?",
       "delete_all_error": "Failed to delete local decks: {{error}}",
       "delete_all_loading": "Deleting local decks...",
-      "delete_all_success": "Local decks deleted successfully.",
       "import": "Import",
       "import_arkhamdb": "Import from ArkhamDB",
       "import_arkhamdb_help": "Enter a public ArkhamDB deck id, deck url or deck guide url. Decks will be <strong>copied</strong> over and deck history and upgrade state will not be imported. If you are meaning to sync your ArkhamDB decks with this app, <settings_link>connect your arkhamdb account.</settings_link>",
@@ -844,10 +839,8 @@
       "random_basic_weakness": "Random basic weakness",
       "sealed_deck": {
         "error": "Failed to fetch sealed deck: {{error}}",
-        "loading": "Fetching sealed deck...",
-        "success": "Sealed deck applied successfully."
-      },
-      "success": "Deck created successfully."
+        "loading": "Fetching sealed deck..."
+      }
     },
     "deck_edit": {
       "actions": {
@@ -997,7 +990,6 @@
       "save_error": "Failed to save deck: {{error}}",
       "save_loading": "Saving deck...",
       "save_short": "Save",
-      "save_success": "Deck saved successfully.",
       "tab_card_list": "Card list",
       "tab_config": "Config",
       "tab_notes": "Notes",
@@ -1043,7 +1035,6 @@
         "upgrade_xp": "XP available: {{xp}}{{adjustment}} (spent: {{spent}})"
       },
       "import_failed": "Failed to import deck: {{error}}",
-      "import_success": "Deck imported successfully.",
       "latest_version": "<a>Jump to latest version</a>.",
       "list": "List",
       "loading": "Fetching deck...",
@@ -1072,7 +1063,6 @@
         "great_work_label": "I was usurped by the homunculus",
         "great_work_status_usurped": "The Great Work will be removed from your deck alongside each of your signature cards. Your investigator will be replaced with the homunculus.",
         "loading": "Upgrading deck",
-        "success": "Deck upgraded successfully.",
         "title": "Upgrade deck with XP",
         "xp_gained": "XP gained"
       }
@@ -1148,7 +1138,6 @@
       "installed_content": "Installed content",
       "messages": {
         "available_content_loading": "Loading available content...",
-        "content_installed": "Content added successfully.",
         "content_loading": "Loading content...",
         "fetch_failed": "Failed to load content: {{error}}",
         "parse_failed": "Failed to add content: {{error}}",
@@ -1397,7 +1386,6 @@
         "loading": "Loading latest card data...",
         "locale": "Locale",
         "sync": "Sync card data",
-        "sync_success": "Card data synced successfully.",
         "title": "Card data",
         "up_to_date": "Card data is up to date.",
         "update_available": "New card data is available."
@@ -1428,7 +1416,6 @@
         "lock": "Another {{provider}} operation is in progress, please wait...",
         "no_errors": "No errors",
         "provider_error": "Syncing {{provider}} failed: {{error}}",
-        "provider_success": "{{provider}} synced successfully.",
         "provider_syncing": "Syncing {{provider}}...",
         "reconnect": "Refresh",
         "sync": "Sync",
@@ -1494,7 +1481,6 @@
       "preview": "Preview",
       "save": "Save settings",
       "saving": "Saving settings...",
-      "success": "Settings saved successfully.",
       "title": "Settings"
     },
     "suzi_standalone_setup": {

@@ -95,11 +95,6 @@ function SettingsInner({
         await updateSettings(settings);
         updateColorTheme(theme);
         toast.dismiss(toastId);
-        toast.show({
-          children: t("settings.success"),
-          duration: 3000,
-          variant: "success",
-        });
       } catch (err) {
         toast.dismiss(toastId);
         toast.show({

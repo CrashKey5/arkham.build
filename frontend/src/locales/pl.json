@@ -774,17 +774,13 @@
         "delete_confirm": "Jesteś pewien, że chcesz usunąć tą talię?",
         "delete_error": "Nie udało się usunąć talii: {{error}}",
         "delete_loading": "Usuwanie talii...",
-        "delete_success": "Usuwanie talii zostało zakończone sukcesem.",
         "delete_upgrade_confirm": "Jesteś pewien, że chcesz usunąć to ulepszenie?",
         "delete_upgrade_error": "Nie udało się usunąć ulepszenia: {{error}}",
         "delete_upgrade_loading": "Usuwanie ulepszenia...",
-        "delete_upgrade_success": "Usuwanie ulepszenia zostało zakończone sukcesem.",
         "duplicate_error": "Nie udało się zduplikować talii: {{error}}",
-        "duplicate_success": "Duplikowanie talii zostało zakończone sukcesem.",
         "export_error": "Nie udało się wyeksportować talii: {{error}}",
         "upload_error": "Nie udało się wysłać talii do {{provider}}: {{error}}",
-        "upload_loading": "Wysyłanie talii do {{provider}}...",
-        "upload_success": "Wysyłanie talii zostało zakończone sukcesem."
+        "upload_loading": "Wysyłanie talii do {{provider}}..."
       },
       "tools": {
         "cards": "Karty",
@@ -823,7 +819,6 @@
       "delete_all_confirm": "Czy jesteś pewien, że chcesz usunąć wszystkie talie lokalne ze swojej kolekcji?",
       "delete_all_error": "Nie udało się usunąć lokalnych talii: {{error}}",
       "delete_all_loading": "Usuwanie lokalnych talii...",
-      "delete_all_success": "Usuwanie lokalnych talii zostało zakończone sukcesem.",
       "import": "Zaimportuj",
       "import_arkhamdb": "Importuj z ArkhamDB",
       "import_arkhamdb_help": "Wprowadź ID publicznej talii, jej URL lub URL przewodnika talii. Talia zostanie <strong>skopiowana</strong> bez jej historii i stanu ulepszenia. Jeśli zamierzasz zsynchornizować swoje talie z ArkhamDB z tą aplikacją, <settings_link>połącz swoje konto ArkhamDB.</settings_link>",
@@ -860,10 +855,8 @@
       "random_basic_weakness": "Losowe podstawowe osłabienie",
       "sealed_deck": {
         "error": "Nie udało się zaimportować zapieczętowanej talii: {{error}}",
-        "loading": "Wgrywanie zapieczętowanej talii...",
-        "success": "Zapieczętowana talia została pomyślnie wczytana."
-      },
-      "success": "Talia została utworzona pomyślnie."
+        "loading": "Wgrywanie zapieczętowanej talii..."
+      }
     },
     "deck_edit": {
       "actions": {
@@ -1015,7 +1008,6 @@
       "save_error": "Nie udało się zapisać talii: {{error}}",
       "save_loading": "Zapisywanie talii...",
       "save_short": "Zapisz",
-      "save_success": "Talia została pomyślnie zapisana.",
       "tab_card_list": "Lista kart",
       "tab_config": "Konfiguracja",
       "tab_notes": "Notatki",
@@ -1061,7 +1053,6 @@
         "upgrade_xp": "Dostępne XP: {{xp}}{{adjustment}} (wydano: {{spent}})"
       },
       "import_failed": "Nie udało się zaimportować talii: {{error}}",
-      "import_success": "Talia została zaimportowana pomyślnie.",
       "latest_version": "<a>Skocz do najnowszej wersji</a>.",
       "list": "Lista",
       "loading": "Ładowanie talii...",
@@ -1087,7 +1078,6 @@
         "great_work_label": "Zostałem pochłonięty przez Homunkulusa",
         "great_work_status_usurped": "Wielkie dzieło zostanie usunięte z twojej talii wraz z twoimi kartami osobistymi. Twój badacz będzie zastąpiony Homunkulusem.",
         "loading": "Ulepszanie talii...",
-        "success": "Talia została ulepszona pomyślnie.",
         "title": "Ulepsz talię",
         "xp_gained": "Zyskane XP"
       }
@@ -1416,7 +1406,6 @@
         "loading": "Wczytywanie najnowszych danych kart...",
         "locale": "Język",
         "sync": "Synchronizuj dane kart",
-        "sync_success": "Dane kart zostały pomyślnie zsynchornizowane.",
         "title": "Dane kart",
         "up_to_date": "Używasz najnowszych danych kart.",
         "update_available": "Nowe dane kart są dostępne."
@@ -1447,7 +1436,6 @@
         "lock": "Inna operacja związana z {{provider}} jest w trakcie, proszę czekać...",
         "no_errors": "Brak błędów",
         "provider_error": "Synchronizacja {{provider}} nie udała się: {{error}}",
-        "provider_success": "{{provider}} został zsynchornizowany pomyślnie.",
         "provider_syncing": "Synchronizacja {{provider}}...",
         "reconnect": "Odśwież",
         "sync": "Synchronizuj",
@@ -1513,7 +1501,6 @@
       "preview": "Podgląd",
       "save": "Zapisz ustawienia",
       "saving": "Zapisywanie ustawień...",
-      "success": "Ustawienia zostały pomyślnie zapisane.",
       "title": "Ustawienia"
     },
     "suzi_standalone_setup": {

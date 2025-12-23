@@ -4,7 +4,6 @@ import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
-import { useToast } from "@/components/ui/toast.hooks";
 import { useStore } from "@/store";
 import {
   queryCards,
@@ -23,7 +22,6 @@ export function CardDataSync(props: Props) {
   const { onSyncComplete, showDetails } = props;
 
   const { t } = useTranslation();
-  const toast = useToast();
 
   const init = useStore((state) => state.init);
 
@@ -52,15 +50,8 @@ export function CardDataSync(props: Props) {
 
   const onSync = useCallback(async () => {
     await initMutation.mutateAsync().catch(console.error);
-
-    toast.show({
-      children: t("settings.card_data.sync_success"),
-      duration: 3000,
-      variant: "success",
-    });
-
     onSyncComplete?.();
-  }, [initMutation, onSyncComplete, toast.show, t]);
+  }, [initMutation, onSyncComplete]);
 
   const upToDate =
     data &&

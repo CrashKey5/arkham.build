@@ -66,11 +66,6 @@ export function DeckCreateEditor() {
       const id = await createDeck();
       navigate(`/deck/edit/${id}`, { replace: true });
       toast.dismiss(toastId);
-      toast.show({
-        children: t("deck_create.success"),
-        duration: 3000,
-        variant: "success",
-      });
     } catch (err) {
       toast.dismiss(toastId);
       toast.show({
@@ -131,13 +126,7 @@ export function DeckCreateEditor() {
     state.setSettings({
       defaultStorageProvider: deckCreate.provider as StorageProvider,
     });
-
-    toast.show({
-      variant: "success",
-      children: t("settings.success"),
-      duration: 3000,
-    });
-  }, [deckCreate.provider, toast, t]);
+  }, [deckCreate.provider]);
 
   const investigatorActionRenderer = useCallback(
     (card: Card) => (

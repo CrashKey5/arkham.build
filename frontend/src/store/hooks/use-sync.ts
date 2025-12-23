@@ -18,18 +18,13 @@ export function useSync() {
 
       const toastId = toast.show({
         children: t("settings.connections.provider_syncing", { provider }),
+        persistent: true,
         variant: "loading",
       });
 
       try {
         await sync(create);
         toast.dismiss(toastId);
-
-        toast.show({
-          children: t("settings.connections.provider_success", { provider }),
-          duration: 3000,
-          variant: "success",
-        });
       } catch (err) {
         toast.dismiss(toastId);
         toast.show({

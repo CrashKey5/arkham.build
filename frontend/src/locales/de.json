@@ -761,17 +761,13 @@
         "delete_confirm": "Bist du sicher, dass du das Deck löschen möchtest?",
         "delete_error": "Löschen des Decks fehlgeschlagen: {{error}}",
         "delete_loading": "Deck wird gelöscht...",
-        "delete_success": "Deck wurde erfolgreich gelöscht.",
         "delete_upgrade_confirm": "Bist du sicher, dass du die Verbesserung löschen möchtest?",
         "delete_upgrade_error": "Löschen der Verbesserung fehlgeschlagen: {{error}}",
         "delete_upgrade_loading": "Verbesserung wird gelöscht...",
-        "delete_upgrade_success": "Verbesserung wurde erfolgreich gelöscht.",
         "duplicate_error": "Duplizieren des Decks fehlgeschlagen: {{error}}",
-        "duplicate_success": "Deck wurde erfolgreich dupliziert.",
         "export_error": "Export fehlgeschlagen: {{error}}",
         "upload_error": "Hochladen des Decks zu {{provider}} fehlgeschlagen: {{error}}",
-        "upload_loading": "Deck wird zu {{provider}} hochgeladen...",
-        "upload_success": "Deck wurde erfolgreich hochgeladen."
+        "upload_loading": "Deck wird zu {{provider}} hochgeladen..."
       },
       "tools": {
         "cards": "Karten",
@@ -807,7 +803,6 @@
       "delete_all_confirm": "Bist du sicher, dass du alle lokale Decks löschen möchtest?",
       "delete_all_error": "Löschen der privaten Decks fehlgeschlagen: {{error}}",
       "delete_all_loading": "Lokale Decks werden gelöscht...",
-      "delete_all_success": "Die lokalen Decks wurden erfolgreich gelöscht.",
       "import": "Importieren",
       "import_arkhamdb": "ArkhamDB Deck importieren",
       "import_arkhamdb_help": "Gib die ID oder URL eines öffentlichen ArkhamDB Decks oder Deck Guides ein, um es zu importieren. Das Deck wird als <strong>separate Kopie</strong> ohne vorherige Versionen importiert.",
@@ -844,10 +839,8 @@
       "random_basic_weakness": "Zufällige Grundschwäche",
       "sealed_deck": {
         "error": "Versiegeltes Deck konnte nicht geladen werden: {{error}}",
-        "loading": "Versiegeltes Deck wird geladen...",
-        "success": "Versiegeltes Deck erfolgreich hinzugefügt."
-      },
-      "success": "Deck wurde erfolgreich erstellt."
+        "loading": "Versiegeltes Deck wird geladen..."
+      }
     },
     "deck_edit": {
       "actions": {
@@ -997,7 +990,6 @@
       "save_error": "Speichern des Decks fehlgeschlagen: {{error}}",
       "save_loading": "Deck wird gespeichert...",
       "save_short": "Speichern",
-      "save_success": "Deck wurde erfolgreich gespeichert.",
       "tab_card_list": "Kartenliste",
       "tab_config": "Konfiguration",
       "tab_notes": "Notizen",
@@ -1043,7 +1035,6 @@
         "upgrade_xp": "{{xp}}{{adjustment}} EP verfügbar (ausgegeben: {{spent}})"
       },
       "import_failed": "Import fehlgeschlagen: {{error}}",
-      "import_success": "Deck wurde erfolgreich importiert.",
       "latest_version": "<a>Zur aktuellen Version</a>.",
       "list": "Liste",
       "loading": "Deck wird geladen...",
@@ -1051,12 +1042,15 @@
       "scans": "Scans",
       "sharing": {
         "create": "Freigeben",
+        "create_failed": "Erstellen der Freigabe fehlgeschlagen: {{error}}",
         "create_tooltip": "Eine Freigabe ist ein öffentlich verfügbarer, schreibgeschützter Link zu diesem Deck. Jeder, der über diesen Link verfügt, kann das Deck ansehen, es aber nicht bearbeiten.<br />Die Freigabe kann jederzeit aufgehoben werden, ohne das lokale Deck zu löschen.",
         "delete": "Freigabe aufheben",
+        "delete_failed": "Löschen der Freigabe fehlgeschlagen: {{error}}",
         "description": "Dieses Deck ist nicht freigeben.",
         "description_present": "Dieses Deck ist öffentlich freigegeben und kann über den <a>folgenden Link</a> angesehen werden.",
         "title": "Öffentliche Freigabe",
-        "update": "Freigabe aktualisieren"
+        "update": "Freigabe aktualisieren",
+        "update_failed": "Aktualisieren der Freigabe fehlgeschlagen: {{error}}"
       },
       "tab_deck_list": "Deck",
       "tab_history": "Verlauf",
@@ -1069,7 +1063,6 @@
         "great_work_label": "Der Homunkulus hat sich meines Körpers bemächtigt.",
         "great_work_status_usurped": "Das Große Werk wird zusammen mit jeder deiner Signaturkarten aus deinem Deck entfernt. Dein Ermittler wird durch den Homunkulus ersetzt.",
         "loading": "Verbesserung wird gespeichert...",
-        "success": "Verbesserung wurde erfolgreich gespeichert.",
         "title": "Deck verbessern",
         "xp_gained": "Erhaltene Ehrfahrungspunkte"
       }
@@ -1145,7 +1138,6 @@
       "installed_content": "Hinzugefügte Inhalte",
       "messages": {
         "available_content_loading": "Verfügbare Inhalte werden geladen...",
-        "content_installed": "Inhalt wurde erfolgreich hinzugefügt.",
         "content_loading": "Lade Inhalte...",
         "fetch_failed": "Inhalt konnte nicht geladen werden: {{error}}",
         "parse_failed": "Inhalt konnte nicht hinzugefügt werden: {{error}}",
@@ -1394,7 +1386,6 @@
         "loading": "Kartendaten werden geladen...",
         "locale": "Sprache",
         "sync": "Kartendaten laden",
-        "sync_success": "Kartendaten wurden erfolgreich geladen.",
         "title": "Kartendaten",
         "up_to_date": "Kartendaten sind aktuell.",
         "update_available": "Neue Kartendaten sind verfügbar."
@@ -1425,7 +1416,6 @@
         "lock": "Another {{provider}} operation is in progress, please wait...",
         "no_errors": "Keine Fehler",
         "provider_error": "Synchronisierung mit {{provider}} fehlgeschlagen: {{error}}",
-        "provider_success": "{{provider}} erfolgreich synchronisiert.",
         "provider_syncing": "{{provider}} synchronisieren...",
         "reconnect": "Erneut verbinden",
         "sync": "Synchronisieren",
@@ -1491,7 +1481,6 @@
       "preview": "Vorschau",
       "save": "Speichern",
       "saving": "Einstellungen werden gespeichert...",
-      "success": "Einstellungen wurden erfolgreich gespeichert.",
       "title": "Einstellungen"
     },
     "suzi_standalone_setup": {

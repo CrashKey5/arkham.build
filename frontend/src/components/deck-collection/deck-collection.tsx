@@ -80,11 +80,6 @@ export function DeckCollection() {
       try {
         await deleteAllDecks();
         toast.dismiss(toastId);
-        toast.show({
-          children: t("deck_collection.delete_all_success"),
-          duration: 3000,
-          variant: "success",
-        });
       } catch (err) {
         toast.dismiss(toastId);
         toast.show({
