@@ -207,7 +207,8 @@ export function CardModal(props: Props) {
       )}
       {!cardWithRelations.card.preview &&
         !ctx.resolvedDeck &&
-        settings.showCardModalPopularDecks && (
+        settings.showCardModalPopularDecks &&
+        cardWithRelations.card.official && (
           <div className={css["related"]}>
             <PopularDecks scope={cardWithRelations.card} />
           </div>
