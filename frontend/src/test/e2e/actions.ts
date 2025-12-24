@@ -72,9 +72,10 @@ export async function shareDeck(page: Page, navigate = true) {
   });
 
   if (navigate) {
-    await page.waitForTimeout(1000);
-    await page.$eval("a[target=_blank]", (el) => {
-      el.removeAttribute("target");
+    await page.$$eval("a[target=_blank]", (nodes) => {
+      nodes.forEach((el) => {
+        el.removeAttribute("target");
+      });
     });
 
     await page.getByTestId("share-link").click();
