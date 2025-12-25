@@ -26,8 +26,7 @@
     "@hono/node-server": "1.19.6",
     "hono": "4.10.7",
     "kysely": "0.28.8",
-    "pg": "8.16.3",
-    "zod": "4.1.13"
+    "pg": "8.16.3"
   },
   "devDependencies": {
     "@testcontainers/postgresql": "11.9.0",
