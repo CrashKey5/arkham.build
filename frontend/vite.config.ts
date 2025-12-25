@@ -1,9 +1,8 @@
-/// <reference types="vitest" />
+/// <reference types="vitest/config" />
 import path from "node:path";
 import react from "@vitejs/plugin-react";
 import autoprefixer from "autoprefixer";
 import postcssExtendRule from "postcss-extend-rule";
-import webpackStats from "rollup-plugin-webpack-stats";
 import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
@@ -22,7 +21,7 @@ export default defineConfig({
       plugins: [autoprefixer(), postcssExtendRule()],
     },
   },
-  plugins: [webpackStats(), react()],
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

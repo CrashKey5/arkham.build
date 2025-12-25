@@ -13,8 +13,5 @@
   },
   "scripts": {
     "test": "vitest --pass-with-no-tests"
-  },
-  "devDependencies": {
-    "vitest": "4.0.15"
   }
 }
