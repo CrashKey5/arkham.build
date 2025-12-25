@@ -15,9 +15,12 @@
     "fmt": "biome check --write",
     "lint": "biome check"
   },
+  "dependencies": {
+    "zod": "4.2.1"
+  },
   "devDependencies": {
     "@biomejs/biome": "2.3.10",
-    "lefthook": "2.0.23",
+    "lefthook": "2.0.12",
     "typescript": "5.9.3"
   }
 }
