@@ -11,6 +11,12 @@
   }
 }
 
+.icon_clear {
+  display: inline-flex;
+  gap: 1px;
+  align-items: center;
+}
+
 .icon_clear,
 .icon_search {
   position: absolute;

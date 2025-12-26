@@ -7,6 +7,7 @@ import css from "./search-input.module.css";
 interface Props extends React.ComponentProps<"input"> {
   className?: string;
   error?: Error;
+  iconSlot?: React.ReactNode;
   inputClassName?: string;
   label?: string;
   omitSearchIcon?: boolean;
@@ -20,6 +21,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
     {
       className,
       error,
+      iconSlot,
       inputClassName,
       id,
       label,
@@ -69,15 +71,15 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
           type="text"
           value={value}
         />
-        {!!value && (
-          <Button
-            className={css["icon_clear"]}
-            iconOnly
-            onClick={onClear}
-            variant="bare"
-          >
-            <XIcon />
-          </Button>
+        {(!!iconSlot || !!value) && (
+          <div className={css["icon_clear"]}>
+            {iconSlot}
+            {!!value && (
+              <Button iconOnly onClick={onClear} variant="bare" size="sm">
+                <XIcon />
+              </Button>
+            )}
+          </div>
         )}
       </div>
     );

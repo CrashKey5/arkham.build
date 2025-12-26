@@ -117,6 +117,27 @@ export function CardSearch(props: Props) {
             onChangeValue={onValueChange}
             onKeyDown={onInputKeyDown}
             placeholder={t("lists.search.placeholder")}
+            iconSlot={
+              <DefaultTooltip
+                tooltip={search.buildQlError?.message}
+                options={{ paused: !search.buildQlError }}
+              >
+                <a
+                  className={cx(
+                    css["buildql-tag"],
+                    search.mode === "buildql" && css["active"],
+                  )}
+                  href="https://github.com/arkham-build/arkham.build/blob/main/frontend/src/store/lib/buildql/buildql.md#buildql"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Tag size="xs">
+                    {!!search.buildQlError && <ErrorBubble />}
+                    BuildQL
+                  </Tag>
+                </a>
+              </DefaultTooltip>
+            }
             ref={inputRef}
             value={inputValue}
           />
@@ -124,17 +145,6 @@ export function CardSearch(props: Props) {
         {slotRight}
       </div>
       <div className={css["flags"]}>
-        {search.mode === "buildql" && (
-          <DefaultTooltip
-            tooltip={search.buildQlError?.message}
-            options={{ paused: !search.buildQlError }}
-          >
-            <Tag size="sm">
-              {!!search.buildQlError && <ErrorBubble />}
-              BuildQL
-            </Tag>
-          </DefaultTooltip>
-        )}
         <div className={css["flags-slot"]}>{slotFlags}</div>
         {}
         {search.mode === "simple" && (

@@ -20,6 +20,10 @@
   width: 100%;
 }
 
+.field {
+  position: relative;
+}
+
 .field-input {
   width: 100%;
 }
@@ -71,6 +75,25 @@
 
   .container:not(.force-hover) .flags-slot {
     display: none;
+  }
+}
+
+.buildql-tag {
+  opacity: 0.4;
+  cursor: help;
+  display: none;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &.active {
+    opacity: 1;
+  }
+
+  @media screen and (min-width: 28rem) {
+    display: block;
   }
 }
 
