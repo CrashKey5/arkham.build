@@ -7,6 +7,7 @@ import { cx } from "@/utils/cx";
 import { debounce } from "@/utils/debounce";
 import { useAgathaEasterEggTrigger } from "@/utils/easter-egg-agatha";
 import { useHotkey } from "@/utils/use-hotkey";
+import { useResolvedDeck } from "@/utils/use-resolved-deck";
 import { Checkbox } from "../ui/checkbox";
 import { ErrorBubble } from "../ui/error-bubble";
 import { SearchInput } from "../ui/search-input";
@@ -37,6 +38,8 @@ export function CardSearch(props: Props) {
   const setSearchValue = useStore((state) => state.setSearchValue);
   const setSearchFlag = useStore((state) => state.setSearchFlag);
 
+  const { resolvedDeck } = useResolvedDeck();
+
   const search = useStore(selectActiveListSearch);
   assert(search, "Search bar requires an active list.");
 
@@ -59,45 +62,45 @@ export function CardSearch(props: Props) {
   const onValueChange = useCallback(
     (val: string) => {
       setInputValue(val);
-      debouncedSetSearchValue(val);
+      debouncedSetSearchValue(val, resolvedDeck);
       if (easterEggHandler(val)) {
         setInputValue("");
-        debouncedSetSearchValue("");
+        debouncedSetSearchValue("", resolvedDeck);
       }
     },
-    [debouncedSetSearchValue, easterEggHandler],
+    [debouncedSetSearchValue, easterEggHandler, resolvedDeck],
   );
 
   const onToggleGameText = useCallback(
     (val: boolean | string) => {
-      setSearchFlag("includeGameText", !!val);
+      setSearchFlag("includeGameText", !!val, resolvedDeck);
       inputRef.current?.focus();
     },
-    [setSearchFlag],
+    [setSearchFlag, resolvedDeck],
   );
 
   const onToggleFlavor = useCallback(
     (val: boolean | string) => {
-      setSearchFlag("includeFlavor", !!val);
+      setSearchFlag("includeFlavor", !!val, resolvedDeck);
       inputRef.current?.focus();
     },
-    [setSearchFlag],
+    [setSearchFlag, resolvedDeck],
   );
 
   const onToggleBacks = useCallback(
     (val: boolean | string) => {
-      setSearchFlag("includeBacks", !!val);
+      setSearchFlag("includeBacks", !!val, resolvedDeck);
       inputRef.current?.focus();
     },
-    [setSearchFlag],
+    [setSearchFlag, resolvedDeck],
   );
 
   const onToggleCardName = useCallback(
     (val: boolean | string) => {
-      setSearchFlag("includeName", !!val);
+      setSearchFlag("includeName", !!val, resolvedDeck);
       inputRef.current?.focus();
     },
-    [setSearchFlag],
+    [setSearchFlag, resolvedDeck],
   );
 
   return (

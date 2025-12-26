@@ -10,6 +10,7 @@ import {
   filterPreviews,
   filterType,
 } from "../lib/filtering";
+import type { ResolvedDeck } from "../lib/types";
 import type { Card } from "../schemas/card.schema";
 import { selectBuildQlInterpreter } from "../selectors/shared";
 import type { StoreState } from ".";
@@ -368,7 +369,7 @@ export const createListsSlice: StateCreator<StoreState, [], [], ListsSlice> = (
     });
   },
 
-  setSearchFlag(flag, value) {
+  setSearchFlag(flag, value, deck) {
     let state = get();
 
     assert(state.activeList, "no active list is defined.");
@@ -399,6 +400,7 @@ export const createListsSlice: StateCreator<StoreState, [], [], ListsSlice> = (
       const { filter: buildQlSearch, error: buildQlError } = evaluateBuildQl(
         state,
         list.search.value,
+        deck,
       );
 
       if (buildQlSearch) {
@@ -419,7 +421,7 @@ export const createListsSlice: StateCreator<StoreState, [], [], ListsSlice> = (
     }
   },
 
-  setSearchValue(value) {
+  setSearchValue(value, deck) {
     set((state) => {
       assert(state.activeList, "no active list is defined.");
 
@@ -429,6 +431,7 @@ export const createListsSlice: StateCreator<StoreState, [], [], ListsSlice> = (
       const { filter: buildQlSearch, error: buildQlError } = evaluateBuildQl(
         state,
         value,
+        deck,
       );
 
       const isBuildQl =
@@ -585,9 +588,13 @@ export const createListsSlice: StateCreator<StoreState, [], [], ListsSlice> = (
   },
 });
 
-function evaluateBuildQl(state: StoreState, value: string) {
+function evaluateBuildQl(
+  state: StoreState,
+  value: string,
+  deck?: ResolvedDeck,
+) {
   try {
-    const interpreter = selectBuildQlInterpreter(state);
+    const interpreter = selectBuildQlInterpreter(state, deck);
     const filter = interpreter.evaluate(parseBuildQl(value));
     filter({} as Card); // test for runtime errors
     return { filter, error: undefined };

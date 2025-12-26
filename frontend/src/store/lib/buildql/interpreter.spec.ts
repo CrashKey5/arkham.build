@@ -36,6 +36,7 @@ describe("Interpreter", () => {
     ctx = {
       fields,
       fieldLookupContext: {
+        deck: undefined,
         matchBacks: false,
         i18n: {
           language: "en",

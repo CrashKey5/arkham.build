@@ -1,6 +1,7 @@
 import type { i18n } from "i18next";
 import type { Card } from "@/store/schemas/card.schema";
 import type { Metadata } from "@/store/slices/metadata.types";
+import type { ResolvedDeck } from "../types";
 
 export type FieldValue =
   | string
@@ -13,6 +14,7 @@ export type FieldValue =
 export type FieldType = "string" | "text" | "number" | "boolean";
 
 export type FieldLookupContext = {
+  deck: ResolvedDeck | undefined;
   i18n: i18n;
   matchBacks: boolean;
   metadata: Metadata;

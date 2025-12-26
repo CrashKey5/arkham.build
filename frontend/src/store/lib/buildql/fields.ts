@@ -241,6 +241,14 @@ const fieldDefinitions: FieldDefinition[] = [
     type: "string",
   },
   {
+    lookup: () => (card, ctx) => {
+      if (!ctx.deck) return null;
+      return ctx.deck.slots[card.code] ?? null;
+    },
+    name: "in_deck",
+    type: "number",
+  },
+  {
     aliases: ["level", "lvl"],
     legacyAlias: "p",
     lookup: backResolver((card) => card.xp ?? null),

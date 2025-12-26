@@ -369,7 +369,11 @@ back:subname != null & back:subname != subname
       "ia",
     ],
     "legacyAlias": "do"
-  }
+  },
+  {
+    "name": "in_deck",
+    "type": "number"
+  },
   {
     "name": "multiclass",
     "type": "boolean",
