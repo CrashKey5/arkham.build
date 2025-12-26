@@ -360,10 +360,12 @@ export const selectPrintingsForCard = createSelector(
 export const selectBuildQlInterpreter = createSelector(
   selectMetadata,
   selectActiveList,
-  (metadata, list) => {
+  (_: StoreState, deck?: ResolvedDeck) => deck,
+  (metadata, list, deck) => {
     return new Interpreter({
       fields,
       fieldLookupContext: {
+        deck,
         i18n,
         matchBacks: !!list?.search?.includeBacks,
         metadata,

@@ -1,5 +1,6 @@
 import type { SkillKey } from "@/utils/constants";
 import type { Filter } from "@/utils/fp";
+import type { ResolvedDeck } from "../lib/types";
 import type { DecklistConfig } from "./settings.types";
 
 export type AssetFilter = {
@@ -203,8 +204,12 @@ export type ListsSlice = {
   setFilterOpen(id: number, open: boolean): void;
 
   setActiveList(value: string | undefined): void;
-  setSearchValue(value: string): void;
-  setSearchFlag(flag: keyof Omit<Search, "value">, value: boolean): void;
+  setSearchValue(value: string, deck?: ResolvedDeck): void;
+  setSearchFlag(
+    flag: keyof Omit<Search, "value">,
+    value: boolean,
+    deck?: ResolvedDeck,
+  ): void;
 
   resetFilter(id: number): void;
   resetFilters(): void;
