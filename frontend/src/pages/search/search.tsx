@@ -23,6 +23,7 @@ function Search() {
   const activeList = useStore((state) => state.lists[state.activeList ?? ""]);
   const addList = useStore((state) => state.addList);
   const setActiveList = useStore((state) => state.setActiveList);
+  const setSearchValue = useStore((state) => state.setSearchValue);
   const removeList = useStore((state) => state.removeList);
   const mounted = useRef(false);
 
@@ -35,19 +36,20 @@ function Search() {
         card_type: "",
       },
       {
-        search: searchParams.get("q") || "",
+        search: "",
         showInvestigatorFilter: false,
         showOwnershipFilter: false,
       },
     );
 
     setActiveList(listKey);
+    setSearchValue(searchParams.get("q") || "");
 
     return () => {
       removeList(listKey);
       setActiveList(undefined);
     };
-  }, [addList, removeList, setActiveList, searchParams]);
+  }, [addList, removeList, setActiveList, searchParams, setSearchValue]);
 
   const listCards = useStore((state) =>
     selectListCards(state, undefined, undefined),
