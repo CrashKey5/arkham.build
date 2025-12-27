@@ -1578,24 +1578,39 @@ export const selectAvailableUpgrades = createSelector(
       const versions = lookupTables.relations.level[card.code];
       if (!versions) continue;
 
-      for (const code of Object.keys(versions)) {
+      const upgrades = Object.keys(versions).reduce((acc, code) => {
         const version = metadata.cards[code];
 
         const isUpgrade = version?.xp && version.xp > (card.xp ?? 0);
-        if (!isUpgrade) continue;
+        if (!isUpgrade) return acc;
 
         const hasAccess = accessFilter?.(version);
-        if (!hasAccess) continue;
+        if (!hasAccess) return acc;
 
+        acc.push(version);
+        return acc;
+      }, [] as Card[]);
+
+      upgrades.sort((a, b) => {
+        const aIsDuplicate = Boolean(a.duplicate_of_code);
+        const bIsDuplicate = Boolean(b.duplicate_of_code);
+        if (aIsDuplicate !== bIsDuplicate) {
+          return aIsDuplicate ? 1 : -1;
+        }
+
+        return (a.xp ?? 0) - (b.xp ?? 0);
+      });
+
+      for (const upgrade of upgrades) {
         const isNotDuplicated =
           !availableUpgrades.upgrades[card.code] ||
           availableUpgrades.upgrades[card.code].every(
-            (c) => c.xp !== version.xp || c.subname !== version.subname,
+            (c) => c.xp !== upgrade.xp || c.subname !== upgrade.subname,
           );
         if (!isNotDuplicated) continue;
 
         availableUpgrades.upgrades[card.code] ??= [];
-        availableUpgrades.upgrades[card.code].push(version);
+        availableUpgrades.upgrades[card.code].push(upgrade);
       }
     }
 
