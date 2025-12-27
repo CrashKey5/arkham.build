@@ -1216,7 +1216,7 @@ export function filterInvestigatorWeaknessAccess(
       ? [
           filterRequired(investigator),
           filterSubtypes({ basicweakness: true, weakness: false, none: false }),
-          (card: Card) => card.xp == null && !card.restrictions,
+          (card: Card) => card.xp == null && !card.restrictions && !card.hidden,
         ]
       : [(c: Card) => !!investigator.side_deck_requirements?.card?.[c.code]];
 
