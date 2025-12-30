@@ -4,10 +4,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Field } from "@/components/ui/field";
 import { HotkeyTooltip } from "@/components/ui/hotkey";
 import { useStore } from "@/store";
-import { getAdditionalDeckOptions } from "@/store/lib/deck-validation";
 import type { ResolvedDeck } from "@/store/lib/types";
+import { selectLimitedSlotOccupation } from "@/store/selectors/decks";
 import { displayAttribute } from "@/utils/card-utils";
 import { cx } from "@/utils/cx";
+import { isEmpty } from "@/utils/is-empty";
 import { useHotkey } from "@/utils/use-hotkey";
 import css from "./deck-edit.module.css";
 
@@ -25,7 +26,11 @@ export function CardAccessToggles(props: Props) {
   const showLimitedAccess = useStore((state) => state.ui.showLimitedAccess);
   const setShowLimitedAccess = useStore((state) => state.setShowLimitedAccess);
 
-  const canShowLimitedAccess = hasLimitedSlots(deck);
+  const limitedSlots = useStore((state) =>
+    selectLimitedSlotOccupation(state, deck),
+  );
+
+  const canShowLimitedAccess = !isEmpty(limitedSlots);
 
   const onShowUnusableChange = useCallback(
     (val: boolean) => {
@@ -56,7 +61,7 @@ export function CardAccessToggles(props: Props) {
         (!showLimitedAccess || showUnusable) && css["active"],
       )}
     >
-      {hasLimitedSlots(deck) && (
+      {canShowLimitedAccess && (
         <HotkeyTooltip
           keybind="alt+a"
           description={t("lists.actions.show_limited_access_help", {
@@ -66,7 +71,22 @@ export function CardAccessToggles(props: Props) {
           <Checkbox
             checked={showLimitedAccess}
             id="show-limited-access"
-            label={t("lists.actions.show_limited_access")}
+            label={
+              <>
+                {t("lists.actions.show_limited_access")}
+                &nbsp;(
+                {limitedSlots.map(({ option, entries }, idx) => (
+                  <span key={option.id ?? option.name ?? idx}>
+                    {idx > 0 && ", "}
+                    <span>
+                      {entries.reduce((acc, curr) => acc + curr.quantity, 0)}/
+                      {option.limit}
+                    </span>
+                  </span>
+                ))}
+                )
+              </>
+            }
             onCheckedChange={setShowLimitedAccess}
           />
         </HotkeyTooltip>
@@ -84,13 +104,4 @@ export function CardAccessToggles(props: Props) {
       </HotkeyTooltip>
     </Field>
   );
-}
-
-function hasLimitedSlots(deck: ResolvedDeck) {
-  const options = [
-    ...(deck.investigatorBack.card.deck_options ?? []),
-    ...getAdditionalDeckOptions(deck),
-  ];
-
-  return options.some((o) => o.limit);
 }
