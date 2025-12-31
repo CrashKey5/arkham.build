@@ -60,7 +60,7 @@ const fieldDefinitions: FieldDefinition[] = [
   },
   {
     aliases: ["cl"],
-    lookup: backResolver((card) => card.clues ?? card.clues_fixed ?? null),
+    lookup: backResolver((card) => card.clues ?? null),
     name: "clues",
     type: "number",
   },
