@@ -3,7 +3,6 @@ import {
   ArchiveRestoreIcon,
   CopyIcon,
   DicesIcon,
-  DownloadIcon,
   EllipsisIcon,
   ImportIcon,
   PencilIcon,
@@ -236,15 +235,17 @@ function SidebarActions(props: {
   }, [deck, importSharedDeck, toast.show, navigate, t, type]);
 
   const isReadOnly = !!deck.next_deck;
+  const isLocal = origin === "local";
 
-  useHotkey("e", onEdit, { disabled: isReadOnly });
-  useHotkey("u", onOpenUpgradeModal, { disabled: isReadOnly });
-  useHotkey("cmd+backspace", onDelete, { disabled: isReadOnly });
-  useHotkey("cmd+shift+backspace", onDeleteLatest, { disabled: isReadOnly });
-  useHotkey("cmd+i", onImport, { disabled: origin === "local" });
-  useHotkey("cmd+d", onDuplicate);
-  useHotkey("cmd+shift+j", onExportJson);
-  useHotkey("cmd+shift+t", onExportText);
+  useHotkey("e", onEdit, { disabled: isReadOnly || !isLocal });
+  useHotkey("u", onOpenUpgradeModal, { disabled: isReadOnly || !isLocal });
+  useHotkey("cmd+a", toggleArchived, { disabled: !isLocal });
+  useHotkey("cmd+backspace", onDelete, { disabled: isReadOnly || !isLocal });
+  useHotkey("cmd+shift+backspace", onDeleteLatest, {
+    disabled: isReadOnly || !isLocal,
+  });
+  useHotkey("cmd+i", onImport, { disabled: isLocal });
+  useHotkey("cmd+d", onDuplicate, { disabled: !isLocal });
 
   const originPrefix = origin !== "share" ? `/${type}/view/` : "/share/";
 
@@ -367,6 +368,7 @@ function SidebarActions(props: {
                   </DropdownButton>
                   <DropdownButton
                     data-testid="view-archive"
+                    hotkey="cmd+a"
                     onClick={toggleArchived}
                   >
                     {isArchived ? (
@@ -404,20 +406,19 @@ function SidebarActions(props: {
               )}
               <DropdownButton
                 data-testid="view-export-json"
-                hotkey="cmd+shift+j"
                 onClick={onExportJson}
               >
-                <DownloadIcon /> {t("deck.actions.export_json")}
+                {t("deck.actions.export_json")}
               </DropdownButton>
               <DropdownButton
                 data-testid="view-export-text"
-                hotkey="cmd+shift+t"
                 onClick={onExportText}
               >
-                <DownloadIcon /> {t("deck.actions.export_text")}
+                {t("deck.actions.export_text")}
               </DropdownButton>
               {origin === "local" && (
                 <>
+                  <hr />
                   {!!deck.previous_deck && (
                     <DropdownButton
                       data-testid="view-delete-upgrade"
