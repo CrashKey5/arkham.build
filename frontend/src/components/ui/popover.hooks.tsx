@@ -114,6 +114,10 @@ type ContextType =
 export const PopoverContext = createContext<ContextType>(undefined);
 
 export const usePopoverContext = () => {
+  return useContext(PopoverContext);
+};
+
+export const usePopoverContextChecked = () => {
   const context = useContext(PopoverContext);
 
   if (context == null) {

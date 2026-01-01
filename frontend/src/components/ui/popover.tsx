@@ -7,7 +7,11 @@ import {
 import { cloneElement, forwardRef, isValidElement } from "react";
 import { FLOATING_PORTAL_ID } from "@/utils/constants";
 import type { PopoverOptions } from "./popover.hooks";
-import { PopoverContext, usePopover, usePopoverContext } from "./popover.hooks";
+import {
+  PopoverContext,
+  usePopover,
+  usePopoverContextChecked,
+} from "./popover.hooks";
 
 export function Popover({
   children,
@@ -36,7 +40,7 @@ export const PopoverTrigger = forwardRef<
   HTMLElement,
   React.HTMLProps<HTMLElement> & PopoverTriggerProps
 >(function PopoverTrigger({ children, asChild = false, ...props }, propRef) {
-  const context = usePopoverContext();
+  const context = usePopoverContextChecked();
   // biome-ignore lint/suspicious/noExplicitAny: safe.
   const childrenRef = (children as any).ref;
   const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef]);
@@ -71,7 +75,7 @@ export const PopoverContent = forwardRef<
   React.HTMLProps<HTMLElement>
   // eslint-disable-next-line react/prop-types
 >(function PopoverContent({ style, ...props }, propRef) {
-  const { context: floatingContext, ...context } = usePopoverContext();
+  const { context: floatingContext, ...context } = usePopoverContextChecked();
 
   const { isMounted, styles } = useTransitionStyles(floatingContext, {
     duration: 150,

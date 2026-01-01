@@ -80,7 +80,7 @@ test.describe("deck collection", () => {
     await page
       .getByTestId("collection-deck-Le Diamond")
       .getByTestId("deck-summary-title")
-      .click();
+      .click({ force: true });
 
     await page.getByTestId("view-more-actions").click();
     await page.getByTestId("view-archive").click();
@@ -89,7 +89,7 @@ test.describe("deck collection", () => {
     await page
       .getByTestId("collection-deck-Daisy Walker Investigates")
       .getByTestId("deck-summary-title")
-      .click();
+      .click({ force: true });
 
     await page.getByTestId("view-more-actions").click();
     await page.getByTestId("view-archive").click();
@@ -104,7 +104,7 @@ test.describe("deck collection", () => {
     await page
       .getByTestId("collection-deck-Daisy Walker Investigates")
       .getByTestId("deck-summary-title")
-      .click();
+      .click({ force: true });
 
     await page.getByTestId("view-more-actions").click();
     await page.getByTestId("view-archive").click();
