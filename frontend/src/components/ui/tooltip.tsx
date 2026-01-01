@@ -108,7 +108,7 @@ export const DefaultTooltip = memo(function DefaultTooltip(
 
   return (
     <Tooltip
-      delay={200}
+      delay={150}
       {...options}
       paused={paused || options?.paused || !tooltip}
     >
