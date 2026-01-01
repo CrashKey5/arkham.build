@@ -230,6 +230,7 @@
       },
       "reset": "Zurücksetzen",
       "seal": "Versiegeln",
+      "select": "Auswählen",
       "set_as_default": "Als Standard festlegen",
       "shroud": "Schleier",
       "skill": {
@@ -783,6 +784,7 @@
         "title": "Werkzeuge"
       },
       "validation": {
+        "card_not_in_limited_pool": "Die folgenden Karten sind nicht Teil des Kartenpools für dieses Deck:",
         "forbidden_cards": "Deck enthält verbotene Karten:",
         "invalid": "Ungültiges Deck.",
         "invalid_card_count": "Deck enthält eine ungültige Anzahl der folgenden Karten:",
@@ -1099,6 +1101,7 @@
     "draw_simulator": {
       "draw_tooltip": "Ziehe {{count}} {{cards}}.",
       "mulligan_mode": "Mulligan-Modus",
+      "mulligan_mode_help": "Im Mulligan-Modus werden Schwächen (exkl. Tarot) und Karten, die im Spiel starten, automatisch neu gezogen. Das Deck wird gemischt, nachdem der Modus deaktiviert wird.",
       "redraw": "Auswahl ersetzen",
       "redraw_tooltip": "Ausgewählte Karten werden unter das Deck gelegt und mit neuen Karten ersetzt.",
       "reset": "Zurücksetzen",
@@ -1181,6 +1184,10 @@
         "nocost": "Keine Kosten",
         "odd": "Ungerade",
         "title": "Kosten"
+      },
+      "cycle": {
+        "placeholder": "Zyklen auswählen...",
+        "title": "Zyklus"
       },
       "encounter_set": {
         "placeholder": "Begegnungsset auswählen...",

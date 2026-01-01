@@ -1101,6 +1101,7 @@
     "draw_simulator": {
       "draw_tooltip": "Draw {{count}} {{cards}}.",
       "mulligan_mode": "Mulligan mode",
+      "mulligan_mode_help": "When enabled, non-Tarot weaknesses and cards that start in play are redrawn automatically. After mulligan mode is disabled, the deck is shuffled once.",
       "redraw": "Redraw selection",
       "redraw_tooltip": "Selected cards will be appended to the end of the deck and then replaced with new cards.",
       "reset": "Reset",
@@ -1185,8 +1186,8 @@
         "title": "Cost"
       },
       "cycle": {
-        "title": "Cycle",
-        "placeholder": "Select cycles..."
+        "placeholder": "Select cycles...",
+        "title": "Cycle"
       },
       "encounter_set": {
         "placeholder": "Select encounter sets...",
