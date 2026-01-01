@@ -147,7 +147,7 @@ function DisplaySettings({ viewMode }: { viewMode: ViewMode }) {
       <PopoverTrigger asChild>
         <Button
           className={css["nav-config"]}
-          tooltip={t("lists.nav.list_settings")}
+          aria-label={t("lists.nav.list_settings")}
           data-test-id="card-list-config"
           variant="bare"
           iconOnly

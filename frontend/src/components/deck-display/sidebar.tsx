@@ -337,7 +337,7 @@ function SidebarActions(props: {
             <Button
               variant="bare"
               data-testid="view-more-actions"
-              tooltip={t("common.more_actions")}
+              aria-label={t("common.more_actions")}
             >
               <EllipsisIcon />
             </Button>

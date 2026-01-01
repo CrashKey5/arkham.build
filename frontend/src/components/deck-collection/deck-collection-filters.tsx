@@ -68,7 +68,7 @@ export function DeckCollectionFilters(props: Props) {
             <Button
               className={css["expand-filters"]}
               data-testid="expand-deck-filters"
-              tooltip={t("deck_collection.more_filters")}
+              aria-label={t("deck_collection.more_filters")}
               variant="bare"
             >
               {hasChanges && <CircleIcon className={css["active"]} />}

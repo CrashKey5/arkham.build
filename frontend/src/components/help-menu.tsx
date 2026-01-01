@@ -251,7 +251,12 @@ export function HelpMenu() {
       </Link>
       <Popover>
         <PopoverTrigger asChild>
-          <Button iconOnly variant="bare" size="lg">
+          <Button
+            aria-label={t("help.title")}
+            iconOnly
+            variant="bare"
+            size="lg"
+          >
             <CircleHelpIcon />
           </Button>
         </PopoverTrigger>
