@@ -14,6 +14,7 @@ import { PortaledCardTooltip } from "../card-tooltip/card-tooltip-portaled";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Plane } from "../ui/plane";
+import { DefaultTooltip } from "../ui/tooltip";
 import { useRestingTooltip } from "../ui/tooltip.hooks";
 import css from "./draw-simulator.module.css";
 
@@ -98,12 +99,14 @@ export function DrawSimulator(props: Props) {
         </h4>
       </header>
       <div className={css["nav"]}>
-        <Checkbox
-          id="mulligan-mode"
-          label={t("draw_simulator.mulligan_mode")}
-          checked={state.mulliganMode}
-          onCheckedChange={toggleMulligan}
-        />
+        <DefaultTooltip tooltip={t("draw_simulator.mulligan_mode_help")}>
+          <Checkbox
+            id="mulligan-mode"
+            label={t("draw_simulator.mulligan_mode")}
+            checked={state.mulliganMode}
+            onCheckedChange={toggleMulligan}
+          />
+        </DefaultTooltip>
       </div>
       <nav className={css["nav"]}>
         {[1, 2, 5].map((count) => (
