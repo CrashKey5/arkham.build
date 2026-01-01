@@ -1,10 +1,4 @@
-import {
-  BookOpenTextIcon,
-  CircleHelpIcon,
-  InfoIcon,
-  KeyboardIcon,
-  NewspaperIcon,
-} from "lucide-react";
+import { BookOpenTextIcon, CircleHelpIcon, KeyboardIcon } from "lucide-react";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
@@ -192,16 +186,12 @@ export function HelpMenu() {
             { keybind: "e", description: t("deck.actions.edit") },
             { keybind: "u", description: t("deck.actions.upgrade") },
             {
+              keybind: "cmd+a",
+              description: t("deck.actions.archive"),
+            },
+            {
               keybind: "cmd+d",
               description: t("deck.actions.duplicate"),
-            },
-            {
-              keybind: "cmd+shift+j",
-              description: t("deck.actions.export_json"),
-            },
-            {
-              keybind: "cmd+shift+t",
-              description: t("deck.actions.export_text"),
             },
             {
               keybind: "cmd+backspace",
@@ -248,20 +238,25 @@ export function HelpMenu() {
 
   return (
     <>
+      <Link asChild href="~/rules">
+        <Button
+          as="a"
+          data-testid="masthead-rules"
+          iconOnly
+          tooltip={t("rules.title")}
+          variant="bare"
+        >
+          <BookOpenTextIcon />
+        </Button>
+      </Link>
       <Popover>
         <PopoverTrigger asChild>
-          <Button iconOnly tooltip={t("help.title")} variant="bare" size="lg">
+          <Button iconOnly variant="bare" size="lg">
             <CircleHelpIcon />
           </Button>
         </PopoverTrigger>
         <PopoverContent>
           <DropdownMenu>
-            <Link asChild href="~/rules">
-              <DropdownButton as="a" data-testid="masthead-rules">
-                <BookOpenTextIcon /> {t("rules.title")}
-              </DropdownButton>
-            </Link>
-            <hr />
             <DropdownButton
               className={css["action-shortcuts"]}
               hotkey="?"
@@ -276,7 +271,7 @@ export function HelpMenu() {
                 className={css["about"]}
                 data-testid="masthead-about"
               >
-                <InfoIcon /> {t("help.about")}
+                {t("help.about")}
               </DropdownButton>
             </Link>
             <DropdownButton
@@ -285,7 +280,7 @@ export function HelpMenu() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <NewspaperIcon /> {t("help.changelog")}
+              {t("help.changelog")}
             </DropdownButton>
             <hr />
             <Socials className={css["socials"]} />

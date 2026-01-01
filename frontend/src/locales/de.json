@@ -1425,7 +1425,7 @@
         "provider_error": "Synchronisierung mit {{provider}} fehlgeschlagen: {{error}}",
         "provider_syncing": "{{provider}} synchronisieren...",
         "reconnect": "Erneut verbinden",
-        "sync": "Synchronisieren",
+        "sync": "Sync",
         "sync_all": "{{collectionLabels}} Decks synchronisieren",
         "sync_errors": "Fehler",
         "sync_status": "Status",
