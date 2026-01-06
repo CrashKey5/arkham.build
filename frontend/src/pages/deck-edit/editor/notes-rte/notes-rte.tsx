@@ -114,9 +114,10 @@ function NotesRichTextEditorToolbar({ deck }: { deck: ResolvedDeck }) {
     <nav className={css["toolbar"]}>
       <div className={css["toolbar-actions"]}>
         <Popover
-          placement="bottom-start"
-          open={popoverOpen === "cards"}
+          hoverDisabled
           onOpenChange={onCardsOpenChange}
+          open={popoverOpen === "cards"}
+          placement="bottom-start"
         >
           <PopoverTrigger asChild>
             <Button
@@ -141,9 +142,10 @@ function NotesRichTextEditorToolbar({ deck }: { deck: ResolvedDeck }) {
           </PopoverContent>
         </Popover>
         <Popover
-          placement="bottom-start"
-          open={popoverOpen === "symbols"}
+          hoverDisabled
           onOpenChange={onSymbolsOpenChange}
+          open={popoverOpen === "symbols"}
+          placement="bottom-start"
         >
           <PopoverTrigger asChild>
             <Button
