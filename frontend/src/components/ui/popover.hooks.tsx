@@ -21,6 +21,7 @@ import {
 } from "react";
 
 export interface PopoverOptions {
+  hoverDisabled?: boolean;
   initialOpen?: boolean;
   placement?: Placement;
   modal?: boolean;
@@ -29,6 +30,7 @@ export interface PopoverOptions {
 }
 
 export function usePopover({
+  hoverDisabled,
   initialOpen = false,
   placement = "bottom",
   modal,
@@ -74,7 +76,7 @@ export function usePopover({
   });
 
   const hover = useHover(context, {
-    enabled: true,
+    enabled: !hoverDisabled,
     restMs: 50,
     handleClose: safePolygon({
       blockPointerEvents: true,
