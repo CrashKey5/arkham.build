@@ -11,7 +11,6 @@ html[data-theme="light"] .rules {
   max-width: 80rem;
   margin-inline: auto;
   position: relative;
-  font-size: 1rem;
 
   @media screen and (min-width: 55rem) {
     display: grid;
