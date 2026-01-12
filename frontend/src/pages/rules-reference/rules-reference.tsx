@@ -25,7 +25,7 @@ function RulesReference() {
 <nav class="inner rop">
 <ul>
     <li>
-        <a href="#Intro">A Note from ArkhamDB</a>
+        <a href="#Intro">Introduction</a>
         <ul>
             <li>
                 <a href="#The_Thing_That_Should_Not_Be">The Thing That Should Not Be...</a>
@@ -146,6 +146,7 @@ function RulesReference() {
         <li><a href="#Cancel">Cancel</a></li>
         <li><a href="#Cannot">Cannot</a></li>
         <li><a href="#Cardtypes">Cardtypes</a></li>
+        <li><a href="#Challenge_Scenarios">Challenge Scenarios</a></li>
         <li><a href="#Chaos_Tokens">Chaos Tokens</a></li>
         <ul>
             <li>
@@ -337,6 +338,7 @@ function RulesReference() {
         <li>
             <a href="#Ownership_and_Control">Ownership and Control</a>
         </li>
+        <li><a href="#Parallel_Investigators">Parallel Investigators</a></li>
         <li><a href="#Parley">Parley</a></li>
         <li><a href="#Partner">Partner</a></li>
         <li><a href="#Patrol">Patrol</a></li>
@@ -368,6 +370,7 @@ function RulesReference() {
         <li>
             <a href="#Record_in_your_Campaign_Log">"Record in your Campaign Log..."</a>
         </li>
+        <li><a href="#Relentless">Relentless</a></li>
         <li><a href="#Remember_that">"Remember that..."</a></li>
         <li>
             <a href="#Removed_from_Game">Removed from Game</a>
@@ -375,6 +378,7 @@ function RulesReference() {
         <li>
             <a href="#Replacing_an_Opening_Hand">Replacing an Opening Hand</a>
         </li>
+        <li><a href="#Replacement_Cards">Replacement Cards</a></li>
         <li><a href="#Researched">Researched</a></li>
         <li><a href="#Resign">Resign</a></li>
         <li><a href="#Resource_Action">Resource Action</a></li>
@@ -424,6 +428,7 @@ function RulesReference() {
                 <a href="#Spawning_an_Enemy">Spawning an Enemy</a>
             </li>
         </ul>
+        <li><a href="#Specialist_Cards">Specialist Cards</a></li>
         <li><a href="#Standalone_Mode">Standalone Mode</a></li>
         <li><a href="#Story_Cards">Story Cards</a></li>
         <li><a href="#Supplies">Supplies</a></li>
@@ -536,9 +541,9 @@ function RulesReference() {
       <h1 id="top">Rules reference</h1>
     </body><body>
       <blockquote>
-        The content on this page is sourced from <a href="https://arkhamdb.com">ArkhamDB</a> and maintained by <a href="https://github.com/Kamalisk/arkhamdb/commits/arkham/src/AppBundle/Resources/views/Default/rulesreference.html.twig">its contributors</a>. The source code is available <a href="https://github.com/Kamalisk/arkhamdb/blob/arkham/src/AppBundle/Resources/views/Default/rulesreference.html.twig">on GitHub</a>.
+        The content of this page is available <a href="https://github.com/arkham-build/arkham.build/blob/main/frontend/src/assets/rules.html">on GitHub</a>.
       </blockquote>
-    </body>A Note from ArkhamDB</h2>
+    </body>Introduction</h2>
 
 <p>
     This page contains a replica of the Rules Reference found in
@@ -1787,7 +1792,7 @@ function RulesReference() {
 </p>
 
 <p>
-    <i>For example: Hope, Zeal, and Augur all have the "bonded
+    <i>For example: Hope, Zeal, and Augur all have the "Bonded
         (Miss Doyle)" keyword. This means each of those cards is
         bonded to the card Miss Doyle. Hope, Zeal, and Augur
         each have no level and are therefore not available as
@@ -1799,6 +1804,17 @@ function RulesReference() {
         investigator's deck and do not count towards their deck
         size.</i>
 </p>
+
+<table>
+    <tbody><tr>
+        <td>
+            <img class="card-scan" src="https://assets.arkham.build/optimized/06030.avif" alt="Miss Doyle">
+        </td>
+        <td>
+            <img class="card-scan" src="https://assets.arkham.build/optimized/06031.avif" alt="Hope">
+        </td>
+    </tr>
+</tbody></table>
 
 <p>
     <span style="color: var(--blue);">(Added in FAQ, section 'Game Play', point 1.19)</span>
@@ -2174,6 +2190,18 @@ function RulesReference() {
     page 20.
 </p>
 
+<h2 id="Challenge_Scenarios" style="color: var(--red);">
+    Challenge Scenarios (added in <em>Parallel Investigators</em>)
+</h2>
+
+<p>
+    Challenge scenarios are special print-and-play scenarios that utilize existing
+    products in the <i>Arkham Horror: The Card Game</i> collection, along with
+    additional print-and-play cards, to create new content. These scenarios are
+    designed with certain prerequisites in mind, in order to craft a challenging
+    puzzle-like experience.
+</p>
+
 <h2 id="Chaos_Tokens">Chaos Tokens</h2>
 
 <p>
@@ -2223,6 +2251,17 @@ function RulesReference() {
     [curse] tokens. However, certain card effects can add these
     tokens or remove them from the chaos bag.
 </p>
+
+<table>
+    <tbody><tr>
+        <td>
+            <img src="/assets/rules/ChaosToken_Bless.png" alt="Bless Token" width="72" style="margin-inline: auto;">
+        </td>
+        <td>
+            <img src="/assets/rules/ChaosToken_Curse.png" alt="Curse Token" width="72" style="margin-inline: auto;">
+        </td>
+    </tr>
+</tbody></table>
 
 <ul>
     <li>
@@ -2963,6 +3002,18 @@ function RulesReference() {
         copy of Hunter’s Armor in that investigator’s deck is
         affected by the upgrade.</i>
 </p>
+
+<table>
+    <tbody><tr>
+        <td>
+            <img class="card-scan" src="https://assets.arkham.build/optimized/09021.avif" alt="Hunter’s Armor">
+        </td>
+        <td>
+            <img class="card-scan" src="/assets/rules/09021-upgradesheet.jpg" alt="Hunter’s Armor - Upgradesheet">
+        </td>
+    </tr>
+</tbody></table>
+
 
 <ul>
     <li>
@@ -5652,13 +5703,15 @@ function RulesReference() {
 <p>
     A multi-class card is a card which bears multiple class
     icons instead of one, and is a card of each of those
-    classes. For example, a card with both a Rogue ([rogue]) and
-    a Guardian ([guardian]) icon is both a Rogue card and a
+    classes. For example, .45 Thompson (0) has both a Rogue ([rogue]) and
+    a Guardian ([guardian]) icon and is thus both a Rogue card and a
     Guardian card for all purposes. Generally, a multi-class
     card can be included in an investigator’s deck if that
     investigator has access to <i>either</i> of that card’s
     classes.
 </p>
+
+<img class="card-scan" src="https://assets.arkham.build/optimized/05115.avif" alt=".45 Thompson (0)">
 
 <p>
     If an investigator has limited access to one of the classes
@@ -5906,6 +5959,19 @@ function RulesReference() {
         placement of the card is adjusted.
     </li>
 </ul>
+
+<h2 id="Parallel_Investigators" style="color: var(--red);">
+    Parallel Investigators (added in <em>Parallel Investigators</em>)
+</h2>
+
+<p>
+    Parallel investigators are alternate, print-and-play versions of investigators
+    from existing <i>Arkham Horror: The Card Game</i> products. These investigators,
+    along with their advanced signature cards, are fully playable in any scenario
+    or campaign.
+</p>
+
+<img class="card-scan" src="https://assets.arkham.build/optimized/90084.avif" alt="Parallel Jenny Barnes">
 
 <h2 id="Parley">Parley</h2>
 
@@ -6258,6 +6324,25 @@ function RulesReference() {
     integrate them into your collection of player cards.
 </p>
 
+<table>
+    <tbody><tr>
+        <td>
+            <img class="card-scan" src="https://assets.arkham.build/optimized/05046.avif">
+        </td>
+        <td>
+            <img class="card-scan" src="https://assets.arkham.build/optimized/05047.avif">
+        </td>
+    </tr>
+        <tr>
+        <td>
+            <img class="card-scan" src="https://assets.arkham.build/optimized/05048.avif">
+        </td>
+        <td>
+            <img class="card-scan" src="https://assets.arkham.build/optimized/05049.avif">
+        </td>
+    </tr>
+</tbody></table>
+
 <h2 id="Put_into_Play">Put into Play</h2>
 
 <p>
@@ -6370,6 +6455,18 @@ function RulesReference() {
         might be important in a later scenario.</i>
 </p>
 
+<h2 id="Relentless" style="color: var(--red);">
+    Relentless (added in <em>The Drowned City</em>)
+</h2>
+
+<p>
+    Some enemies in this campaign have the relentless keyword. During
+    the enemy phase (after framework step 3.3), each enemy with the
+    relentless keyword that has attacked this phase (even if that attack was
+    canceled) readies and attacks the investigator(s) it is engaged with a
+    second time.
+</p>
+
 <h2 id="Remember_that">“Remember that...”</h2>
 
 <p>
@@ -6431,6 +6528,42 @@ function RulesReference() {
         number of cards she keeps as her opening hand.</i>
 </p>
 
+<h2 id="Replacement_Cards" style="color: var(--red);">
+    Replacement Cards (added in <em>Parallel Investigators</em>)
+</h2>
+
+<p>
+    Signature cards with the Replacement keyword are optional replacements
+    for the given card. When building a deck, you may choose to replace the
+    specific cards listed under “Deckbuilding Requirements” with all of that
+    investigator’s replacement cards. Doing so satisfies your Deckbuilding
+    Requirements. During a campaign, this choice cannot be unmade.
+</p>
+
+<p>
+    <i>
+        For example: Marta is building a Lola Hayes deck. Improvisation and Crisis of
+        Identity are listed under Deckbuilding Requirements for Lola Hayes. Marta may
+        choose to instead replace those four cards with all five versions of Leading Lady,
+        as well as Samuel Blake.
+    </i>
+</p>
+
+<p>
+    You may also choose to include all cards listed under “Deckbuilding
+    Requirements” as well as all of that investigator’s replacement cards.
+    Replacement cards added in this manner do not count towards the
+    investigator’s deck size.
+</p>
+
+<p>
+    <i>
+        For example: Marta is building a Lola Hayes deck. Instead of deciding between
+        her typical signature cards and her replacement signature cards, Marta may
+        choose to add all ten cards to her deck.
+    </i>
+</p>
+
 <h2 id="Researched" style="color: var(--red);">
     Researched (added in <em>Edge of the Earth</em>)
 </h2>
@@ -6476,6 +6609,17 @@ function RulesReference() {
         Archive of Conduits (Unidentified), and they can only do
         so if they have "identified the gateway."</i>
 </p>
+
+<table>
+    <tbody><tr>
+        <td>
+            <img src="https://assets.arkham.build/optimized/08033.avif" alt="Archive of Conduits (Unidentified)" class="card-scan">
+        </td>
+        <td>
+            <img src="https://assets.arkham.build/optimized/08041.avif" alt="Archive of Conduits (Gateway to Tindalos)" class="card-scan">
+        </td>
+    </tr>
+</tbody></table>
 
 <h2 id="Resign">Resign</h2>
 
@@ -6986,23 +7130,25 @@ function RulesReference() {
 
 <table>
     <tbody><tr>
-        <td colspan="2" align="center">
-            [accessory_inverted] 1 accessory slot
-        </td>
+        <td>[accessory_inverted] 1 accessory slot</td>
     </tr>
     <tr>
         <td>[body_inverted] 1 body slot</td>
+    </tr>
+    <tr>
         <td>[ally_inverted] 1 ally slot</td>
     </tr>
     <tr>
-        <td>[hand_inverted] 1 hand slot</td>
-        <td>[hand_x2_inverted] 2 hand slots</td>
+        <td>[hand_inverted] 1 hand slot | [hand_x2_inverted] 2 hand slots</td>
     </tr>
     <tr>
-        <td>[arcane_inverted] 1 arcane slot</td>
-        <td>[arcane_x2_inverted] 2 arcane slots</td>
+        <td>[arcane_inverted] 1 arcane slot | [arcane_x2_inverted] 2 arcane slots</td>
     </tr>
 </tbody></table>
+
+<p>
+    See also <a href="#Tarot_Slot">Tarot Slot</a>.
+</p>
 
 <p>
     If playing or gaining control of an asset would put an
@@ -7123,6 +7269,43 @@ function RulesReference() {
     multiple investigators, and you use the rules for "<a href="#Enemy_Engagement">Enemy Engagement</a>" to determine which investigator it should automatically
     engage.
 </p>
+
+<h2 id="Specialist_Cards" style="color: var(--red);">
+    Specialist Cards (added in <em>The Drowned City</em>)
+</h2>
+
+<p>
+    Some of the player cards in this product belong to a new group of
+    Neutral cards known as Specialist cards. Specialist cards can be
+    identified by their black color and by the absence of any class icon.
+</p>
+
+<p>
+    Each Specialist card also contains text that specifies one or more
+    <b>Traits</b>, e.g. “<b>Miskatonic</b>, <b>Scholar</b> deck only.” An investigator <b>must</b>
+    have one or more of the indicated <b>Traits</b> printed on their investigator
+    card in order to purchase that Specialist card.
+</p>
+
+<p>
+    Additionally, an investigator must follow all of their deckbuilding
+    options and restrictions when looking to purchase a Specialist card
+    for their deck.
+</p>
+
+<p>
+    <i>
+        For example: Dakota Garofalo is a specialist <b></b>Ally asset with the
+        text “<b>Detective</b>, <b>Hunter</b>, <b>Wayfarer</b> deck only” in its text box. Only
+        investigators with the <b>Detective</b>, <b>Hunter</b>, and/or <b>Wayfarer</b> traits may
+        purchase this card, regardless of other deckbuilding access. For example,
+        Marion Tavares does not possess any of the specified <b>Traits</b>, and therefore
+        cannot include this card in her deck. However, Michael McGlen with the
+        <b>Hunter</b> trait may purchase Dakota Garofalo.
+    </i>
+</p>
+
+<img src="https://assets.arkham.build/optimized/11110.avif" alt="Dakota Garofalo" class="card-scan">
 
 <h2 id="Standalone_Mode">Standalone Mode</h2>
 
@@ -7383,6 +7566,8 @@ function RulesReference() {
     expansion. The following symbol indicates that an asset
     fills a tarot slot:
 </p>
+
+<img src="/assets/rules/overlay-tarot-slot.png" width="72" class="center">
 
 <p>
     As with other slots, tarot slots limit the number of asset
