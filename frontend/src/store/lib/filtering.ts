@@ -22,6 +22,7 @@ import type { AttributeFilter, Card, DeckOption } from "../schemas/card.schema";
 import type {
   AssetFilter,
   CostFilter,
+  FilterMapping,
   InvestigatorSkillsFilter,
   LevelFilter,
   List,
@@ -1248,26 +1249,40 @@ export function filterDuplicatesFromContext(
   lookupTables: LookupTables,
   deck: ResolvedDeck | undefined,
 ) {
-  const packFilterValue = packFilter(activeList);
-
   const cardPool = deck?.cardPool
     ? resolveLimitedPoolPacks(metadata, deck.cardPool).map((p) => p.code)
     : undefined;
 
+  const packFilterValue = currentFilterValue(activeList, "pack");
+  const cycleFilterValue = currentFilterValue(activeList, "cycle");
+
   const cardPoolEmpty = isEmpty(cardPool);
   const packFilterEmpty = isEmpty(packFilterValue);
+  const cycleFilterEmpty = isEmpty(cycleFilterValue);
 
   function printingMatches(c: string) {
+    if (cardPoolEmpty && packFilterEmpty && cycleFilterEmpty) {
+      return true;
+    }
+
     const card = metadata.cards[c];
 
-    const packCodes = [
+    const packCodes = new Set([
       card.pack_code,
       ...Object.keys(lookupTables.reprintPacksByPack[card.pack_code] || {}),
-    ];
+    ]);
+
+    const cycleCodes = new Set(
+      Array.from(packCodes).map((code) => {
+        const pack = metadata.packs[code];
+        return pack.cycle_code;
+      }),
+    );
 
     return (
-      (cardPoolEmpty || cardPool.some((p) => packCodes.includes(p))) &&
-      (packFilterEmpty || packFilterValue.some((p) => packCodes.includes(p)))
+      (cardPoolEmpty || cardPool.some((p) => packCodes.has(p))) &&
+      (packFilterEmpty || packFilterValue.some((p) => packCodes.has(p))) &&
+      (cycleFilterEmpty || cycleFilterValue.some((p) => cycleCodes.has(p)))
     );
   }
 
@@ -1360,14 +1375,17 @@ export function containsCard(
   );
 }
 
-function packFilter(activeList: List): MultiselectFilter | undefined {
-  const packFilterIndex = activeList.filters.findIndex(
-    (f) => f === "pack" && activeList.filtersEnabled,
+function currentFilterValue<K extends keyof FilterMapping>(
+  activeList: List,
+  key: K,
+): FilterMapping[K] | undefined {
+  const filterIndex = activeList.filters.findIndex(
+    (f) => f === key && activeList.filtersEnabled,
   );
 
-  const packFilterValue = packFilterIndex
-    ? (activeList.filterValues[packFilterIndex]?.value as MultiselectFilter)
+  const value = filterIndex
+    ? (activeList.filterValues[filterIndex]?.value as FilterMapping[K])
     : undefined;
 
-  return packFilterValue;
+  return value;
 }

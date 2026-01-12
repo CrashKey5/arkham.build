@@ -728,6 +728,7 @@ export const selectListCards = createSelector(
 
     // filter duplicates, taking into account the deck and list context.
     const currentTotal = filteredCards.length;
+
     if (!showUnusableCards) {
       filteredCards = filteredCards.filter(
         filterDuplicatesFromContext(
@@ -738,6 +739,7 @@ export const selectListCards = createSelector(
           deck,
         ),
       );
+
       totalCardCount -= currentTotal - filteredCards.length;
     }
 
@@ -829,10 +831,6 @@ export const selectCardRelationsResolver = createSelector(
     };
   },
 );
-
-/**
- * Utilities
- */
 
 export const selectListFilterProperties = createSelector(
   selectMetadata,
