@@ -101,6 +101,10 @@ html[data-theme="light"] .rules {
   padding-left: 1rem;
 }
 
+.rules-container > * + * {
+  margin-top: 1rem;
+}
+
 .rules {
   max-width: 80ch;
   margin-inline: auto;
