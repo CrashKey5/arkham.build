@@ -12,6 +12,7 @@ import { SearchInput } from "@/components/ui/search-input";
 import { cx } from "@/utils/cx";
 import { fuzzyMatch, prepareNeedle } from "@/utils/fuzzy";
 import { useGoBack } from "@/utils/use-go-back";
+import { useHotkey } from "@/utils/use-hotkey";
 
 function RulesReference() {
   const { t } = useTranslation();
@@ -21,15 +22,16 @@ function RulesReference() {
   const [tocOpen, setTocOpen] = useState(false);
   const [search, setSearch] = useState("");
 
+  const tocTriggerRef = useRef<HTMLButtonElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const tocRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const $toc = tocRef.current?.querySelector("ul");
     const $content = contentRef.current?.querySelector("#rules");
     const needle = prepareNeedle(search);
 
-    if (!$toc || !$content) return;
+    if (!$content) return;
 
     const matchingSections = new Set();
     let currentSectionStart = 0;
@@ -69,6 +71,7 @@ function RulesReference() {
   useEffect(() => {
     const onHashChange = () => {
       setSearch("");
+      setTocOpen(false);
       setTimeout(() => {
         const hash = window.location.hash.slice(1);
         const el = document.getElementById(hash);
@@ -83,11 +86,11 @@ function RulesReference() {
     };
   }, []);
 
-  const goBack = useGoBack();
+  useHotkey("/", () => {
+    searchRef.current?.focus();
+  });
 
-  const onBackToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, []);
+  const goBack = useGoBack();
 
   const onToggleToc = useCallback(() => {
     setTocOpen((prev) => !prev);
@@ -97,27 +100,31 @@ function RulesReference() {
     setTocOpen(false);
   }, []);
 
+  useClickOutside(tocRef, tocTriggerRef, onCloseToc, tocOpen);
+
   return (
     <AppLayout title={t("rules.title")}>
       <div className="container">
         <Button
           className="toc-toggle"
           onClick={onToggleToc}
+          ref={tocTriggerRef}
           size="xl"
           variant="primary"
         >
           {tocOpen ? <XIcon /> : <ListIcon />} {t("rules.toc")}
         </Button>
-        <div className={cx("toc-container", tocOpen && "open")}>
+        <div className={cx("toc-container", tocOpen && "open")} ref={tocRef}>
           <h1 className="toc-title">{t("rules.toc")}</h1>
 
           <div className="toc-inner">
             <SearchInput
               className="rules-search"
-              value={search}
               id="rules-search"
-              placeholder={t("rules.search_placeholder")}
               onValueChange={setSearch}
+              placeholder={t("rules.search_placeholder")}
+              ref={searchRef}
+              value={search}
             />
           </div>
 
@@ -126,15 +133,14 @@ function RulesReference() {
               <ChevronLeftIcon />
               {t("common.back")}
             </Button>
-            <Button size="sm" onClick={onBackToTop}>
+            <Button size="sm" as="a" href="#">
               <ChevronUpIcon />
               {t("rules.back_to_top")}
             </Button>
           </nav>
 
-          <Scroller className="toc-inner" onClick={onCloseToc}>
+          <Scroller className="toc-inner">
             <div
-              ref={tocRef}
               dangerouslySetInnerHTML={{
                 __html: parseCardTextHtml(toc, { newLines: "skip" }),
               }}
@@ -161,6 +167,33 @@ function replaceIcons(node: Element) {
       icon.replaceWith(document.createTextNode(`[${iconName}]`));
     }
   }
+}
+
+function useClickOutside(
+  ref: React.RefObject<HTMLElement>,
+  tocTriggerRef: React.RefObject<HTMLElement>,
+  onClickOutside: () => void,
+  enabled: boolean,
+) {
+  useEffect(() => {
+    function handleClickOutside(evt: MouseEvent) {
+      if (
+        enabled &&
+        ref.current &&
+        !ref.current.contains(evt.target as Node) &&
+        evt.target !== tocTriggerRef.current &&
+        !tocTriggerRef.current?.contains(evt.target as Node)
+      ) {
+        evt.preventDefault();
+        onClickOutside();
+      }
+    }
+
+    document.addEventListener("pointerdown", handleClickOutside);
+    return () => {
+      document.removeEventListener("pointerdown", handleClickOutside);
+    };
+  }, [ref, onClickOutside, enabled, tocTriggerRef]);
 }
 
 export default RulesReference;
