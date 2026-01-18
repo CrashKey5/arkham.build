@@ -1372,6 +1372,7 @@
     "rules": {
       "title": "Rules reference",
       "back_to_top": "Back to top",
+      "search_placeholder": "Search keywords...",
       "toc": "Table of contents"
     },
     "search": {
