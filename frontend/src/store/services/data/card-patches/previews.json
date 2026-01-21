@@ -154,7 +154,6 @@
     "traits": "Blunder.",
     "type_code": "event"
   },
-
   {
     "back_flavor": "Trish Scarborough enjoyed an exciting and dangerous career as a spy for the Black Chamber. She's no stranger to subterfuge, but never expected to be at the center of her own conspiracy when a new director arrived to run the organization. After a series of increasingly menial missions, she was strongly encouraged to \"take time for herself.\" Suspicious of her director's motives, she dug into the Chamber's records and discovered evidence of corruption going all the way to the top - rumors of an organization known as the Red Coterie working behind the scenes. Framed for leaking sensitive information, she's now on the run and driven to restore her good name.",
     "back_text": "<b>Deck Size</b>: 30.\n<b>Deckbuilding Options</b>: Rogue cards ([rogue]) level 0-5, Seeker cards ([seeker]) level 0-2, Neutral cards level 0-5.\n<b>Deckbuilding Requirements</b> (do not count toward deck size): Covert Ops, Black Chamber Operative, 1 random basic weakness.",
@@ -163,11 +162,17 @@
     "deck_options": [
       {
         "faction": ["rogue", "neutral"],
-        "level": { "min": 0, "max": 5 }
+        "level": {
+          "min": 0,
+          "max": 5
+        }
       },
       {
         "faction": ["seeker"],
-        "level": { "min": 0, "max": 2 }
+        "level": {
+          "min": 0,
+          "max": 2
+        }
       }
     ],
     "deck_requirements": "size:30, card:12008, card:12009, random:subtype:basicweakness",
@@ -1106,6 +1111,28 @@
     "xp": 0
   },
   {
+    "code": "12060",
+    "cost": 4,
+    "deck_limit": 2,
+    "faction_code": "mystic",
+    "flavor": "\"You see these folks too? You never really get used to them.\"",
+    "health": 2,
+    "illustrator": "Billy Norrby",
+    "is_unique": true,
+    "name": "Jim Culver",
+    "pack_code": "core_2026",
+    "position": 60,
+    "quantity": 2,
+    "sanity": 2,
+    "skill_willpower": 1,
+    "slot": "Ally",
+    "subname": "Haunted Musician",
+    "text": "You get +1 [willpower].\n[reaction] After you take damage and/or horror, exhaust Jim Culver: Draw 1 card.",
+    "traits": "Ally. Performer.",
+    "type_code": "asset",
+    "xp": 0
+  },
+  {
     "code": "12065",
     "cost": 1,
     "deck_limit": 2,
@@ -1119,6 +1146,23 @@
     "skill_wild": 1,
     "text": "Fast. Play when you draw a non-weakness treachery card.\nCancel that card's revelation effect and take 1 horror.",
     "traits": "Spell. Spirit.",
+    "type_code": "event",
+    "xp": 0
+  },
+  {
+    "code": "12066",
+    "cost": 0,
+    "deck_limit": 2,
+    "faction_code": "mystic",
+    "flavor": "In the cosmos, all are one. In the void, all is none.",
+    "illustrator": "Brian Valenzuela",
+    "name": "Will of the Cosmos",
+    "pack_code": "core_2026",
+    "position": 66,
+    "quantity": 2,
+    "skill_intellect": 1,
+    "text": "Place 1 doom on a player card you control. Then, discover 1 clue at your location and 1 clue at another revealed location.",
+    "traits": "Insight. Augury.",
     "type_code": "event",
     "xp": 0
   },
