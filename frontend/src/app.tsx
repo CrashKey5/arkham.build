@@ -187,17 +187,19 @@ function RouteReset() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: a change to pathname indicates a change to window.location.
   useEffect(() => {
-    if (window.location.hash) {
-      // HACK: this enables hash-based deep links to work when a route is loaded async.
-      const el = document.querySelector(window.location.hash);
+    try {
+      if (window.location.hash) {
+        // HACK: this enables hash-based deep links to work when a route is loaded async.
+        const el = document.querySelector(window.location.hash);
 
-      if (el) {
-        el.scrollIntoView();
-        return;
+        if (el) {
+          el.scrollIntoView();
+          return;
+        }
       }
-    }
 
-    window.scrollTo(0, 0);
+      window.scrollTo(0, 0);
+    } catch (_) {}
   }, [pathname]);
 
   return null;
