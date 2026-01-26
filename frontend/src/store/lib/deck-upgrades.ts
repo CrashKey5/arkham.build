@@ -585,6 +585,7 @@ function countFreeLevel0Cards(
     }
 
     const removed = slotDiff.removes.find((diff) => findUpgraded(diff, card));
+
     // upgrading a card into a permanent of same name frees a level 0 slot.
     if (removed && !removed[0].permanent) {
       free0Cards += quantity;
@@ -608,9 +609,7 @@ function getDirectUpgrades(slotDiff: Diff) {
     let unmatched = quantityAdded;
 
     while (unmatched > 0) {
-      const removedIdx = slotDiff.removes.findIndex((diff) =>
-        findUpgraded(diff, card),
-      );
+      const removedIdx = removes.findIndex((diff) => findUpgraded(diff, card));
 
       if (removedIdx < 0) break;
 
