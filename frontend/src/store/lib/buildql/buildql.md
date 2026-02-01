@@ -191,15 +191,13 @@ back:subname != null & back:subname != subname
     ],
     "legacyAlias": "a"
   },
-  {
-    "name": "faction",
-    "type": "string",
-    "aliases": [
-      "cls",
-      "class"
-    ],
-    "legacyAlias": "f"
+    {
+    aliases: ["bo"],
+    lookup: backResolver((card, { lookupTables }) => !!lookupTables.relations.bonded[card.code]),
+    name: "bonded",
+    type: "boolean",
   },
+
   {
     "name": "clues",
     "type": "number",
@@ -290,6 +288,15 @@ back:subname != null & back:subname != subname
     "aliases": [
       "exl"
     ]
+  },
+    {
+    "name": "faction",
+    "type": "string",
+    "aliases": [
+      "cls",
+      "class"
+    ],
+    "legacyAlias": "f"
   },
   {
     "name": "fight",

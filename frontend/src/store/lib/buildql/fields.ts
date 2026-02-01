@@ -42,27 +42,12 @@ const fieldDefinitions: FieldDefinition[] = [
     type: "number",
   },
   {
-    aliases: ["cls", "class"],
-    legacyAlias: "f",
-    lookup: backResolver((card, { i18n }) => {
-      const factions: string[] = [];
-
-      [card.faction_code, card.faction2_code, card.faction3_code].forEach(
-        (faction_code) => {
-          if (faction_code) {
-            factions.push(faction_code);
-
-            if (i18n.language !== "en") {
-              factions.push(i18n.t(`common.factions.${faction_code}`));
-            }
-          }
-        },
-      );
-
-      return factions;
-    }),
-    name: "faction",
-    type: "string",
+    aliases: ["bo"],
+    lookup: backResolver(
+      (card, { lookupTables }) => !!lookupTables.relations.bonded[card.code],
+    ),
+    name: "bonded",
+    type: "boolean",
   },
   {
     aliases: ["cl"],
@@ -157,6 +142,29 @@ const fieldDefinitions: FieldDefinition[] = [
     lookup: () => (card) => card.exile ?? false,
     name: "exile",
     type: "boolean",
+  },
+  {
+    aliases: ["cls", "class"],
+    legacyAlias: "f",
+    lookup: backResolver((card, { i18n }) => {
+      const factions: string[] = [];
+
+      [card.faction_code, card.faction2_code, card.faction3_code].forEach(
+        (faction_code) => {
+          if (faction_code) {
+            factions.push(faction_code);
+
+            if (i18n.language !== "en") {
+              factions.push(i18n.t(`common.factions.${faction_code}`));
+            }
+          }
+        },
+      );
+
+      return factions;
+    }),
+    name: "faction",
+    type: "string",
   },
   {
     aliases: ["fi"],
