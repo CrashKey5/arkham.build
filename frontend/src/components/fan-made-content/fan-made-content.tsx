@@ -135,13 +135,13 @@ export function FanMadeContent(props: SettingProps) {
 
   const [search, setSearchValue] = useState("");
 
-  function projectFilter<T extends Filterable>(
-    projects: T[] | undefined,
-  ): T[] | undefined {
-    if (projects) {
+  const projectFilter = useMemo(() => {
+    function projectFilterfn<T extends Filterable>(
+      projects: T[] | undefined,
+    ): T[] | undefined {
       const needle = prepareNeedle(search);
 
-      if (!search) return projects;
+      if (!search || !projects) return projects;
       if (!needle) return projects;
 
       return projects.filter((project) => {
@@ -149,17 +149,17 @@ export function FanMadeContent(props: SettingProps) {
         return fuzzyMatch([haystack], needle);
       });
     }
-  }
+    return projectFilterfn;
+  }, [search]);
+
+  const searchChange = useCallback((val: string) => {
+    setSearchValue(val);
+  }, []);
 
   return (
     <div className={css["container"]}>
       <DisplaySettings {...props} />
-      <FanMadeSearch
-        search={search}
-        onSearchChange={useCallback((val: string) => {
-          setSearchValue(val);
-        }, [])}
-      />
+      <FanMadeSearch search={search} onSearchChange={searchChange} />
       <Collection
         onAddProject={onAddProject}
         listingsQuery={listingsQuery}
@@ -242,11 +242,10 @@ type SearchProps = {
 
 function FanMadeSearch({ search, onSearchChange }: SearchProps) {
   return (
-    <div>
-      <search
-        className={cx(css["container"], css["dynamic"])}
-        data-testid="search"
-      />
+    <search
+      className={cx(css["container"], css["dynamic"])}
+      data-testid="search"
+    >
       <div>
         <SearchInput
           id="fanmade-search-input"
@@ -254,7 +253,7 @@ function FanMadeSearch({ search, onSearchChange }: SearchProps) {
           onChangeValue={onSearchChange}
         />
       </div>
-    </div>
+    </search>
   );
 }
 
