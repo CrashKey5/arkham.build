@@ -29,6 +29,7 @@ import type { FanMadeContentFilter } from "@/store/slices/lists.types";
 import { assert } from "@/utils/assert";
 import { cx } from "@/utils/cx";
 import { capitalize, formatDate } from "@/utils/formatting";
+import { fuzzyMatch, prepareNeedle } from "@/utils/fuzzy";
 import { isEmpty } from "@/utils/is-empty";
 import { parseMarkdown } from "@/utils/markdown";
 import { ErrorDisplay, ErrorImage } from "../error-display/error-display";
@@ -47,10 +48,15 @@ import {
 } from "../ui/modal";
 import { Plane } from "../ui/plane";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { SearchInput } from "../ui/search-input";
 import { Select } from "../ui/select";
 import { Tag } from "../ui/tag";
 import { useToast } from "../ui/toast.hooks";
 import css from "./fan-made-content.module.css";
+
+type Filterable = {
+  meta: FanMadeProject["meta"];
+};
 
 export function FanMadeContent(props: SettingProps) {
   const { t } = useTranslation();
@@ -111,11 +117,43 @@ export function FanMadeContent(props: SettingProps) {
   const installId = searchParams.get("install_id");
   const installUrl = searchParams.get("install_url");
 
+  const [search, setSearchValue] = useState("");
+
+  const projectFilter = useMemo(() => {
+    function projectFilterfn<T extends Filterable>(
+      projects: T[] | undefined,
+    ): T[] | undefined {
+      const needle = prepareNeedle(search);
+
+      if (!search || !projects) return projects;
+      if (!needle) return projects;
+
+      return projects.filter((project) => {
+        const haystack = project.meta.name + project.meta.author;
+        return fuzzyMatch([haystack], needle);
+      });
+    }
+    return projectFilterfn;
+  }, [search]);
+
+  const searchChange = useCallback((val: string) => {
+    setSearchValue(val);
+  }, []);
+
   return (
     <div className={css["container"]}>
       <DisplaySettings {...props} />
-      <Collection onAddProject={onAddProject} listingsQuery={listingsQuery} />
-      <Registry onAddProject={onAddProject} listingsQuery={listingsQuery} />
+      <FanMadeSearch search={search} onSearchChange={searchChange} />
+      <Collection
+        onAddProject={onAddProject}
+        listingsQuery={listingsQuery}
+        filterFn={projectFilter}
+      />
+      <Registry
+        onAddProject={onAddProject}
+        listingsQuery={listingsQuery}
+        filterFn={projectFilter}
+      />
       {!!(installId || installUrl) && (
         <QuickInstallDialog
           onAddProject={onAddProject}
@@ -181,18 +219,44 @@ function DisplaySettings(props: SettingProps) {
   );
 }
 
+type SearchProps = {
+  search: string;
+  onSearchChange: (val: string) => void;
+};
+
+function FanMadeSearch({ search, onSearchChange }: SearchProps) {
+  return (
+    <search
+      className={cx(css["container"], css["dynamic"])}
+      data-testid="search"
+    >
+      <div>
+        <SearchInput
+          id="fanmade-search-input"
+          value={search}
+          onValueChange={onSearchChange}
+        />
+      </div>
+    </search>
+  );
+}
+
 type RegistryProps = {
   onAddProject: (payload: unknown) => Promise<void>;
+  filterFn: <T extends Filterable>(
+    projects: T[] | undefined,
+  ) => T[] | undefined;
   listingsQuery: UseQueryResult<FanMadeProjectListing[]>;
 };
 
-function Collection({ onAddProject, listingsQuery }: RegistryProps) {
+function Collection({ onAddProject, listingsQuery, filterFn }: RegistryProps) {
   const { t } = useTranslation();
+
+  const owned = useStore(selectOwnedFanMadeProjects);
+  const filteredOwned = filterFn(owned);
 
   const { onAddFromRegistry, onAddFromUrl, onAddLocalProject } =
     useProjectRegistry(onAddProject);
-
-  const owned = useStore(selectOwnedFanMadeProjects);
 
   const removeFanMadeProject = useStore((state) => state.removeFanMadeProject);
 
@@ -252,59 +316,65 @@ function Collection({ onAddProject, listingsQuery }: RegistryProps) {
         </Popover>
       </nav>
 
-      {isEmpty(owned) && (
+      {isEmpty(filteredOwned) && (
         <div className={css["empty"]} data-testid="collection-placeholder">
           <BookDashedIcon className={css["empty-icon"]} />
           <p className={css["empty-title"]}>{t("fan_made_content.empty")}</p>
         </div>
       )}
 
-      <div className={css["list"]}>
-        {owned.map((project) => {
-          const { meta } = project;
+      {filteredOwned && (
+        <div className={css["list"]}>
+          {filteredOwned.map((project) => {
+            const { meta } = project;
 
-          const hasRemote = !!meta.url;
+            const hasRemote = !!meta.url;
 
-          const listing = listingsQuery.data?.find(
-            (listing) => listing.meta.code === meta.code,
-          );
+            const listing = listingsQuery.data?.find(
+              (listing) => listing.meta.code === meta.code,
+            );
 
-          return (
-            <ProjectCard key={meta.code} project={project}>
-              {hasRemote && listing && (
-                <ProjectInstallStatus
-                  installed={project}
-                  remote={listing}
-                  onUpdate={onAddFromRegistry}
-                />
-              )}
-              <Button
-                as="a"
-                href={`/fan-made-content/preview/${meta.code}`}
-                size="sm"
-                data-testid="collection-project-view-cards"
-                rel="noreferrer"
-                target="_blank"
-              >
-                <EyeIcon /> {t("fan_made_content.actions.view_cards")}
-              </Button>
-              <Button
-                data-testid="collection-project-uninstall"
-                size="sm"
-                onClick={() => removeFanMadeProject(project.meta.code)}
-              >
-                <Trash2Icon /> {t("fan_made_content.actions.uninstall")}
-              </Button>
-            </ProjectCard>
-          );
-        })}
-      </div>
+            if (!hasRemote || listing) {
+              return (
+                <ProjectCard key={meta.code} project={project}>
+                  {hasRemote && listing && (
+                    <ProjectInstallStatus
+                      installed={project}
+                      remote={listing}
+                      onUpdate={onAddFromRegistry}
+                    />
+                  )}
+                  <Button
+                    as="a"
+                    href={`/fan-made-content/preview/${meta.code}`}
+                    size="sm"
+                    data-testid="collection-project-view-cards"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    <EyeIcon /> {t("fan_made_content.actions.view_cards")}
+                  </Button>
+                  <Button
+                    data-testid="collection-project-uninstall"
+                    size="sm"
+                    onClick={() => removeFanMadeProject(project.meta.code)}
+                  >
+                    <Trash2Icon /> {t("fan_made_content.actions.uninstall")}
+                  </Button>
+                </ProjectCard>
+              );
+            }
+            return null;
+          })}
+        </div>
+      )}
     </section>
   );
 }
 
-function Registry({ onAddProject, listingsQuery }: RegistryProps) {
+function Registry({ onAddProject, listingsQuery, filterFn }: RegistryProps) {
   const { t } = useTranslation();
+  const filteredProjects = filterFn(listingsQuery.data);
   const { onAddFromRegistry } = useProjectRegistry(onAddProject);
 
   const owned = useStore((state) => state.fanMadeData.projects);
@@ -334,9 +404,18 @@ function Registry({ onAddProject, listingsQuery }: RegistryProps) {
         </div>
       )}
 
-      {listingsQuery.data && (
+      {isEmpty(filteredProjects) && (
+        <div className={css["empty"]} data-testid="registry-placeholder">
+          <BookDashedIcon className={css["empty-icon"]} />
+          <p className={css["empty-title"]}>
+            {t("fan_made_content.messages.no_match")}
+          </p>
+        </div>
+      )}
+
+      {filteredProjects && (
         <div className={css["list"]}>
-          {listingsQuery.data.map((listing) => {
+          {filteredProjects.map((listing) => {
             const { meta } = listing;
             const projectOwned = owned[meta.code];
 
