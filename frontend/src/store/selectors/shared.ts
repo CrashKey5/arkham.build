@@ -359,14 +359,16 @@ export const selectPrintingsForCard = createSelector(
 
 export const selectBuildQlInterpreter = createSelector(
   selectMetadata,
+  selectLookupTables,
   selectActiveList,
   (_: StoreState, deck?: ResolvedDeck) => deck,
-  (metadata, list, deck) => {
+  (metadata, lookupTables, list, deck) => {
     return new Interpreter({
       fields,
       fieldLookupContext: {
         deck,
         i18n,
+        lookupTables,
         matchBacks: !!list?.search?.includeBacks,
         metadata,
       },

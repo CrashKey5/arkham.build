@@ -21,6 +21,7 @@ const tests = [
   ["Upgrade exceptional card", "exceptional_upgrade"],
   ["Increased deck size grants free lvl. 0 cards", "deck_size_adjust"],
   ["Upgrade into a permanent card", "permanent"],
+  ["Upgrade two cards into one", "many_to_one"],
   // Arcane Research
   ["Arcane Research: Apply one discount", "arcane_research"],
   ["Arcane Research: Apply two discounts", "arcane_research_second_copy"],
@@ -137,7 +138,7 @@ describe("getChangeStats", () => {
 
     const resolveFixture = async (fileName: string) => {
       const deck = await import(
-        `@/test/fixtures/decks/upgrades/${fileName}.json`
+        `@test/fixtures/decks/upgrades/${fileName}.json`
       );
       return resolveDeck(
         { metadata: state.metadata, lookupTables, sharing: state.sharing },

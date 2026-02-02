@@ -74,6 +74,10 @@ const InstallFanMadeContent = lazy(
 
 const Core2026Reveal = lazy(() => import("./pages/blog/core-2026-reveal"));
 
+const FanMadeContentPreview = lazy(
+  () => import("./pages/fan-made-content-preview/fan-made-content-preview"),
+);
+
 function App() {
   return (
     <Providers>
@@ -147,11 +151,15 @@ function AppInner() {
               <Route component={BrowseDecklists} path="/decklists" />
               <Route component={Connect} path="/connect" />
               <Route component={Rules} path="/rules" />
+              <Route component={Core2026Reveal} path="/blog/core-2026-reveal" />
+              <Route
+                component={FanMadeContentPreview}
+                path="/fan-made-content/preview/:id"
+              />
               <Route
                 component={InstallFanMadeContent}
                 path="/install-fan-made-content"
               />
-              <Route component={Core2026Reveal} path="/blog/core-2026-reveal" />
               <Route path="*">
                 <ErrorStatus statusCode={404} />
               </Route>
@@ -179,17 +187,19 @@ function RouteReset() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: a change to pathname indicates a change to window.location.
   useEffect(() => {
-    if (window.location.hash) {
-      // HACK: this enables hash-based deep links to work when a route is loaded async.
-      const el = document.querySelector(window.location.hash);
+    try {
+      if (window.location.hash) {
+        // HACK: this enables hash-based deep links to work when a route is loaded async.
+        const el = document.querySelector(window.location.hash);
 
-      if (el) {
-        el.scrollIntoView();
-        return;
+        if (el) {
+          el.scrollIntoView();
+          return;
+        }
       }
-    }
 
-    window.scrollTo(0, 0);
+      window.scrollTo(0, 0);
+    } catch (_) {}
   }, [pathname]);
 
   return null;

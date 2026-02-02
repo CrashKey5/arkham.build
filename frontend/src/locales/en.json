@@ -732,6 +732,8 @@
       "id": "Deck id",
       "latest_upgrade": {
         "add_to_deck": "Add to current deck",
+        "decrement_xp": "Decrease available amount of XP for this upgrade",
+        "increment_xp": "Increase available amount of XP for this upgrade",
         "no_changes": "No changes.",
         "summary": "{{xpSpent}} of {{xp}} XP spent",
         "title": "Latest upgrade",
@@ -1371,7 +1373,10 @@
       "title": "Preview season is here!"
     },
     "rules": {
-      "title": "Rules reference"
+      "title": "Rules reference",
+      "back_to_top": "Back to top",
+      "search_placeholder": "Search keywords...",
+      "toc": "Table of contents"
     },
     "search": {
       "title": "Search results"
@@ -1402,6 +1407,7 @@
       "collection": {
         "card_collection": "Card collection",
         "card_count": "Card count",
+        "chapter": "Chapter {{number}}",
         "new_format": "New format",
         "old_format": "Old format",
         "show_all_cards_owned": "Show all cards as owned",

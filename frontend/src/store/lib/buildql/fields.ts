@@ -19,6 +19,12 @@ import type {
   FieldType,
 } from "./interpreter.types";
 
+export class BackArray<T> extends Array<T> {
+  constructor(items: T[]) {
+    super(...items);
+  }
+}
+
 interface FieldDefinition {
   aliases?: string[];
   legacyAlias?: string;
@@ -36,27 +42,22 @@ const fieldDefinitions: FieldDefinition[] = [
     type: "number",
   },
   {
-    aliases: ["cls", "class"],
-    legacyAlias: "f",
-    lookup: backResolver((card, { i18n }) => {
-      const factions: string[] = [];
-
-      [card.faction_code, card.faction2_code, card.faction3_code].forEach(
-        (faction_code) => {
-          if (faction_code) {
-            factions.push(faction_code);
-
-            if (i18n.language !== "en") {
-              factions.push(i18n.t(`common.factions.${faction_code}`));
-            }
-          }
-        },
-      );
-
-      return factions;
+    aliases: ["bo"],
+    lookup: backResolver(
+      (card, { lookupTables }) => !!lookupTables.relations.bonded[card.code],
+    ),
+    name: "bonded",
+    type: "boolean",
+  },
+  {
+    aliases: ["ch"],
+    name: "chapter",
+    lookup: backResolver((card, { metadata }) => {
+      const pack = metadata.packs[card.pack_code];
+      if (!pack?.chapter) return 1;
+      return pack.chapter;
     }),
-    name: "faction",
-    type: "string",
+    type: "number",
   },
   {
     aliases: ["cl"],
@@ -153,6 +154,29 @@ const fieldDefinitions: FieldDefinition[] = [
     type: "boolean",
   },
   {
+    aliases: ["cls", "class"],
+    legacyAlias: "f",
+    lookup: backResolver((card, { i18n }) => {
+      const factions: string[] = [];
+
+      [card.faction_code, card.faction2_code, card.faction3_code].forEach(
+        (faction_code) => {
+          if (faction_code) {
+            factions.push(faction_code);
+
+            if (i18n.language !== "en") {
+              factions.push(i18n.t(`common.factions.${faction_code}`));
+            }
+          }
+        },
+      );
+
+      return factions;
+    }),
+    name: "faction",
+    type: "string",
+  },
+  {
     aliases: ["fi"],
     lookup: backResolver((card) => card.enemy_fight ?? null),
     name: "fight",
@@ -164,6 +188,18 @@ const fieldDefinitions: FieldDefinition[] = [
     lookup: backResolver((card) => displayAttribute(card, "flavor")),
     name: "flavor",
     type: "text",
+  },
+  {
+    aliases: ["hu"],
+    lookup: backResolver((card, { lookupTables, metadata }) => {
+      const otherLevels = lookupTables.relations.level[card.code];
+      const hasUpgrade = Object.keys(otherLevels ?? {}).some(
+        (otherCode) => (metadata.cards[otherCode]?.xp ?? 0) > (card.xp ?? 0),
+      );
+      return hasUpgrade;
+    }),
+    name: "has_upgrade",
+    type: "boolean",
   },
   {
     aliases: ["hd"],
@@ -197,7 +233,7 @@ const fieldDefinitions: FieldDefinition[] = [
     type: "string",
   },
   {
-    aliases: ["il", "illu", "artist"],
+    aliases: ["il", "illu"],
     legacyAlias: "l",
     lookup: backResolver((card) => card.illustrator ?? null),
     name: "illustrator",
@@ -249,12 +285,18 @@ const fieldDefinitions: FieldDefinition[] = [
     type: "number",
   },
   {
-    aliases: ["level", "lvl"],
-    legacyAlias: "p",
-    lookup: backResolver((card) => card.xp ?? null),
-    name: "xp",
-    type: "number",
+    aliases: ["iu"],
+    lookup: backResolver((card, { lookupTables, metadata }) => {
+      const otherLevels = lookupTables.relations.level[card.code];
+      const upgraded = Object.keys(otherLevels ?? {}).some(
+        (otherCode) => (metadata.cards[otherCode]?.xp ?? 0) < (card.xp ?? 0),
+      );
+      return upgraded;
+    }),
+    name: "is_upgrade",
+    type: "boolean",
   },
+
   {
     aliases: ["mu", "multi"],
     lookup: backResolver(
@@ -344,6 +386,12 @@ const fieldDefinitions: FieldDefinition[] = [
     lookup: backResolver((card) => isSpecialist(card)),
     name: "specialist",
     type: "boolean",
+  },
+  {
+    aliases: ["sg"],
+    name: "stage",
+    lookup: backResolver((card) => card.stage ?? null),
+    type: "number",
   },
   {
     aliases: ["sn"],
@@ -444,6 +492,13 @@ const fieldDefinitions: FieldDefinition[] = [
     name: "willpower",
     type: "number",
   },
+  {
+    aliases: ["level", "lvl"],
+    legacyAlias: "p",
+    lookup: backResolver((card) => card.xp ?? null),
+    name: "xp",
+    type: "number",
+  },
 ];
 
 function backResolver(resolver: FieldLookup) {
@@ -461,7 +516,7 @@ function backResolver(resolver: FieldLookup) {
       if (onlyReturnBackAttr) return resolver(back ?? ({} as Card), ctx);
 
       return back
-        ? [resolver(card, ctx), resolver(back, ctx)].flat()
+        ? new BackArray([resolver(card, ctx), resolver(back, ctx)].flat())
         : resolver(card, ctx);
     };
   };

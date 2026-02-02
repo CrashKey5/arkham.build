@@ -12,7 +12,7 @@ interface Props extends React.ComponentProps<"input"> {
   inputClassName?: string;
   label?: string;
   omitSearchIcon?: boolean;
-  onChangeValue: (value: string) => void;
+  onValueChange: (value: string) => void;
   id: string;
   value: string;
 }
@@ -28,23 +28,23 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
       id,
       label,
       omitSearchIcon,
-      onChangeValue,
+      onValueChange,
       value,
       ...rest
     },
     ref,
   ) {
     const onClear = useCallback(() => {
-      onChangeValue("");
-    }, [onChangeValue]);
+      onValueChange("");
+    }, [onValueChange]);
 
     const onChange = useCallback(
       (evt: React.ChangeEvent<HTMLInputElement>) => {
         if (evt.target instanceof HTMLInputElement) {
-          onChangeValue(evt.target.value);
+          onValueChange(evt.target.value);
         }
       },
-      [onChangeValue],
+      [onValueChange],
     );
 
     const cssVariables = useMemo(
