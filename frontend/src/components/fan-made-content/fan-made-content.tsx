@@ -9,7 +9,8 @@ import {
   LinkIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "wouter";
 import { z } from "zod";
@@ -32,6 +33,7 @@ import { capitalize, formatDate } from "@/utils/formatting";
 import { fuzzyMatch, prepareNeedle } from "@/utils/fuzzy";
 import { isEmpty } from "@/utils/is-empty";
 import { parseMarkdown } from "@/utils/markdown";
+import { useHotkey } from "@/utils/use-hotkey";
 import { ErrorDisplay, ErrorImage } from "../error-display/error-display";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
@@ -143,9 +145,13 @@ export function FanMadeContent(props: SettingProps) {
   return (
     <div className={css["container"]}>
       <DisplaySettings {...props} />
-      <Collection onAddProject={onAddProject} listingsQuery={listingsQuery} />
+      <FanMadeSearch search={search} onSearchChange={searchChange} />
+      <Collection
+        onAddProject={onAddProject}
+        listingsQuery={listingsQuery}
+        filterFn={projectFilter}
+      />
       <Registry
-        action={<FanMadeSearch search={search} onSearchChange={searchChange} />}
         onAddProject={onAddProject}
         listingsQuery={listingsQuery}
         filterFn={projectFilter}
@@ -222,22 +228,50 @@ type SearchProps = {
 
 function FanMadeSearch({ search, onSearchChange }: SearchProps) {
   const { t } = useTranslation();
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(
+    document.getElementById("settings-header-portal"),
+  );
 
-  return (
-    <search>
+  const ref = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (!portalTarget) {
+      const target = document.getElementById("settings-header-portal");
+      setPortalTarget(target);
+    }
+  }, [portalTarget]);
+
+  const onFocusSearch = useCallback(() => {
+    if (ref.current) {
+      ref.current.focus();
+    }
+  }, []);
+
+  useHotkey("/", onFocusSearch);
+
+  const searchElement = (
+    <search className={css["fan-made-search"]}>
       <SearchInput
+        bindSlashKey
         placeholder={t("fan_made_content.filter_fan_made_content")}
         id="fanmade-search-input"
+        ref={ref}
         value={search}
         onValueChange={onSearchChange}
       />
     </search>
   );
+
+  if (portalTarget) {
+    return createPortal(searchElement, portalTarget);
+  }
+
+  return searchElement;
 }
 
 type RegistryProps = {
   onAddProject: (payload: unknown) => Promise<void>;
-  filterFn?: <T extends Filterable>(
+  filterFn: <T extends Filterable>(
     projects: T[] | undefined,
   ) => T[] | undefined;
   listingsQuery: UseQueryResult<FanMadeProjectListing[]>;
@@ -247,7 +281,7 @@ function Collection({ onAddProject, listingsQuery, filterFn }: RegistryProps) {
   const { t } = useTranslation();
 
   const owned = useStore(selectOwnedFanMadeProjects);
-  const filteredOwned = filterFn ? filterFn(owned) : owned;
+  const filteredOwned = filterFn(owned);
 
   const { onAddFromRegistry, onAddFromUrl, onAddLocalProject } =
     useProjectRegistry(onAddProject);
@@ -366,18 +400,9 @@ function Collection({ onAddProject, listingsQuery, filterFn }: RegistryProps) {
   );
 }
 
-function Registry({
-  action,
-  onAddProject,
-  listingsQuery,
-  filterFn,
-}: RegistryProps & {
-  action?: React.ReactNode;
-}) {
+function Registry({ onAddProject, listingsQuery, filterFn }: RegistryProps) {
   const { t } = useTranslation();
-  const filteredProjects = filterFn
-    ? filterFn(listingsQuery.data)
-    : listingsQuery.data;
+  const filteredProjects = filterFn(listingsQuery.data);
   const { onAddFromRegistry } = useProjectRegistry(onAddProject);
 
   const owned = useStore((state) => state.fanMadeData.projects);
@@ -388,7 +413,6 @@ function Registry({
         <h2 className={css["title"]}>
           {t("fan_made_content.available_content")}
         </h2>
-        {action}
       </header>
 
       {!!listingsQuery.error && (
