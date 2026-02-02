@@ -5,6 +5,7 @@ import { Button } from "./button";
 import css from "./search-input.module.css";
 
 interface Props extends React.ComponentProps<"input"> {
+  bindSlashKey?: boolean;
   className?: string;
   error?: Error;
   iconSlotSize?: number;
@@ -20,6 +21,7 @@ interface Props extends React.ComponentProps<"input"> {
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
   function SearchInput(
     {
+      bindSlashKey,
       className,
       error,
       iconSlot,
