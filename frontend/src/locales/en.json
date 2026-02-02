@@ -1143,6 +1143,7 @@
         "available_content_loading": "Loading available content...",
         "content_loading": "Loading content...",
         "fetch_failed": "Failed to load content: {{error}}",
+        "no_match": "No available content matches your filter",
         "parse_failed": "Failed to add content: {{error}}",
         "registry_failed": "Failed to load available content from registry: {{error}}"
       },
