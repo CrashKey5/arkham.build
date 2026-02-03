@@ -52,6 +52,12 @@ export function applySearch(
   cards: Card[],
   metadata: Metadata,
 ): Card[] {
+  if (metadata.cards[search.value]) {
+    return cards.filter(
+      (card) => card.id === search.value || card.back_link_id === search.value,
+    );
+  }
+
   const needle = prepareNeedle(search.value);
   if (!needle) return cards;
 
