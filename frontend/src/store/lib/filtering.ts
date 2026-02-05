@@ -592,6 +592,16 @@ function filterMyriad(card: Card) {
 
 function filterRestrictions(card: Card, investigator: Card) {
   if (Array.isArray(card.restrictions?.trait)) {
+    // placeholder investigators don't have restrictions
+    if (
+      investigator.official === false &&
+      SPECIAL_CARD_CODES.GENERIC_CUSTOM_INVESTIGATORS.some(
+        (code) => code === investigator.code,
+      )
+    ) {
+      return true;
+    }
+
     const targetTraits = card.restrictions.trait;
 
     return splitMultiValue(investigator.real_traits).some((t) =>
