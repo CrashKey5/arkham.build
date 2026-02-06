@@ -32,7 +32,10 @@ export {
   type RecommendationsResponse,
   RecommendationsResponseSchema,
 } from "./dtos/recommendations-response.schema.ts";
-
+export {
+  type SealedDeckResponse,
+  SealedDeckResponseSchema,
+} from "./dtos/sealed-deck-response.schema.ts";
 export {
   ASSET_SLOT_ORDER,
   FACTION_ORDER,
@@ -43,12 +46,10 @@ export {
   type SkillIcon,
   type SkillKey,
 } from "./lib/constants.ts";
-
 export {
   decodeSearch,
   encodeSearch,
 } from "./lib/search-params.ts";
-
 export {
   type ApiCard,
   ApiCardSchema,
@@ -65,14 +66,12 @@ export {
   JsonDataCardSchema,
   type OptionSelect,
 } from "./schemas/card.schema.ts";
-
 export {
   type FanMadeCard,
   FanMadeCardSchema,
   type FanMadeProject,
   FanMadeProjectSchema,
 } from "./schemas/fan-made-project.schema.ts";
-
 export {
   type FanMadeProjectInfo,
   FanMadeProjectInfoSchema,

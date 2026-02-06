@@ -7,6 +7,7 @@ import adminRouter from "./features/admin.ts";
 import { arkhamDbDecklistsRouter } from "./features/arkhamdb-decklists/index.ts";
 import fanMadeContentRouter from "./features/fan-made-content.ts";
 import { recommendationsRouter } from "./features/recommendations.ts";
+import sealedDeckRouter from "./features/sealed-deck.ts";
 import { bodyLimitMiddleware } from "./lib/body-limit.ts";
 import type { Config } from "./lib/config.ts";
 import { corsMiddleware } from "./lib/cors.ts";
@@ -31,14 +32,14 @@ export function appFactory(config: Config, database: Database) {
     return next();
   });
 
+  app.route("/admin", adminRouter);
+
   const pub = new Hono<HonoEnv>();
   pub.route("/arkhamdb-decklists", arkhamDbDecklistsRouter());
-  pub.route("/recommendations", recommendationsRouter());
   pub.route("/fan-made-project-info", fanMadeContentRouter);
-
+  pub.route("/recommendations", recommendationsRouter());
+  pub.route("/sealed-deck", sealedDeckRouter);
   app.route("/v2/public", pub);
-
-  app.route("/admin", adminRouter);
 
   app.get("/up", (c) => c.text("ok"));
 
