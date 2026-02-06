@@ -2,6 +2,7 @@ import {
   type AttributeFilter,
   type Card,
   type DeckOption,
+  type SealedDeckResponse,
   SKILL_KEYS,
   type SkillKey,
 } from "@arkham-build/shared";
@@ -38,7 +39,7 @@ import type {
 import type { Metadata } from "../slices/metadata.types";
 import { type CardOwnershipOptions, ownedCardCount } from "./card-ownership";
 import type { LookupTables } from "./lookup-tables.types";
-import type { ResolvedDeck, SealedDeck, Selections } from "./types";
+import type { ResolvedDeck, Selections } from "./types";
 import { isOptionSelect } from "./types";
 
 /**
@@ -1227,7 +1228,7 @@ export function filterInvestigatorWeaknessAccess(
 }
 
 export function filterSealed(
-  sealedDeck: SealedDeck["cards"],
+  sealedDeck: SealedDeckResponse["cards"],
   lookupTables: LookupTables,
 ) {
   return (c: Card) => {

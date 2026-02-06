@@ -2,6 +2,7 @@ import type {
   ApiCard,
   FanMadeProject,
   FanMadeProjectInfo,
+  SealedDeckResponse,
 } from "@arkham-build/shared";
 import {
   encodeSearch,
@@ -15,7 +16,6 @@ import { packToApiFormat } from "@/utils/arkhamdb-json-format";
 import { assert } from "@/utils/assert";
 import { displayPackName } from "@/utils/formatting";
 import i18n from "@/utils/i18n";
-import type { SealedDeck } from "../lib/types";
 import type { Cycle } from "../schemas/cycle.schema";
 import type { DataVersion } from "../schemas/data-version.schema";
 import { type Deck, type Id, isDeck } from "../schemas/deck.schema";
@@ -354,8 +354,8 @@ export async function getRecommendations(
   return RecommendationsResponseSchema.parse(json).data.recommendations;
 }
 
-export async function querySealedDeck(id: string): Promise<SealedDeck> {
-  const res = await request(`/public/sealed_deck/${id}`);
+export async function querySealedDeck(id: string): Promise<SealedDeckResponse> {
+  const res = await apiV2Request(`/v2/public/sealed-deck/${id}`);
   return await res.json();
 }
 

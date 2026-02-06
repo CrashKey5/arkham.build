@@ -3,6 +3,7 @@ import type {
   Card,
   FactionName,
   OptionSelect,
+  SealedDeckResponse,
   SkillIcon,
 } from "@arkham-build/shared";
 import type { Cycle } from "../schemas/cycle.schema";
@@ -15,11 +16,6 @@ import type { AttachmentQuantities } from "../slices/deck-edits.types";
 
 export type Coded = {
   code: string;
-};
-
-export type SealedDeck = {
-  name: string;
-  cards: Record<string, number>;
 };
 
 export type ResolvedCard = {
@@ -184,7 +180,7 @@ export type ResolvedDeck = Omit<Deck, "sideSlots"> & {
   hasParallel: boolean;
   otherInvestigatorVersion?: ResolvedCard;
   originalDeck: Deck;
-  sealedDeck?: SealedDeck;
+  sealedDeck?: SealedDeckResponse;
   selections?: Selections;
   shared: boolean;
   stats: {
