@@ -1,3 +1,4 @@
+import type { Card } from "@arkham-build/shared";
 import { Attachments } from "@/components/attachments/attachments";
 import {
   FilterAttachmentButton,
@@ -6,7 +7,6 @@ import {
 import { getMatchingAttachables } from "@/components/attachments/attachments.helpers";
 import { useStore } from "@/store";
 import type { ResolvedDeck } from "@/store/lib/types";
-import type { Card } from "@/store/schemas/card.schema";
 import { selectAvailableUpgrades } from "@/store/selectors/lists";
 import { mapTabToSlot } from "@/store/slices/deck-edits.types";
 import { SPECIAL_CARD_CODES } from "@/utils/constants";
