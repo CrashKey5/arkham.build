@@ -362,37 +362,34 @@ function Collection({ onAddProject, listingsQuery, filterFn }: RegistryProps) {
               (listing) => listing.meta.code === meta.code,
             );
 
-            if (!hasRemote || listing) {
-              return (
-                <ProjectCard key={meta.code} project={project}>
-                  {hasRemote && listing && (
-                    <ProjectInstallStatus
-                      installed={project}
-                      remote={listing}
-                      onUpdate={onAddFromRegistry}
-                    />
-                  )}
-                  <Button
-                    as="a"
-                    href={`/fan-made-content/preview/${meta.code}`}
-                    size="sm"
-                    data-testid="collection-project-view-cards"
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    <EyeIcon /> {t("fan_made_content.actions.view_cards")}
-                  </Button>
-                  <Button
-                    data-testid="collection-project-uninstall"
-                    size="sm"
-                    onClick={() => removeFanMadeProject(project.meta.code)}
-                  >
-                    <Trash2Icon /> {t("fan_made_content.actions.uninstall")}
-                  </Button>
-                </ProjectCard>
-              );
-            }
-            return null;
+            return (
+              <ProjectCard key={meta.code} project={project}>
+                {hasRemote && listing && (
+                  <ProjectInstallStatus
+                    installed={project}
+                    remote={listing}
+                    onUpdate={onAddFromRegistry}
+                  />
+                )}
+                <Button
+                  as="a"
+                  href={`/fan-made-content/preview/${meta.code}`}
+                  size="sm"
+                  data-testid="collection-project-view-cards"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <EyeIcon /> {t("fan_made_content.actions.view_cards")}
+                </Button>
+                <Button
+                  data-testid="collection-project-uninstall"
+                  size="sm"
+                  onClick={() => removeFanMadeProject(project.meta.code)}
+                >
+                  <Trash2Icon /> {t("fan_made_content.actions.uninstall")}
+                </Button>
+              </ProjectCard>
+            );
           })}
         </div>
       )}
