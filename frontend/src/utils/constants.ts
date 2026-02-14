@@ -99,12 +99,8 @@ export const SPECIAL_CARD_CODES = {
   OCCULT_EVIDENCE: "06008",
   /** Fake-bonded card, should be excluded from things liks draw simulator. */
   ON_THE_MEND: "09006",
-  /** Has option to add cards to ignore deck limit slots. */
-  PARALLEL_AGNES: "90017",
   /** Has spirit deck. */
   PARALLEL_JIM: "90049",
-  /** Has option to add cards to ignore deck limit slots. */
-  PARALLEL_SKIDS: "90008",
   /** Parallel front has deckbuilding impact. */
   PARALLEL_ROLAND: "90024",
   /** Parallel front has deckbuilding impact. */
