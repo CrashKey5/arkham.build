@@ -80,9 +80,7 @@ const selectUsableByInvestigatorsResolved = createSelector(
   selectUsableByInvestigators,
   selectShowFanMadeRelations,
   (cards, showFanMadeRelations) =>
-    cards
-      .filter((card) => showFanMadeRelations || official(card))
-      .map((card) => ({ card }) as ResolvedCard),
+    cards.filter(({ card }) => showFanMadeRelations || official(card)),
 );
 
 export function SpecialistInvestigators(props: Props) {
