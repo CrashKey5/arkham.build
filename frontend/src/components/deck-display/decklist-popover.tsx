@@ -17,7 +17,7 @@ export function DecklistPopover(props: Props) {
 
   return (
     <div className={css["container"]}>
-      <Popover placement="top-start">
+      <Popover placement="top-start" strategy="fixed">
         <PopoverTrigger asChild>
           <Button variant="primary">
             <i className="icon-deck" /> {t("deck_view.show_deck_list")}
