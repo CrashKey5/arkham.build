@@ -1057,6 +1057,7 @@
         "update": "Update share",
         "update_failed": "Failed to update share: {{error}}"
       },
+      "show_deck_list": "Show deck list",
       "tab_deck_list": "Deck",
       "tab_history": "History",
       "tab_notes": "Notes",

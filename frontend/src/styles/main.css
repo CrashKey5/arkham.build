@@ -697,6 +697,7 @@
   .longform {
     font-family: var(--font-family-ui);
     line-height: 1.5;
+    overflow-x: hidden;
   }
 
   .longform :where(h1, h2, h3, h4, h5, h6) {
@@ -738,7 +739,7 @@
   .longform table {
     border-collapse: collapse;
     border-spacing: 0;
-    width: 100%;
+    max-width: 100%;
   }
 
   .longform table :where(td, th) {
