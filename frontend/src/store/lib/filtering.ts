@@ -37,6 +37,8 @@ import type {
   SubtypeFilter,
 } from "../slices/lists.types";
 import type { Metadata } from "../slices/metadata.types";
+import type { Interpreter } from "./buildql/interpreter";
+import { parse } from "./buildql/parser";
 import { type CardOwnershipOptions, ownedCardCount } from "./card-ownership";
 import type { LookupTables } from "./lookup-tables.types";
 import type { ResolvedDeck, Selections } from "./types";
@@ -394,6 +396,7 @@ type FilterCardLevelOptions = {
 
 function filterCardLevel(
   value: [number, number] | undefined,
+  buildQlInterpeter: Interpreter | undefined,
   options?: FilterCardLevelOptions,
 ) {
   return (card: Card) => {
@@ -412,20 +415,28 @@ function filterCardLevel(
       return value[1] >= 0;
     }
 
-    const filter = filterInvestigatorAccess(options.investigator, {
-      customizable: {
-        level: "actual",
-        properties: "all",
+    const filter = filterInvestigatorAccess(
+      options.investigator,
+      buildQlInterpeter,
+      {
+        customizable: {
+          level: "actual",
+          properties: "all",
+        },
+        targetDeck: options.targetDeck,
       },
-      targetDeck: options.targetDeck,
-    });
+    );
 
     return checkLevelRange(value, card, filter);
   };
 }
 
-export function filterLevel(filterState: LevelFilter, investigator?: Card) {
-  return filterCardLevel(filterState.range, {
+export function filterLevel(
+  filterState: LevelFilter,
+  buildQlInterpeter: Interpreter,
+  investigator?: Card,
+) {
+  return filterCardLevel(filterState.range, buildQlInterpeter, {
     investigator,
     customizable: {
       level: "all",
@@ -886,6 +897,7 @@ export type InvestigatorAccessConfig = {
 
 export function makeOptionFilter(
   option: DeckOption,
+  buildQlInterpeter: Interpreter | undefined,
   config?: InvestigatorAccessConfig,
 ) {
   // unknown rules or duplicate rules.
@@ -930,7 +942,7 @@ export function makeOptionFilter(
       const {
         optionFilter: optionSelectFilters,
         filterCount: optionSelectFilterCount,
-      } = parseOption(select, config);
+      } = parseOption(buildQlInterpeter, select, config);
 
       if (optionSelectFilterCount <= 1) {
         console.debug("unknown option select", select);
@@ -943,7 +955,7 @@ export function makeOptionFilter(
     optionFilter.push(or(selectFilters));
   }
 
-  const parsed = parseOption(option, config);
+  const parsed = parseOption(buildQlInterpeter, option, config);
   optionFilter.push(...parsed.optionFilter);
   filterCount += parsed.filterCount;
 
@@ -954,7 +966,11 @@ export function makeOptionFilter(
   return filterCount > 1 ? and(optionFilter) : undefined;
 }
 
-function parseOption(option: DeckOption, config?: InvestigatorAccessConfig) {
+function parseOption(
+  buildQlInterpeter: Interpreter | undefined,
+  option: DeckOption,
+  config?: InvestigatorAccessConfig,
+) {
   const optionFilter: Filter[] = [];
   let filterCount = 0;
 
@@ -972,7 +988,7 @@ function parseOption(option: DeckOption, config?: InvestigatorAccessConfig) {
     if (level) {
       filterCount += 1;
       optionFilter.push(
-        filterCardLevel([level.min, level.max], {
+        filterCardLevel([level.min, level.max], buildQlInterpeter, {
           customizable: config?.customizable,
         }),
       );
@@ -1058,11 +1074,17 @@ function parseOption(option: DeckOption, config?: InvestigatorAccessConfig) {
     optionFilter.push(or(ors));
   }
 
+  if (buildQlInterpeter && option.buildql_query) {
+    filterCount += 2;
+    optionFilter.push(buildQlInterpeter.evaluate(parse(option.buildql_query)));
+  }
+
   return { filterCount, optionFilter };
 }
 
 export function filterInvestigatorAccess(
   investigatorBack: Card,
+  buildQlInterpeter: Interpreter | undefined,
   config?: InvestigatorAccessConfig,
 ): Filter | undefined {
   const mode = config?.targetDeck ?? "slots";
@@ -1084,6 +1106,7 @@ export function filterInvestigatorAccess(
           investigator,
           "deck_options",
           "deck_requirements",
+          buildQlInterpeter,
           config,
         )
       : undefined;
@@ -1094,6 +1117,7 @@ export function filterInvestigatorAccess(
           investigator,
           "side_deck_options",
           "side_deck_requirements",
+          buildQlInterpeter,
           config,
         )
       : undefined;
@@ -1118,6 +1142,7 @@ function makePlayerCardsFilter(
   investigator: Card,
   optionsAccessor: "deck_options" | "side_deck_options",
   requiredAccessor: "deck_requirements" | "side_deck_requirements",
+  buildQlInterpeter: Interpreter | undefined,
   config?: InvestigatorAccessConfig,
 ) {
   let options = investigator[optionsAccessor];
@@ -1172,7 +1197,7 @@ function makePlayerCardsFilter(
   for (const option of options) {
     const filter =
       !option.limit || showLimitedAccess
-        ? makeOptionFilter(option, config)
+        ? makeOptionFilter(option, buildQlInterpeter, config)
         : () => false;
 
     if (!filter) continue;
@@ -1191,7 +1216,7 @@ function makePlayerCardsFilter(
     for (const option of config.additionalDeckOptions) {
       const filter =
         !option.limit || showLimitedAccess
-          ? makeOptionFilter(option, config)
+          ? makeOptionFilter(option, buildQlInterpeter, config)
           : () => false;
 
       if (!filter) continue;
