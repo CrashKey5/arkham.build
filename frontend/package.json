@@ -49,8 +49,8 @@
     "react-dom": "18.3.1",
     "react-i18next": "15.6.1",
     "react-virtuoso": "4.13.0",
+    "recharts": "3.7.0",
     "reselect": "5.1.1",
-    "victory": "37.3.6",
     "wouter": "3.7.1",
     "zustand": "5.0.7"
   },
