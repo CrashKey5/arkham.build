@@ -105,7 +105,7 @@ export function Sidebar(props: Props) {
         {origin === "local" && <SidebarUpgrade deck={deck} />}
 
         {(origin === "arkhamdb" || deck.source === "arkhamdb") && (
-          <ArkhamDBDetails deck={deck} />
+          <ArkhamDBDetails deck={deck} type={type} />
         )}
 
         {deck.source !== "arkhamdb" && (
@@ -466,6 +466,7 @@ function Sharing(props: {
 
   const deckData = useStore((state) => state.data.decks[props.deck.id]);
   const share = useStore((state) => state.sharing.decks[props.deck.id]);
+  const devModeEnabled = useStore((state) => state.settings.devModeEnabled);
 
   const connectionLock = useStore(selectConnectionLock);
 
@@ -519,6 +520,7 @@ function Sharing(props: {
             <ShareInfo id={deck.id} path={`/share/${deck.id}`} />
             {origin === "local" && (
               <nav className={css["share-actions"]}>
+                {devModeEnabled && <DevModeApiLinkButton id={deck.id} />}
                 {deck.date_update !== share && (
                   <Button
                     disabled={isReadOnly}
@@ -618,9 +620,28 @@ function ShareInfo(props: { id: Id; path: string }) {
   );
 }
 
-function ArkhamDBDetails(props: { deck: ResolvedDeck }) {
-  const { deck } = props;
+function DevModeApiLinkButton({ id }: { id: Id }) {
   const { t } = useTranslation();
+  return (
+    <Button
+      as="a"
+      data-testid="share-api-link"
+      href={`${import.meta.env.VITE_API_LEGACY_URL}/v1/public/share/${id}`}
+      rel="noreferrer"
+      target="_blank"
+      variant="link"
+      size="sm"
+    >
+      {t("deck_view.sharing.api_link")}
+    </Button>
+  );
+}
+
+function ArkhamDBDetails(props: { deck: ResolvedDeck; type: DeckDisplayType }) {
+  const { deck, type } = props;
+  const { t } = useTranslation();
+
+  const devModeEnabled = useStore((state) => state.settings.devModeEnabled);
 
   return (
     <>
@@ -633,15 +654,20 @@ function ArkhamDBDetails(props: { deck: ResolvedDeck }) {
           <p>
             {t("deck_view.connections.description", { provider: "ArkhamDB" })}
           </p>
-          <Button
-            as="a"
-            href={`${localizeArkhamDBBaseUrl()}/deck/view/${deck.id}`}
-            size="sm"
-            rel="noreferrer"
-            target="_blank"
-          >
-            {t("deck_view.connections.view", { provider: "ArkhamDB" })}
-          </Button>
+          <nav className={css["share-actions"]}>
+            {devModeEnabled && type === "deck" && (
+              <DevModeApiLinkButton id={deck.id} />
+            )}
+            <Button
+              as="a"
+              href={`${localizeArkhamDBBaseUrl()}/deck/view/${deck.id}`}
+              size="sm"
+              rel="noreferrer"
+              target="_blank"
+            >
+              {t("deck_view.connections.view", { provider: "ArkhamDB" })}
+            </Button>
+          </nav>
         </DeckDetail>
       </section>
       <section className={css["details"]} data-testid="share">
